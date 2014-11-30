@@ -28,9 +28,11 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:name=".SmarterApplication"
         android:theme="@style/SmarterTheme">
+
         <activity
-            android:name="net.kismetwireless.android.smarterwifimanager.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,11 +41,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityPrefs"
+            android:name=".ui.ActivityPrefs"
             android:label="@string/prefs_name" >
         </activity>
 
-        <receiver android:name="net.kismetwireless.android.smarterwifimanager.NetworkReceiver" >
+        <receiver android:name=".services.NetworkReceiver" >
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.net.wifi.STATE_CHANGE" />
@@ -54,56 +56,56 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="net.kismetwireless.android.smarterwifimanager.BootReceiver" >
+        <receiver android:name=".services.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="net.kismetwireless.android.smarterwifimanager.AlarmReceiver" />
+        <receiver android:name=".services.AlarmReceiver" />
 
         <service
-            android:name="net.kismetwireless.android.smarterwifimanager.SmarterWifiService"
+            android:name=".services.SmarterWifiService"
             android:description="@string/service_desc" />
 
         <activity
-            android:name=".ActivitySsidBlacklist"
+            android:name=".ui.ActivitySsidBlacklist"
             android:label="@string/title_activity_ssid_blacklist"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".ui.MainActivity"/>
         </activity>
 
         <activity
-            android:name=".ActivityBluetoothBlacklist"
+            android:name=".ui.ActivityBluetoothBlacklist"
             android:label="@string/title_activity_bluetooth_blacklist"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".ui.MainActivity"/>
         </activity>
 
         <activity
-            android:name=".ActivityTimeRange"
+            android:name=".ui.ActivityTimeRange"
             android:label="@string/title_activity_timerange"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".ui.MainActivity"/>
         </activity>
 
         <activity
-            android:name=".ActivitySsidLearned"
+            android:name=".ui.ActivitySsidLearned"
             android:label="@string/title_activity_learned"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ui.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value=".ui.MainActivity"/>
         </activity>
 
         <activity
-            android:name=".ActivityQuickconfig"
+            android:name=".ui.ActivityQuickconfig"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:launchMode="singleTop"
             android:taskAffinity=""
