@@ -29,12 +29,19 @@ import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 /**
  * Created by dragorn on 10/1/13.
  */
 public class FragmentTimeRange extends SmarterFragment {
-    View mainView;
+    @Inject
     Context context;
+
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
+
+    View mainView;
     FragmentActivity activity;
 
     ArrayList<SmarterTimeRange> lastTimeList = new ArrayList<SmarterTimeRange>();
@@ -42,8 +49,6 @@ public class FragmentTimeRange extends SmarterFragment {
     private TimeListAdapter listAdapter;
     private ListView lv;
     private TextView emptyView;
-
-    SmarterWifiServiceBinder serviceBinder;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

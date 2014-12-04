@@ -22,16 +22,22 @@ import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 /**
  * Created by dragorn on 9/17/13.
  */
 public class FragmentSsidBlacklist extends SmarterFragment {
-    private Context context;
+    @Inject
+    Context context;
+
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
+
     private View mainView;
 
     private ArrayList<SmarterSSID> lastSsidList = new ArrayList<SmarterSSID>();
 
-    private SmarterWifiServiceBinder serviceBinder;
     private SsidListAdapter listAdapter;
     private ListView lv;
     private TextView emptyView;
@@ -92,10 +98,7 @@ public class FragmentSsidBlacklist extends SmarterFragment {
         listAdapter = new SsidListAdapter(context, R.layout.ssid_blacklist_entry, lastSsidList);
         lv.setAdapter(listAdapter);
 
-        serviceBinder = new SmarterWifiServiceBinder(context);
         serviceBinder.addCallback(callback);
-
-        serviceBinder.doBindService();
 
         return mainView;
     }
@@ -194,9 +197,6 @@ public class FragmentSsidBlacklist extends SmarterFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if (serviceBinder != null)
-            serviceBinder.doUnbindService();
     }
 
     @Override

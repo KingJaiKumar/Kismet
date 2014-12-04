@@ -17,14 +17,19 @@ import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 
+import javax.inject.Inject;
+
 /**
  * Created by dragorn on 9/17/13.
  */
 public class FragmentMain extends SmarterFragment {
-    View mainView;
-
-    SmarterWifiServiceBinder serviceBinder;
+    @Inject
     Context context;
+
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
+
+    View mainView;
 
     ImageView mainIcon;
     TextView headlineText, smallText;
@@ -132,12 +137,7 @@ public class FragmentMain extends SmarterFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        //if (mainView == null)
-            mainView = inflater.inflate(R.layout.fragment_main, container, false);
-
-        context = getActivity().getApplicationContext();
-
-        serviceBinder = new SmarterWifiServiceBinder(context);
+        mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -209,9 +209,6 @@ public class FragmentMain extends SmarterFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if (serviceBinder != null)
-            serviceBinder.doUnbindService();
     }
 
     private boolean setManageWifi(boolean b) {

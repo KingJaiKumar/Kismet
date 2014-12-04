@@ -48,13 +48,6 @@ public class QuickConfigDialog extends DialogFragment {
     private WifiManager wifiManager;
     private BluetoothAdapter btAdapter;
     private View forgetView;
-    private SmarterWifiServiceBinder binder;
-
-    public QuickConfigDialog() {
-        SmarterApplication.get(getActivity()).inject(this);
-
-        eventBus.register(this);
-    }
 
     private SmarterWifiService.SmarterServiceCallback serviceCallback = new SmarterWifiService.SmarterServiceCallback() {
         @Override
@@ -165,6 +158,10 @@ public class QuickConfigDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        SmarterApplication.get(getActivity()).inject(this);
+        eventBus.register(this);
+
         final Activity activity = getActivity();
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -173,8 +170,7 @@ public class QuickConfigDialog extends DialogFragment {
         e.putBoolean("everbeenrun", true);
         e.commit();
 
-        binder = new SmarterWifiServiceBinder(activity);
-        binder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
+        serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             @Override
             public void run(SmarterWifiServiceBinder b) {
                 b.doUpdatePreferences();
@@ -231,11 +227,11 @@ public class QuickConfigDialog extends DialogFragment {
         forgetView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binder.deleteCurrentTower();
+                serviceBinder.deleteCurrentTower();
             }
         });
 
-        binder.addCallback(serviceCallback);
+        serviceBinder.addCallback(serviceCallback);
 
         dialogView = view;
 
@@ -257,7 +253,7 @@ public class QuickConfigDialog extends DialogFragment {
             Activity activity = getActivity();
 
             activity.unregisterReceiver(bcastRx);
-            binder.removeCallback(serviceCallback);
+            serviceBinder.removeCallback(serviceCallback);
             activity.finish();
         } catch (NullPointerException npe) {
 

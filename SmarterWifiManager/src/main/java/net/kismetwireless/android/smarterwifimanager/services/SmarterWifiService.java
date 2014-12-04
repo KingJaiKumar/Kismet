@@ -26,14 +26,15 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
-import net.kismetwireless.android.smarterwifimanager.models.CellLocationCommon;
 import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.R;
+import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+import net.kismetwireless.android.smarterwifimanager.models.CellLocationCommon;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterBluetooth;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterDBSource;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterTimeRange;
+import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,6 +42,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 public class SmarterWifiService extends Service {
     // Unique combinations:
@@ -160,13 +163,15 @@ public class SmarterWifiService extends Service {
     }
 
     private ServiceBinder serviceBinder = new ServiceBinder();
-    private Context context;
+
+    @Inject
+    Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        context = this.getApplicationContext();
+        SmarterApplication.get(this).inject(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
 

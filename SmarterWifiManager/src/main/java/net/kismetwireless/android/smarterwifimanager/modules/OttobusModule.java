@@ -6,6 +6,7 @@ import com.squareup.otto.ThreadEnforcer;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 import net.kismetwireless.android.smarterwifimanager.ui.MainActivity;
+import net.kismetwireless.android.smarterwifimanager.ui.QuickConfigDialog;
 
 import javax.inject.Singleton;
 
@@ -20,7 +21,7 @@ import dagger.Provides;
         injects = {
                 SmarterWifiService.class, SmarterWifiServiceBinder.class,
 
-                MainActivity.class,
+                MainActivity.class, QuickConfigDialog.class
 
         },
         complete = false,
