@@ -19,16 +19,22 @@ import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 /**
  * Created by dragorn on 9/17/13.
  */
 public class FragmentBluetoothBlacklist extends SmarterFragment {
-    private Context context;
+    @Inject
+    Context context;
+
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
+
     private View mainView;
 
     private ArrayList<SmarterBluetooth> lastBtList = new ArrayList<SmarterBluetooth>();
 
-    private SmarterWifiServiceBinder serviceBinder;
     private BluetoothListAdapter listAdapter;
     private ListView lv;
     private TextView emptyView;
@@ -77,17 +83,13 @@ public class FragmentBluetoothBlacklist extends SmarterFragment {
         // if (mainView == null)
             mainView = inflater.inflate(R.layout.fragment_bluetooth, container, false);
 
-        context = getActivity().getApplicationContext();
-
         lv = (ListView) mainView.findViewById(R.id.bluetoothListView);
         emptyView = (TextView) mainView.findViewById(R.id.textViewNoBluetooth);
 
         listAdapter = new BluetoothListAdapter(context, R.layout.bluetooth_blacklist_entry, lastBtList);
         lv.setAdapter(listAdapter);
 
-        serviceBinder = new SmarterWifiServiceBinder(context);
         serviceBinder.addCallback(callback);
-        serviceBinder.doBindService();
 
         return mainView;
     }
@@ -163,9 +165,6 @@ public class FragmentBluetoothBlacklist extends SmarterFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if (serviceBinder != null)
-            serviceBinder.doUnbindService();
     }
 
     @Override

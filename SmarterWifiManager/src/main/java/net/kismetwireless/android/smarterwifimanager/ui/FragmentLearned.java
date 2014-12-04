@@ -22,16 +22,21 @@ import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 /**
  * Created by dragorn on 9/17/13.
  */
 public class FragmentLearned extends SmarterFragment {
-    private Context context;
+    @Inject
+    Context context;
+
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
+
     private View mainView;
 
     private ArrayList<SmarterSSID> lastSsidList = new ArrayList<SmarterSSID>();
-
-    private SmarterWifiServiceBinder serviceBinder;
 
     private LearnedSsidListAdapter listAdapter;
     private ListView lv;
@@ -104,15 +109,12 @@ public class FragmentLearned extends SmarterFragment {
         // if (mainView == null)
             mainView = inflater.inflate(R.layout.fragment_learnedssid, container, false);
 
-        context = getActivity().getApplicationContext();
-
         lv = (ListView) mainView.findViewById(R.id.learnedListView);
         emptyView = (TextView) mainView.findViewById(R.id.textViewNoneLearned);
 
         listAdapter = new LearnedSsidListAdapter(context, R.layout.ssid_learnlist_entry, lastSsidList);
         lv.setAdapter(listAdapter);
 
-        serviceBinder = new SmarterWifiServiceBinder(context);
         serviceBinder.addCallback(serviceCallback);
 
         forgetView = (View) mainView.findViewById(R.id.forget);
