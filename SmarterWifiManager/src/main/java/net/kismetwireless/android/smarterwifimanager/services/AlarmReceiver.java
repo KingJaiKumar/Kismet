@@ -7,23 +7,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.PowerManager;
 
+import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+
+import javax.inject.Inject;
+
 /**
  * Created by dragorn on 10/11/13.
  */
 public class AlarmReceiver extends BroadcastReceiver {
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        SmarterApplication.get(context).inject(this);
+
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Smarter Wi-Fi Timerange");
         wl.acquire();
 
-        final SmarterWifiServiceBinder serviceBinder = new SmarterWifiServiceBinder(context);
-
+        // Make sure we exist before we run
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             public void run(SmarterWifiServiceBinder b) {
-                // Log.d("smarter", "alarm triggered, configuring timerange");
                 b.configureTimerangeState();
-                serviceBinder.doUnbindService();
                 wl.release();
             }
         });

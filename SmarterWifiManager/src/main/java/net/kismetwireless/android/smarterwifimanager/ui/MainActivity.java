@@ -28,20 +28,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import net.kismetwireless.android.smarterwifimanager.R;
+import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 
 // Main icon color shifts
 // 00e8d5    b8b8b8    a40000
 
 public class MainActivity extends ActionBarActivity {
+    @Inject
     Context context;
+
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
 
     private static int PREFS_REQ = 1;
 
-    private SmarterWifiServiceBinder serviceBinder;
     // private SmarterPagerAdapter pagerAdapter;
     // private ViewPager viewPager;
     private ActionBar actionBar;
@@ -58,16 +64,15 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        context = this;
+        SmarterApplication.get(this).inject(this);
+
+        setContentView(R.layout.activity_main);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor e = prefs.edit();
         e.putBoolean("everbeenrun", true);
         e.commit();
-
-        serviceBinder = new SmarterWifiServiceBinder(this);
 
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             @Override
@@ -188,52 +193,6 @@ public class MainActivity extends ActionBarActivity {
 
         return true;
     }
-
-    /*
-    public class SmarterTabsListener implements ActionBar.TabListener {
-        public Fragment fragment;
-
-        public SmarterTabsListener(Fragment fragment) {
-            this.fragment = fragment;
-        }
-
-        @Override
-        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            // ignore
-        }
-
-        @Override
-        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            // show tab
-            viewPager.setCurrentItem(tab.getPosition());
-        }
-
-        @Override
-        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            // hide
-        }
-    }
-
-    public class SmarterPagerAdapter extends FragmentStatePagerAdapter {
-        private List<Fragment> fragments = new ArrayList<Fragment>();
-
-        public SmarterPagerAdapter(FragmentManager fm, List<Fragment> frags) {
-            super(fm);
-
-            fragments = frags;
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return fragments.get(i);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-    }
-    */
 
     public void showAbout() {
         AlertDialog.Builder alert = new AlertDialog.Builder(context);

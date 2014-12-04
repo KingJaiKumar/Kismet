@@ -12,14 +12,29 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.preference.PreferenceManager;
 
+import com.squareup.otto.Bus;
+
 import net.kismetwireless.android.smarterwifimanager.LogAlias;
+import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiConnected;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisabled;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiEnabled;
+
+import javax.inject.Inject;
 
 /**
  * Created by dragorn on 9/2/13.
  */
 public class NetworkReceiver extends BroadcastReceiver {
+    @Inject
+    SmarterWifiServiceBinder serviceBinder;
+
+    @Inject
+    Bus eventBus;
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        SmarterApplication.get(context).inject(this);
 
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -30,14 +45,32 @@ public class NetworkReceiver extends BroadcastReceiver {
             }
         }
 
-        final SmarterWifiServiceBinder serviceBinder = new SmarterWifiServiceBinder(context);
-
         try {
+            // Collapse upping/up and downing/down status into single events
+            if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
+                int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+                int oldWifiState = intent.getIntExtra(WifiManager.EXTRA_PREVIOUS_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+
+                if ((oldWifiState == WifiManager.WIFI_STATE_DISABLED || oldWifiState == WifiManager.WIFI_STATE_DISABLING) &&
+                        (wifiState == WifiManager.WIFI_STATE_ENABLED || wifiState == WifiManager.WIFI_STATE_ENABLING)) {
+                    eventBus.post(new EventWifiEnabled());
+                } else if ((wifiState == WifiManager.WIFI_STATE_DISABLED || wifiState == WifiManager.WIFI_STATE_DISABLING) &&
+                        (oldWifiState == WifiManager.WIFI_STATE_ENABLED || oldWifiState == WifiManager.WIFI_STATE_ENABLING)) {
+                    eventBus.post(new EventWifiDisabled());
+                }
+            } else if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+                final NetworkInfo ni = (NetworkInfo) intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+
+                if (ni.getType() == ConnectivityManager.TYPE_WIFI && ni.isConnected()) {
+                    eventBus.post(new EventWifiConnected());
+                }
+            }
+
+            // TODO - remove this once we finish converting to eventbus
             if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
                 serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
                     public void run(SmarterWifiServiceBinder b) {
                         b.configureWifiState();
-                        serviceBinder.doUnbindService();
                     }
                 });
             }
@@ -51,7 +84,6 @@ public class NetworkReceiver extends BroadcastReceiver {
                 serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
                     public void run(SmarterWifiServiceBinder b) {
                         b.configureWifiState();
-                        serviceBinder.doUnbindService();
                     }
                 });
 
@@ -95,7 +127,7 @@ public class NetworkReceiver extends BroadcastReceiver {
             }
 
         } catch (NullPointerException npe) {
-            // Don't care
+            // Don't care.  Sometimes the service fails and this happens, and I don't know why.
         }
 
     }

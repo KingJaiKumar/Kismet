@@ -5,20 +5,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
-
 /**
  * Created by dragorn on 9/24/13.
  */
 public class ActivityPrefs extends Activity {
-    SmarterWifiServiceBinder binder;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binder = new SmarterWifiServiceBinder(this);
-        binder.doBindService();
 
         ActionBar ab = getActionBar();
 
@@ -30,11 +23,6 @@ public class ActivityPrefs extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        // Try to update prefs as we go out
-        if (binder != null) {
-            binder.doUpdatePreferences();
-        }
     }
 
     @Override

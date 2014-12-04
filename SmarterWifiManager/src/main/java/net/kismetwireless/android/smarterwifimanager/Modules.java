@@ -1,8 +1,8 @@
 package net.kismetwireless.android.smarterwifimanager;
 
-import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.modules.ContextModule;
 import net.kismetwireless.android.smarterwifimanager.modules.OttobusModule;
+import net.kismetwireless.android.smarterwifimanager.modules.SmarterServiceModule;
 
 /**
  * Created by dragorn on 11/30/14.
@@ -12,6 +12,7 @@ final public class Modules {
         return new Object[] {
                 new ContextModule(app),
                 new OttobusModule(),
+                new SmarterServiceModule()
         };
     }
 
