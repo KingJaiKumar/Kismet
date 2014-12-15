@@ -4,3 +4,4 @@
 */.gradle/*
 libraries/*/build/*
 *.swp
+*.iml
