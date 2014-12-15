@@ -8,7 +8,6 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
@@ -20,15 +19,18 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.telephony.CellInfo;
-import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
+
 import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+import net.kismetwireless.android.smarterwifimanager.events.EventCellTower;
 import net.kismetwireless.android.smarterwifimanager.models.CellLocationCommon;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterBluetooth;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterDBSource;
@@ -74,8 +76,9 @@ public class SmarterWifiService extends Service {
 
     SharedPreferences preferences;
 
+    SmarterPhoneStateListener phoneListener;
+
     TelephonyManager telephonyManager;
-    SmarterPhoneListener phoneListener;
     WifiManager wifiManager;
     BluetoothAdapter btAdapter;
     ConnectivityManager connectivityManager;
@@ -100,8 +103,6 @@ public class SmarterWifiService extends Service {
     private ControlType lastControlReason = ControlType.CONTROL_TOWERID;
 
     private Handler timerHandler = new Handler();
-
-    private SmarterDBSource dbSource;
 
     private NotificationCompat.Builder notificationBuilder;
 
@@ -167,6 +168,12 @@ public class SmarterWifiService extends Service {
     @Inject
     Context context;
 
+    @Inject
+    Bus eventBus;
+
+    @Inject
+    SmarterDBSource dbSource;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -177,16 +184,10 @@ public class SmarterWifiService extends Service {
 
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
-        try {
-            dbSource = new SmarterDBSource(context);
-        } catch (SQLiteException e) {
-            LogAlias.d("smarter", "failed to open database: " + e);
-        }
-
         // Default network state
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        phoneListener = new SmarterPhoneListener();
+        phoneListener = new SmarterPhoneStateListener(this);
 
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
@@ -224,6 +225,10 @@ public class SmarterWifiService extends Service {
 
         // Kick an update
         // configureWifiState();
+
+
+        // Register the event bus
+        eventBus.register(this);
 
         // Update the time range database which also fires BT and Wifi configurations
         configureTimerangeState();
@@ -312,6 +317,8 @@ public class SmarterWifiService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        eventBus.unregister(this);
 
         shutdown = true;
     }
@@ -536,28 +543,24 @@ public class SmarterWifiService extends Service {
     };
 
     // Set current tower or fetch current tower
-    private void handleCellLocation(CellLocation location) {
+    private void handleCellLocation(CellLocationCommon location) {
         if (location == null) {
-            location = telephonyManager.getCellLocation();
+            location = new CellLocationCommon(telephonyManager.getCellLocation());
         }
 
         LogAlias.d("smarter", "Handling cell location, going to kick curtower and wifistate");
-        setCurrentTower(new CellLocationCommon(location));
+        setCurrentTower(location);
         // configureWifiState();
     }
 
-    private class SmarterPhoneListener extends PhoneStateListener {
-        @Override
-        public void onCellLocationChanged(CellLocation location) {
-            LogAlias.d("smarter", "celllocation changeded, calling directly");
-            handleCellLocation(location);
-        }
+    @Subscribe
+    public void onEvent(EventCellTower c) {
+        handleCellLocation(c.getLocation());
+    }
 
-        @Override
-        public void onCellInfoChanged(List<CellInfo> infos) {
-            LogAlias.d("smarter", "cellinfo changed, spoofing via getcellocation");
-            handleCellLocation(telephonyManager.getCellLocation());
-        }
+    @Produce
+    public EventCellTower produceCellLocation() {
+        return new EventCellTower(telephonyManager.getCellLocation());
     }
 
     // Set the current tower and figure out what our tower state is

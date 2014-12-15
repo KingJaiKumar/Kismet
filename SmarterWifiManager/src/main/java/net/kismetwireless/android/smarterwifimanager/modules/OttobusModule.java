@@ -3,6 +3,7 @@ package net.kismetwireless.android.smarterwifimanager.modules;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
+import net.kismetwireless.android.smarterwifimanager.services.SmarterPhoneStateListener;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 import net.kismetwireless.android.smarterwifimanager.ui.MainActivity;
@@ -20,6 +21,8 @@ import dagger.Provides;
 @Module(
         injects = {
                 SmarterWifiService.class, SmarterWifiServiceBinder.class,
+
+                SmarterPhoneStateListener.class,
 
                 MainActivity.class, QuickConfigDialog.class
 

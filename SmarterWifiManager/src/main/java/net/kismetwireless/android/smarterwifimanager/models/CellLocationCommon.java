@@ -15,6 +15,9 @@ public class CellLocationCommon {
     private long towerId;
     private boolean valid = true;
 
+    // "halfbad" towers look weird but we do what we can with them
+    private boolean halfbad = false;
+
     public CellLocationCommon(CellLocation l) {
         if (l == null) {
             valid = false;
@@ -30,7 +33,7 @@ public class CellLocationCommon {
         // LogAlias.d("smarter", "gsm lac " + gsm.getLac() + " cid " + gsm.getCid() + " psc " + gsm.getPsc());
 
         if (gsm.getLac() < 0 && gsm.getCid() < 0) {
-            LogAlias.d("smarter", "gsm tower lac or cid negative, discarding");
+            LogAlias.d("smarter", "gsm tower lac and cid negative, invalid result");
             valid = false;
             towerId = -1;
             return;
@@ -43,6 +46,7 @@ public class CellLocationCommon {
             LogAlias.d("smarter", "gsm tower problem:  valid tower lac " + gsm.getLac() + " cid " + gsm.getCid() + " but negative result, kluging to positive");
             towerId = Math.abs(towerId);
             valid = true;
+            halfbad = true;
         }
 
         // LogAlias.d("smarter", "towerid " + towerId);
@@ -54,7 +58,7 @@ public class CellLocationCommon {
 
     public void setCdmaLocation(CdmaCellLocation cdma) {
         if (cdma.getNetworkId() < 0 && cdma.getSystemId() < 0 && cdma.getBaseStationId() < 0) {
-            LogAlias.d("smarter", "cdma nid/sid/bsid negative, discarding");
+            LogAlias.d("smarter", "cdma nid, sid, and bsid negative, invalid");
             valid = false;
             towerId = -1;
             return;
@@ -67,6 +71,7 @@ public class CellLocationCommon {
             LogAlias.d("smarter", "cdma tower problem:  valid tower nid " + cdma.getNetworkId() + " sid " + cdma.getSystemId() + " bsid " + cdma.getBaseStationId() + " but negative result, kluging to positive");
             towerId = Math.abs(towerId);
             valid = true;
+            halfbad = true;
         }
 
     }
@@ -80,6 +85,14 @@ public class CellLocationCommon {
             return towerId;
 
         return -1;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public boolean isHalfbad() {
+        return halfbad;
     }
 
     public boolean equals(CellLocationCommon c) {

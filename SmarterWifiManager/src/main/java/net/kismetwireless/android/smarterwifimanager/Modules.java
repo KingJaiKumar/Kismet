@@ -1,6 +1,7 @@
 package net.kismetwireless.android.smarterwifimanager;
 
 import net.kismetwireless.android.smarterwifimanager.modules.ContextModule;
+import net.kismetwireless.android.smarterwifimanager.modules.DatabaseModule;
 import net.kismetwireless.android.smarterwifimanager.modules.OttobusModule;
 import net.kismetwireless.android.smarterwifimanager.modules.SmarterServiceModule;
 
@@ -12,7 +13,8 @@ final public class Modules {
         return new Object[] {
                 new ContextModule(app),
                 new OttobusModule(),
-                new SmarterServiceModule()
+                new SmarterServiceModule(),
+                new DatabaseModule()
         };
     }
 

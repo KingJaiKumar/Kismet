@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.preference.PreferenceManager;
@@ -18,6 +19,7 @@ import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiConnected;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisabled;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisconnected;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiEnabled;
 
 import javax.inject.Inject;
@@ -46,23 +48,44 @@ public class NetworkReceiver extends BroadcastReceiver {
         }
 
         try {
+            LogAlias.d("smarter", "bcast rx: " + intent.getAction());
+
             // Collapse upping/up and downing/down status into single events
             if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
+                LogAlias.d("smarter", "rx: Wifi_state_changed");
+
                 int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
                 int oldWifiState = intent.getIntExtra(WifiManager.EXTRA_PREVIOUS_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
 
-                if ((oldWifiState == WifiManager.WIFI_STATE_DISABLED || oldWifiState == WifiManager.WIFI_STATE_DISABLING) &&
-                        (wifiState == WifiManager.WIFI_STATE_ENABLED || wifiState == WifiManager.WIFI_STATE_ENABLING)) {
+                LogAlias.d("smarter", "wifi_state_changed old: " + oldWifiState + " new: " + wifiState);
+
+                if ((oldWifiState != WifiManager.WIFI_STATE_ENABLED && oldWifiState != WifiManager.WIFI_STATE_ENABLING) &&
+                        (wifiState == WifiManager.WIFI_STATE_ENABLING || wifiState == WifiManager.WIFI_STATE_ENABLED)) {
+                    LogAlias.d("smarter", "Generating event: Wifi enabled");
                     eventBus.post(new EventWifiEnabled());
-                } else if ((wifiState == WifiManager.WIFI_STATE_DISABLED || wifiState == WifiManager.WIFI_STATE_DISABLING) &&
-                        (oldWifiState == WifiManager.WIFI_STATE_ENABLED || oldWifiState == WifiManager.WIFI_STATE_ENABLING)) {
+                } else if ((oldWifiState != WifiManager.WIFI_STATE_DISABLING && oldWifiState != WifiManager.WIFI_STATE_DISABLED) &&
+                        (wifiState == WifiManager.WIFI_STATE_DISABLED || wifiState == WifiManager.WIFI_STATE_DISABLING)) {
+                    LogAlias.d("smarter", "Generating event: Wifi disabled");
                     eventBus.post(new EventWifiDisabled());
                 }
             } else if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
-                final NetworkInfo ni = (NetworkInfo) intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                LogAlias.d("smarter", "rx: Network state changed");
 
-                if (ni.getType() == ConnectivityManager.TYPE_WIFI && ni.isConnected()) {
-                    eventBus.post(new EventWifiConnected());
+                NetworkInfo ni = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+
+                if (ni != null && ni.getType() == ConnectivityManager.TYPE_WIFI) {
+
+                    WifiInfo wi = intent.getParcelableExtra(WifiManager.EXTRA_WIFI_INFO);
+
+                    if (ni.getState() == NetworkInfo.State.CONNECTED) {
+                        LogAlias.d("smarter", "Generating event: Wifi connected " + wi.toString());
+                        eventBus.post(new EventWifiConnected(wi));
+                    } else if (ni.getState() == NetworkInfo.State.DISCONNECTED) {
+                        LogAlias.d("smarter", "Generating event: Wifi disconnected");
+                        eventBus.post(new EventWifiDisconnected());
+                    } else {
+                        LogAlias.d("smarter", "NetworkReceiver got wifi state " + ni.getState() + " but it's not being tracked");
+                    }
                 }
             }
 
@@ -108,8 +131,6 @@ public class NetworkReceiver extends BroadcastReceiver {
 
                 // LogAlias.d("smarter", "bcast rx got bt device " + bluetoothDevice.getAddress() + " " + bluetoothDevice.getName() + " state " + state);
             }
-
-            LogAlias.d("smarter", "bcast rx: " + intent.getAction());
 
             if (intent.getAction().equals(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)) {
                 final int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
