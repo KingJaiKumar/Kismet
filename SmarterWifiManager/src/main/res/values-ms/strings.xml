@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Smarter Wi-Fi Manager</string>
+    <string name="prefs_name">Keutamaan</string>
+
+    <string name="action_settings">Penetapan</string>
+    <string name="action_add_timerange">Tambah julat masa</string>
+
+    <string name="hello_world">Helo dunia!</string>
+    <string name="prefs_item_shutdowntime">Masa Penutupan Wi-Fi</string>
+    <string name="prefs_item_shutdowntime_explanation">Jika anda dapati Wi-Fi dilumpuhkan ketika menambahkan rangkaian baharu, atau sebaliknya ditogol terlalu kerap, anda boleh meningkatkan masa rehat sebelum ia dipadamkan.</string>
+    <string name="prefs_item_notification">Tunjuk pemberitahuan</string>
+    <string name="prefs_item_notification_explanation">Memadamkan pemberitahuan boleh mengakibatkan perkhidmatan latar belakang dalam keadaan ingatan yang rendah, jika anda perasan masalah, biarkannya.</string>
+    <string name="prefs_item_boot">Mula secara automatik</string>
+    <string name="prefs_item_boot_explanation">Mulakan perkhidmatan Smarter Wi-Fi Manager secara automatik semasa dihidupkan atau Wi-Fi dan menara sel berubah.</string>
+    <string name="prefs_item_towermaintenance">Penyelenggaraan Lokasi</string>
+    <string name="prefs_item_towermaintenance_explanation">Pastikan senarai lokasi daripada menjadi terlalu besar dengan menggunakan penyelenggaraan bijak.</string>
+
+    <string name="tab_main">Lebih pintar</string>
+    <string name="tab_ignore">Abaikan</string>
+    <string name="tab_learned">Dipelajari</string>
+    <string name="tab_bluetooth">Bluetooth</string>
+    <string name="tab_time">Masa</string>
+
+    <string name="pref_enable">dibolehkan_sistem</string>
+    <string name="pref_learn">dibolehkan_sistem</string>
+
+    <string name="service_desc">Perkhidmatan Smarter Wi-Fi </string>
+
+    <string name="manage_radio_switch">Menguruskan radio</string>
+    <string name="manage_radio_explanation">Mengawal Wi-Fi dan Bluetooth berdasarkan lokasi dipelajari secara automatik, julat masa, dan kriteria lain</string>
+
+    <string name="learn_wifi_switch">Lokasi Belajar Secara Automatik</string>
+
+    <string name="manage_wifi_explanation">Mengawal radio Wi-Fi berdasarkan lokasi dipelajari secara automatik dan kriteria lain</string>
+    <string name="autolearn_wifi_description">Belajar secara automatik apabila membolehkan Wi-Fi berdasarkan identiti menara sel. Untuk mula mempelajari lokasi baharu, bolehkan Wi-Fi secara biasa.</string>
+    <string name="ssid_blacklist_desc">Sambil bersambung kepada SSID yang diabaikan, pembelajaran lokasi automatik akan dilumpuhkan. Ia akan dibolehkan semula apabila anda meninggalkan rangkaian terhalang.</string>
+    <string name="learned_wifi_description">Pengenal pasti menara sel dikaitkan kepada nama rangkaian Wi-Fi dalam mod belajar secara automatik. Jika rangkaian dihidupkan pada masa yang tidak sesuai, mengeluarkan masukannya akan set semula keadaan rangkaian itu.</string>
+    <string name="delete_dialog_title">Hapuskan rangkaian yang diketahui?</string>
+    <string name="delete_learned_message">Menghapuskan rangkaian yang dipelajari akan set semula semua perkaitannya kepada menara yang diketahui. Jika belajar secara automatik dibolehkan, rangkaian akan mula mempelajari menara sekali lagi. Untuk melumpuhkan belajar secara automatik untuk rangkaian, tetapkan rangkaian kepada  "abai" dalam tab Abai</string>
+    <string name="bluetooth_blacklist_description">Wi-Fi dan belajar secara automatik akan dilumpuhkan ketika bersambung kepada peranti Bluetooth yang telah disenaraihitamkan.</string>
+    <string name="ignoring_dialog_network">Mengabaikan rangkaian</string>
+    <string name="ignoring_dialog_description">Mengabaikan rangkaian tidak akan menghapuskan secara automatik lokasi yang telah dipelajari. Anda boleh menghapuskan mereka sekarang atau melalui tab Pembelajaran, atau anda boleh meninggalkan mereka jika anda ingin terus membolehkan Wi-Fi berdasarkan kedudukan yang diketahui, tetapi tidak mahu membelajari lokasi baharu tambahan.</string>
+    <string name="ignoring_dialog_leave">Meninggalkan</string>
+    <string name="ignoring_dialog_delete">Hapus</string>
+    <string name="shutdown_time_30s">30 saat</string>
+    <string name="shutdown_time_1m">Satu minit</string>
+    <string name="shutdown_time_2m">Dua minit</string>
+    <string name="time_range_desc">Julat masa tetap membatal kaedah kawalan lain dan dapat membolehkan atau melumpuhkan radio dalam suatu tempoh masa.</string>
+    <string name="drawer_open">Buka pelukis navigasi</string>
+    <string name="drawer_close">Tutup pelukis navigasi</string>
+
+    <string name="nav_ignore">Rangkaian yang diabaikan</string>
+    <string name="nav_bluetooth">Bluetooth</string>
+    <string name="nav_time">Julat masa</string>
+    <string name="nav_learned">Rangkaian yang dipelajari</string>
+
+    <string name="explanation_autolearned">Lokasi yang dipelajari terdahulu</string>
+    <string name="explanation_wifi_idle">Wi-Fi dibolehkan tetapi tidak bersambung</string>
+    <string name="explanation_wifi_blocked">Wi-Fi dihalang</string>
+    <string name="explanation_wifi_enabled">Wi-Fi dibolehkan</string>
+    <string name="explanation_wifi_enabled_cell">Dalam lokasi belajar secara automatik</string>
+    <string name="explanation_wifi_disabled">Wi-Fi dilumpuhkan</string>
+    <string name="explanation_wifi_disabled_cell">Tidak hampir kepada lokasi yang diketahui</string>
+    <string name="explanation_wifi_disabled_bluetooth">Bersambung kepada peranti Bluetooth yang telah disenaraihitamkan.</string>
+    <string name="explanation_wifi_management_disabled">Pengurusan Wi-Fi dilumpuhkan</string>
+    <string name="explanation_wifi_management_disabled_user">Pengurusan dipadamkan</string>
+    <string name="explanation_wifi_management_disabled_cell">Tiada menara sel dalam julat</string>
+    <string name="explanation_wifi_geofence_exclude">Dilumpuhkan oleh geofence</string>
+    <string name="explanation_wifi_geofence_include">Dibolehkan oleh geofence</string>
+    <string name="explanation_wifi_time_include">Dibolehkan oleh julat masa</string>
+    <string name="explanation_wifi_time_exclude">Dilumpuhkan oleh julat masa</string>
+    <string name="explanation_wifi_disabled_towerid">Bersambung kepada menara sel yang telah disenaraihitamkan.</string>
+    <string name="explanation_wifi_ignore_ssidblacklist">Bersambung kepada SSID yang diabaikan</string>
+    <string name="explanation_wifi_forced_user_enabled">Wi-Fi dihidupkan paksa</string>
+    <string name="explanation_wifi_forced_user_disabled">Wi-Fi dipadamkan paksa</string>
+    <string name="explanation_wifi_ignore_airplane">Dalam mod kapal terbang</string>
+    <string name="explanation_wifi_ignore_tethered">Menyambung / berkongsi sambungan</string>
+    <string name="explanation_wifi_ignore_sleeppolicy">Mengabaikan disebabkan oleh dasar tidur</string>
+    <string name="explanation_wifi_idle_disable">Wi-Fi melahu dalam lokasi yang tidak diketahui, menunggu untuk dilumpuhkan</string>
+    <string name="explanation_wifi_neverrun">Buka Smarter Wi-Fi Manager untuk bermula mengawal Wi-Fi anda!</string>
+    <string name="explanation_unknown">Sebab yang tidak diketahui</string>
+
+    <string name="wifistate_blocked">Wi-Fi dipadamkan paksa</string>
+    <string name="wifistate_ignore">Tidak menguruskan Wi-Fi</string>
+    <string name="wifistate_on">Wi-Fi bersambung</string>
+    <string name="wifistate_off">Wi-Fi dilumpuhkan</string>
+    <string name="wifistate_idle">Wi-Fi dibolehkan tetapi tiada rangkaian</string>
+
+    <string name="title_activity_ssid_blacklist">Rangkaian Diabaikan</string>
+    <string name="title_activity_bluetooth_blacklist">Bluetooth</string>
+    <string name="title_activity_timerange">Julat Masa</string>
+    <string name="title_activity_learned">Rangkaian Yang Dipelajari</string>
+
+    <string name="timerange_delete_text">Hapus Julat Masa</string>
+    <string name="timerange_no_effect">Julat masa tidak mengawal apapun</string>
+    <string name="timerange_no_days">Masa tidak berlaku pada sebarang hari</string>
+    <string name="timerange_disabled_text">Julat masa dilumpuhkan</string>
+    <string name="timerange_control_wifi">Wi-Fi</string>
+    <string name="timerange_control_bluetooth">Bluetooth</string>
+    <string name="timerange_control_on">hidup</string>
+    <string name="timerange_control_off">padam</string>
+
+    <string name="timerange_controlbutton_wifi">Menguruskan Wi-Fi</string>
+    <string name="timerange_controlbutton_bt">Menguruskan Bluetooth</string>
+
+    <string name="timerange_dialog_delete_title">Hapus julat masa?</string>
+    <string name="timerange_dialog_delete_cancel">Batal</string>
+    <string name="timerange_dialog_delete_ok">Hapus</string>
+    <string name="timerange_dialog_delete_text">Adakah anda pasti anda ingin menghapuskan julat masa ini?</string>
+
+    <string name="range_mon">Isnin</string>
+    <string name="range_tue">Selasa</string>
+    <string name="range_wed">Rabu</string>
+    <string name="range_thu">Khamis</string>
+    <string name="range_fri">Jumaat</string>
+    <string name="range_sat">Sabtu</string>
+    <string name="range_sun">Ahad</string>
+
+    <string name="range_fail_nodays">Tiada hari terpilih</string>
+    <string name="range_fail_notime">Tiada masa ditetapkan</string>
+    <string name="range_fail_nocontrol">Tiada kesan pada Wi-Fi atau Bluetooth</string>
+    <string name="quicker_enable">Smarter Wi-Fi Manager</string>
+    <string name="quicker_wifi">Wi-Fi</string>
+    <string name="quicker_bt">Bluetooth</string>
+    <string name="quicker_startswm">Smarter Wi-Fi Manager</string>
+    <string name="quicker_settings">Penetapan Wi-Fi Android </string>
+    <string name="quicker_close">Tutup</string>
+    <string name="quicker_explanation">Smarter Wi-Fi Manager boleh melumpuhkan atau membolehkan semula radio bergantung pada konfigurasi semasa.</string>
+    <string name="quicker_forget">Terlupa lokasi semasa</string>
+
+    <string name="nag_tower_maintenance">Smarter Wi-Fi Manager sekarang mempunyai kaedah untuk mengekalkan senarai lokasi secara automatik untuk rangkaian Wi-Fi. Membolehkannya dengan pergi ke Keutamaan dan menghidupkan Penyelenggaraan Lokasi!</string>
+    <string name="nag_tower_maintenance_prefs">Pergi ke keutamaan</string>
+    <string name="nag_tower_maintenance_cancel">Tak usahlah terima kasih</string>
+
+</resources>
