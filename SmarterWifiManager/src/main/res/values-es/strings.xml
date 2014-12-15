@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gestor inteligente de Wi-Fi</string>
+    <string name="prefs_name">Preferencias</string>
+
+    <string name="action_settings">Ajustes</string>
+    <string name="action_add_timerange">Agregar rango horario</string>
+
+    <string name="hello_world">¡Hola mundo!</string>
+    <string name="prefs_item_shutdowntime">Hora de apagado de Wi-Fi</string>
+    <string name="prefs_item_shutdowntime_explanation">Si nota que el Wi-Fi está deshabilitado al agregar una red nueva o si se prende y apaga muy seguido, puede aumentar el tiempo de desconexión antes de que se apague.</string>
+    <string name="prefs_item_notification">Mostrar notificación</string>
+    <string name="prefs_item_notification_explanation">Si apaga las notificaciones, puede afectar el servicio en segundo plano en casos de poca memoria; si detecta problemas, déjelas encendidas.</string>
+    <string name="prefs_item_boot">Iniciar automáticamente</string>
+    <string name="prefs_item_boot_explanation">Iniciar automáticamente servicio Gestor inteligente de Wi-Fi al iniciar o cuando cambia Wi-Fi o torre celular.</string>
+    <string name="prefs_item_towermaintenance">Mantenimiento de ubicación</string>
+    <string name="prefs_item_towermaintenance_explanation">Evite que la lista de ubicaciones sea muy extensa mediante un mantenimiento inteligente.</string>
+
+    <string name="tab_main">Inteligente</string>
+    <string name="tab_ignore">Ignorar</string>
+    <string name="tab_learned">Guardada</string>
+    <string name="tab_bluetooth">Bluetooth</string>
+    <string name="tab_time">Hora</string>
+
+    <string name="pref_enable">habilitar_sistema</string>
+    <string name="pref_learn">habilitar_recordar</string>
+
+    <string name="service_desc">Servicio inteligente de Wi-Fi</string>
+
+    <string name="manage_radio_switch">Gestionar radios</string>
+    <string name="manage_radio_explanation">Controlar Wi-Fi y Bluetooth según ubicaciones guardadas automáticamente, rangos horarios y otros criterios.</string>
+
+    <string name="learn_wifi_switch">Guardar ubicaciones automáticamente</string>
+
+    <string name="manage_wifi_explanation">Controlar radio Wi-Fi según ubicaciones guardadas automáticamente y otros criterios.</string>
+    <string name="autolearn_wifi_description">Recordar cuándo habilitar automáticamente Wi-Fi según identidades de torres celulares. Para empezar a recordar una nueva ubicación, active el Wi-Fi normalmente.</string>
+    <string name="ssid_blacklist_desc">Mientras esté conectado a un SSID, se deshabilitará el guardado automático de ubicaciones. Se volverá a habilitar cuando abandone la red bloqueada.</string>
+    <string name="learned_wifi_description">Los identificadores de torres celulares se trazan en mapas en nombres de redes Wi-Fi en modo de guardado automático. Si una red se enciende en horas inadecuadas, al borrarla se restaurará el estado de esa red.</string>
+    <string name="delete_dialog_title">¿Borrar red guardada?</string>
+    <string name="delete_learned_message">Si borra una red guardada, se restablecerán todas las asociaciones con las torres conocidas. Si se habilita el guardado automático, la red empezará a guardar torres nuevamente. Para deshabilitar el guardado automático de una red, configure la red en &quot;ignorar&quot; en la pestaña Ignorar.</string>
+    <string name="bluetooth_blacklist_description">Wi-Fi y guardado automático se deshabilitarán mientras estén conectadas con dispositivos Bluetooth en lista negra.</string>
+    <string name="ignoring_dialog_network">Cómo ignorar redes</string>
+    <string name="ignoring_dialog_description">Si ignora una red, no se borrarán automáticamente las ubicaciones guardadas. Puede eliminarlas ahora o con la pestaña Recordar, o puede conservarlas si desea continuar habilitando Wi-Fi según ubicaciones conocidas y no desea guardar nuevas ubicaciones.</string>
+    <string name="ignoring_dialog_leave">Olvidar</string>
+    <string name="ignoring_dialog_delete">Borrar</string>
+    <string name="shutdown_time_30s">30 segundos</string>
+    <string name="shutdown_time_1m">Un minuto</string>
+    <string name="shutdown_time_2m">Dos minutos</string>
+    <string name="time_range_desc">Los rangos horarios fijos anulan otros métodos de control y permiten habilitar y deshabilitar radios dentro de un período.</string>
+    <string name="drawer_open">Abrir barra de navegación</string>
+    <string name="drawer_close">Cerrar barra de navegación</string>
+
+    <string name="nav_ignore">Redes ignoradas</string>
+    <string name="nav_bluetooth">Bluetooth</string>
+    <string name="nav_time">Rangos horarios</string>
+    <string name="nav_learned">Redes guardadas</string>
+
+    <string name="explanation_autolearned">Ubicación guardada anteriormente</string>
+    <string name="explanation_wifi_idle">Wi-Fi habilitada pero no conectada</string>
+    <string name="explanation_wifi_blocked">Wi-Fi bloqueada</string>
+    <string name="explanation_wifi_enabled">Wi-Fi habilitada</string>
+    <string name="explanation_wifi_enabled_cell">En ubicaciones guardadas automáticamente</string>
+    <string name="explanation_wifi_disabled">Wi-Fi deshabilitada</string>
+    <string name="explanation_wifi_disabled_cell">Lejos de ubicación conocida</string>
+    <string name="explanation_wifi_disabled_bluetooth">Conectado a dispositivo de Bluetooth en lista negra</string>
+    <string name="explanation_wifi_management_disabled">Gestión de Wi-Fi deshabilitada</string>
+    <string name="explanation_wifi_management_disabled_user">Gestión apagada</string>
+    <string name="explanation_wifi_management_disabled_cell">Torres celulares fuera de alcance</string>
+    <string name="explanation_wifi_geofence_exclude">Deshabilitado por geocerca</string>
+    <string name="explanation_wifi_geofence_include">Habilitado por geocerca</string>
+    <string name="explanation_wifi_time_include">Habilitado por rango horario</string>
+    <string name="explanation_wifi_time_exclude">Deshabilitado por rango horario</string>
+    <string name="explanation_wifi_disabled_towerid">Conectado a torre celular en lista negra</string>
+    <string name="explanation_wifi_ignore_ssidblacklist">Conectado a SSID ignorado</string>
+    <string name="explanation_wifi_forced_user_enabled">Forzar encendido Wi-Fi</string>
+    <string name="explanation_wifi_forced_user_disabled">Forzar apagado Wi-Fi</string>
+    <string name="explanation_wifi_ignore_airplane">En modo avión</string>
+    <string name="explanation_wifi_ignore_tethered">Anclaje a red/compartir conexión</string>
+    <string name="explanation_wifi_ignore_sleeppolicy">Ignorar debido a política de inactividad</string>
+    <string name="explanation_wifi_idle_disable">Wi-Fi sin respuesta en ubicación desconocida, esperando para deshabilitar</string>
+    <string name="explanation_wifi_neverrun">Abrir Gestor inteligente de Wi-Fi para empezar a controlar su Wi-Fi.</string>
+    <string name="explanation_unknown">Motivo desconocido</string>
+
+    <string name="wifistate_blocked">Forzar apagado Wi-Fi</string>
+    <string name="wifistate_ignore">No gestiona Wi-Fi</string>
+    <string name="wifistate_on">Wi-Fi conectada</string>
+    <string name="wifistate_off">Wi-Fi deshabilitada</string>
+    <string name="wifistate_idle">Wi-Fi habilitada pero no hay redes</string>
+
+    <string name="title_activity_ssid_blacklist">Redes ignoradas</string>
+    <string name="title_activity_bluetooth_blacklist">Bluetooth</string>
+    <string name="title_activity_timerange">Rangos horarios</string>
+    <string name="title_activity_learned">Redes guardadas</string>
+
+    <string name="timerange_delete_text">Borrar rango horario</string>
+    <string name="timerange_no_effect">El rango horario no controla nada</string>
+    <string name="timerange_no_days">La hora no tiene ningún día</string>
+    <string name="timerange_disabled_text">Rango horario deshabilitado</string>
+    <string name="timerange_control_wifi">Wi-Fi</string>
+    <string name="timerange_control_bluetooth">Bluetooth</string>
+    <string name="timerange_control_on">encendido</string>
+    <string name="timerange_control_off">apagado</string>
+
+    <string name="timerange_controlbutton_wifi">Gestionar Wi-Fi</string>
+    <string name="timerange_controlbutton_bt">Gestionar Bluetooth</string>
+
+    <string name="timerange_dialog_delete_title">¿Borrar rango horario?</string>
+    <string name="timerange_dialog_delete_cancel">Cancelar</string>
+    <string name="timerange_dialog_delete_ok">Borrar</string>
+    <string name="timerange_dialog_delete_text">¿Está seguro de que desea borrar este rango horario?</string>
+
+    <string name="range_mon">Lun</string>
+    <string name="range_tue">Mar</string>
+    <string name="range_wed">Mié</string>
+    <string name="range_thu">Jue</string>
+    <string name="range_fri">Vie</string>
+    <string name="range_sat">Sáb</string>
+    <string name="range_sun">Dom</string>
+
+    <string name="range_fail_nodays">No se seleccionaron días</string>
+    <string name="range_fail_notime">No se fijó hora</string>
+    <string name="range_fail_nocontrol">No afecta a Wi-Fi o Bluetooth</string>
+    <string name="quicker_enable">Gestor inteligente de Wi-Fi</string>
+    <string name="quicker_wifi">Wi-Fi</string>
+    <string name="quicker_bt">Bluetooth</string>
+    <string name="quicker_startswm">Gestor inteligente de Wi-Fi</string>
+    <string name="quicker_settings">Ajustes de Wi-Fi de Android</string>
+    <string name="quicker_close">Cerrar</string>
+    <string name="quicker_explanation">El Gestor inteligente de Wi-Fi puede deshabilitar o rehabilitar radios según la configuración actual.</string>
+    <string name="quicker_forget">Olvidar ubicación actual</string>
+
+    <string name="nag_tower_maintenance">El Gestor inteligente de Wi-Fi ahora tiene un método para mantener automáticamente la lista de ubicaciones para una red Wi-Fi. Habilítela en Preferencias y active Mantenimiento de ubicación.</string>
+    <string name="nag_tower_maintenance_prefs">Ir a pref</string>
+    <string name="nag_tower_maintenance_cancel">No gracias</string>
+
+</resources>
