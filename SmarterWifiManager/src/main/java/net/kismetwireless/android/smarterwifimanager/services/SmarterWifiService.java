@@ -10,7 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
 import android.os.Handler;
@@ -31,6 +33,9 @@ import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventCellTower;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiConnected;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisconnected;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiState;
 import net.kismetwireless.android.smarterwifimanager.models.CellLocationCommon;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterBluetooth;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterDBSource;
@@ -560,7 +565,72 @@ public class SmarterWifiService extends Service {
 
     @Produce
     public EventCellTower produceCellLocation() {
+        LogAlias.d("smarter", "service produceCellLocation triggered");
         return new EventCellTower(telephonyManager.getCellLocation());
+    }
+
+    @Subscribe
+    public void onEvent(EventWifiConnected e) {
+        configureWifiState();
+    }
+
+    @Produce
+    public EventWifiConnected produceWifiConnected() {
+        WifiInfo wi = wifiManager.getConnectionInfo();
+
+        if (wi != null && wi.getSupplicantState() == SupplicantState.COMPLETED) {
+            LogAlias.d("smarter", "service produceWifiConnected " + wi.toString());
+            return new EventWifiConnected(wi);
+        }
+
+        LogAlias.d("smarter", "service produceWifiConnected null, not connected");
+        return null;
+    }
+
+    @Subscribe
+    public void onEvent(EventWifiDisconnected e) {
+        configureWifiState();
+    }
+
+    @Produce
+    public EventWifiDisconnected produceWifiDisconnected() {
+        int state = wifiManager.getWifiState();
+
+        if (state == WifiManager.WIFI_STATE_ENABLED) {
+            WifiInfo wi = wifiManager.getConnectionInfo();
+
+            if (wi == null) {
+                LogAlias.d("smarter", "service produceWifiDisconnected wifi enabled, connection null, producing disabled");
+                return new EventWifiDisconnected();
+            }
+
+            if (wi.getSupplicantState() != SupplicantState.COMPLETED) {
+                LogAlias.d("smarter", "service produceWifiDisconnected wifi enabled, but supplicant not completed, producing disabled: " + wi);
+                return new EventWifiDisconnected();
+            }
+        }
+
+        LogAlias.d("smarter", "service produceWifiDisconnected wifi not enabled, or enabled and we were connected, not producing anything.  state: " + state);
+        return null;
+
+    }
+
+    @Subscribe
+    public void onEvent(EventWifiState e) {
+        configureWifiState();
+    }
+
+    @Produce
+    public EventWifiState produceWifiState() {
+        int state = wifiManager.getWifiState();
+
+        if (state == WifiManager.WIFI_STATE_ENABLED || state == WifiManager.WIFI_STATE_ENABLING) {
+            LogAlias.d("smarter", "service produceWifiDisabled state enabled or enabling");
+            return new EventWifiState(true);
+        }
+
+        LogAlias.d("smarter", "service produceWifiDisabled state disabled, disabling, or unknown");
+        return new EventWifiState(false);
     }
 
     // Set the current tower and figure out what our tower state is

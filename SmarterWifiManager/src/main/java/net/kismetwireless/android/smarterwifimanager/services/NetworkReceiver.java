@@ -18,9 +18,8 @@ import com.squareup.otto.Bus;
 import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiConnected;
-import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisabled;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisconnected;
-import net.kismetwireless.android.smarterwifimanager.events.EventWifiEnabled;
+import net.kismetwireless.android.smarterwifimanager.events.EventWifiState;
 
 import javax.inject.Inject;
 
@@ -62,11 +61,11 @@ public class NetworkReceiver extends BroadcastReceiver {
                 if ((oldWifiState != WifiManager.WIFI_STATE_ENABLED && oldWifiState != WifiManager.WIFI_STATE_ENABLING) &&
                         (wifiState == WifiManager.WIFI_STATE_ENABLING || wifiState == WifiManager.WIFI_STATE_ENABLED)) {
                     LogAlias.d("smarter", "Generating event: Wifi enabled");
-                    eventBus.post(new EventWifiEnabled());
+                    eventBus.post(new EventWifiState(true));
                 } else if ((oldWifiState != WifiManager.WIFI_STATE_DISABLING && oldWifiState != WifiManager.WIFI_STATE_DISABLED) &&
                         (wifiState == WifiManager.WIFI_STATE_DISABLED || wifiState == WifiManager.WIFI_STATE_DISABLING)) {
                     LogAlias.d("smarter", "Generating event: Wifi disabled");
-                    eventBus.post(new EventWifiDisabled());
+                    eventBus.post(new EventWifiState(false));
                 }
             } else if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                 LogAlias.d("smarter", "rx: Network state changed");
@@ -90,6 +89,7 @@ public class NetworkReceiver extends BroadcastReceiver {
             }
 
             // TODO - remove this once we finish converting to eventbus
+            /*
             if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
                 serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
                     public void run(SmarterWifiServiceBinder b) {
@@ -111,6 +111,8 @@ public class NetworkReceiver extends BroadcastReceiver {
                 });
 
             }
+            */
+
             if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                 serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
                     public void run(SmarterWifiServiceBinder b) {

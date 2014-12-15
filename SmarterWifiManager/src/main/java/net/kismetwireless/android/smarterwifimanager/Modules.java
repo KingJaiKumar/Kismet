@@ -4,6 +4,7 @@ import net.kismetwireless.android.smarterwifimanager.modules.ContextModule;
 import net.kismetwireless.android.smarterwifimanager.modules.DatabaseModule;
 import net.kismetwireless.android.smarterwifimanager.modules.OttobusModule;
 import net.kismetwireless.android.smarterwifimanager.modules.SmarterServiceModule;
+import net.kismetwireless.android.smarterwifimanager.modules.WorldStateModule;
 
 /**
  * Created by dragorn on 11/30/14.
@@ -14,7 +15,8 @@ final public class Modules {
                 new ContextModule(app),
                 new OttobusModule(),
                 new SmarterServiceModule(),
-                new DatabaseModule()
+                new DatabaseModule(),
+                new WorldStateModule()
         };
     }
 
