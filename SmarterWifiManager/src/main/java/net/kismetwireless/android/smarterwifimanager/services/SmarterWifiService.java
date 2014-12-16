@@ -41,6 +41,7 @@ import net.kismetwireless.android.smarterwifimanager.models.SmarterBluetooth;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterDBSource;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterTimeRange;
+import net.kismetwireless.android.smarterwifimanager.models.SmarterWorldState;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
 
 import java.lang.reflect.InvocationTargetException;
@@ -178,6 +179,9 @@ public class SmarterWifiService extends Service {
 
     @Inject
     SmarterDBSource dbSource;
+
+    @Inject
+    SmarterWorldState worldState;
 
     @Override
     public void onCreate() {
@@ -560,6 +564,8 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventCellTower c) {
+        worldState.setLastCellLocation(c.getLocation());
+
         handleCellLocation(c.getLocation());
     }
 
@@ -571,6 +577,8 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiConnected e) {
+        worldState.setLastWifiInfo(e.getWifiInfo());
+
         configureWifiState();
     }
 
@@ -589,6 +597,8 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiDisconnected e) {
+        worldState.setLastWifiInfo(null);
+
         configureWifiState();
     }
 
@@ -617,6 +627,8 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiState e) {
+        worldState.setWifiEnabled(e.isEnabled());
+
         configureWifiState();
     }
 
@@ -767,6 +779,8 @@ public class SmarterWifiService extends Service {
     public void configureWifiState() {
         curState = getWifiState();
         targetState = getShouldWifiBeEnabled();
+
+        LogAlias.d("smarter", "World state: " + worldState.toString());
 
         LogAlias.d("smarter", "configureWifiState current " + curState + " target " + targetState);
 

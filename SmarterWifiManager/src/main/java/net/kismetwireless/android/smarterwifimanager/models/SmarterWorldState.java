@@ -48,6 +48,28 @@ public class SmarterWorldState {
         nextTimeRange = null;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        if (lastCellLocation != null) {
+            sb.append("CELL: ");
+            sb.append(lastCellLocation.toString());
+            sb.append("\n");
+        } else {
+            sb.append("NO CELL\n");
+        }
+
+        if (lastWifiInfo != null) {
+            sb.append("WIFI: ");
+            sb.append(lastWifiInfo.toString());
+            sb.append("\n");
+        } else {
+            sb.append("NO WIFI\n");
+        }
+
+        return sb.toString();
+    }
+
     public CellLocationCommon getLastCellLocation() {
         return lastCellLocation;
     }
@@ -94,5 +116,29 @@ public class SmarterWorldState {
 
     public void setBluetoothEnabled(boolean bluetoothEnabled) {
         this.bluetoothEnabled = bluetoothEnabled;
+    }
+
+    public ControlType getControlType() {
+        return controlType;
+    }
+
+    public void setControlType(ControlType controlType) {
+        this.controlType = controlType;
+    }
+
+    public WifiState getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(WifiState currentState) {
+        this.currentState = currentState;
+    }
+
+    public WifiState getTargetState() {
+        return targetState;
+    }
+
+    public void setTargetState(WifiState targetState) {
+        this.targetState = targetState;
     }
 }

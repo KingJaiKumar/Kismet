@@ -6,14 +6,22 @@ import android.telephony.gsm.GsmCellLocation;
 
 import net.kismetwireless.android.smarterwifimanager.LogAlias;
 
+import java.util.Date;
+
 /**
  * Created by dragorn on 8/30/13.
  *
  * Mangle various cell location types
  */
 public class CellLocationCommon {
+    enum LocationType {
+        GSM, CDMA
+    };
+
     private long towerId;
     private boolean valid = true;
+    private LocationType type = LocationType.GSM;
+    private long seenTime;
 
     // "halfbad" towers look weird but we do what we can with them
     private boolean halfbad = false;
@@ -27,10 +35,14 @@ public class CellLocationCommon {
         } else if (l instanceof CdmaCellLocation) {
             setCdmaLocation((CdmaCellLocation) l);
         }
+
+        seenTime = System.currentTimeMillis();
     }
 
     public void setGsmLocation(GsmCellLocation gsm) {
         // LogAlias.d("smarter", "gsm lac " + gsm.getLac() + " cid " + gsm.getCid() + " psc " + gsm.getPsc());
+
+        type = LocationType.GSM;
 
         if (gsm.getLac() < 0 && gsm.getCid() < 0) {
             LogAlias.d("smarter", "gsm tower lac and cid negative, invalid result");
@@ -57,6 +69,8 @@ public class CellLocationCommon {
     }
 
     public void setCdmaLocation(CdmaCellLocation cdma) {
+        type = LocationType.CDMA;
+
         if (cdma.getNetworkId() < 0 && cdma.getSystemId() < 0 && cdma.getBaseStationId() < 0) {
             LogAlias.d("smarter", "cdma nid, sid, and bsid negative, invalid");
             valid = false;
@@ -93,6 +107,32 @@ public class CellLocationCommon {
 
     public boolean isHalfbad() {
         return halfbad;
+    }
+
+    public LocationType getType() {
+        return type;
+    }
+
+    public long getSeenTime() {
+        return seenTime;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("[");
+        if (!isValid())
+            sb.append("INVALID ");
+        if (isHalfbad())
+            sb.append("HALFBAD ");
+        sb.append(getType());
+        sb.append(" ");
+        sb.append(getTowerId());
+        sb.append(" Seen ");
+        sb.append(new Date(getSeenTime()).toString());
+        sb.append("]");
+
+        return sb.toString();
     }
 
     public boolean equals(CellLocationCommon c) {
