@@ -133,5 +133,6 @@
     <string name="nag_tower_maintenance">Smarter Wi-Fi Manager sekarang mempunyai kaedah untuk mengekalkan senarai lokasi secara automatik untuk rangkaian Wi-Fi. Membolehkannya dengan pergi ke Keutamaan dan menghidupkan Penyelenggaraan Lokasi!</string>
     <string name="nag_tower_maintenance_prefs">Pergi ke keutamaan</string>
     <string name="nag_tower_maintenance_cancel">Tak usahlah terima kasih</string>
+    <string name="html_locale">en</string>
 
 </resources>

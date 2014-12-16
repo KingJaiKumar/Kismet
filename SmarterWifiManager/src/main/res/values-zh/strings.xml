@@ -133,5 +133,6 @@
     <string name="nag_tower_maintenance">Smarter Wi-Fi Manager 现在有办法自动维护 Wi-Fi 网络的位置列表。通过设置首选项并打开位置维护启用它！</string>
     <string name="nag_tower_maintenance_prefs">设置首选项</string>
     <string name="nag_tower_maintenance_cancel">不用谢</string>
+    <string name="html_locale">en</string>
 
 </resources>

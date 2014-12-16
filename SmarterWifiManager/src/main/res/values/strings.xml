@@ -2,6 +2,9 @@
 <resources>
 
     <string name="app_name">Smarter Wi-Fi Manager</string>
+
+    <string name="html_locale">en</string>
+
     <string name="prefs_name">Preferences</string>
 
     <string name="action_settings">Settings</string>

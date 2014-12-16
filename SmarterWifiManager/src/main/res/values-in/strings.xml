@@ -133,5 +133,6 @@
     <string name="nag_tower_maintenance">Kini Manajer Smarter Wi-Fi memiliki metode untuk secara otomatis menjaga daftar lokasi untuk jaringan Wi-Fi.  Aktifkan itu dengan masuk ke Preferensi dan menghidupkan Pemeliharaan Lokasi!</string>
     <string name="nag_tower_maintenance_prefs">Masuk ke pref.</string>
     <string name="nag_tower_maintenance_cancel">Tidak, trims</string>
+    <string name="html_locale">en</string>
 
 </resources>

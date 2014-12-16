@@ -133,5 +133,6 @@
     <string name="nag_tower_maintenance">스마터 Wi-Fi 관리자는 현재 Wi-Fi 네트워크에 대한 위치 리스트를 자동으로 유지 관리하는 방법을 보유하고 있습니다.  프리퍼런스로 가서 위치 유지 관리를 켜서 활성화하십시오!</string>
     <string name="nag_tower_maintenance_prefs">프리퍼런스로 가기</string>
     <string name="nag_tower_maintenance_cancel">거부</string>
+    <string name="html_locale">en</string>
 
 </resources>

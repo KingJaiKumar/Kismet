@@ -133,5 +133,6 @@
     <string name="nag_tower_maintenance">El Gestor inteligente de Wi-Fi ahora tiene un método para mantener automáticamente la lista de ubicaciones para una red Wi-Fi. Habilítela en Preferencias y active Mantenimiento de ubicación.</string>
     <string name="nag_tower_maintenance_prefs">Ir a pref</string>
     <string name="nag_tower_maintenance_cancel">No gracias</string>
+    <string name="html_locale">es</string>
 
 </resources>

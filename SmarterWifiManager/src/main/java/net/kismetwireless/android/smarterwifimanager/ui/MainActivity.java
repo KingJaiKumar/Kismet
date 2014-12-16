@@ -199,7 +199,7 @@ public class MainActivity extends ActionBarActivity {
 
         WebView wv = new WebView(this);
 
-        wv.loadUrl("file:///android_asset/html_no_copy/about.html");
+        wv.loadUrl("file:///android_asset/html_no_copy/about-" + getString(R.string.html_locale) + ".html");
 
         wv.setWebViewClient(new WebViewClient() {
             @Override

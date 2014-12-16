@@ -133,5 +133,6 @@
     <string name="nag_tower_maintenance">ตอนนี้ Smarter Wi-Fi Manager มีวิธีดูแลรักษารายการของตำแหน่งที่ตั้งสำหรับเครือข่าย Wi-Fi โดยอัตโนมัติแล้ว  เปิดการใช้งานมันโดยการไปยังการปรับแต่งค่าและเปิด การดูแลรักษาตำแหน่งที่ตั้ง!</string>
     <string name="nag_tower_maintenance_prefs">ไปยังการปรับแต่งค่า</string>
     <string name="nag_tower_maintenance_cancel">ไม่ ขอบคุณ</string>
+    <string name="html_locale">en</string>
 
 </resources>
