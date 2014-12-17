@@ -12,7 +12,11 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import net.kismetwireless.android.smarterwifimanager.R;
+import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
@@ -29,6 +33,9 @@ public class FragmentMain extends SmarterFragment {
     @Inject
     SmarterWifiServiceBinder serviceBinder;
 
+    @Inject
+    Bus eventBus;
+
     View mainView;
 
     ImageView mainIcon;
@@ -39,36 +46,6 @@ public class FragmentMain extends SmarterFragment {
     SharedPreferences sharedPreferences;
 
     private SmarterWifiService.SmarterServiceCallback guiCallback = new SmarterWifiService.SmarterServiceCallback() {
-        @Override
-        public void preferencesChanged() {
-            super.preferencesChanged();
-
-            if (sharedPreferences == null || switchManageWifi == null || switchAutoLearn == null)
-                return;
-
-            Activity ma = getActivity();
-
-            if (ma == null)
-                return;
-
-            ma.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
-                        switchManageWifi.setChecked(true);
-                    } else {
-                        switchManageWifi.setChecked(false);
-                    }
-
-                    if (sharedPreferences.getBoolean(getString(R.string.pref_learn), true)) {
-                        switchAutoLearn.setChecked(true);
-                    } else {
-                        switchAutoLearn.setChecked(false);
-                    }
-                }
-            });
-        }
-
         @Override
         public void wifiStateChanged(final SmarterSSID ssid, final SmarterWifiService.WifiState state,
                                      final SmarterWifiService.WifiState controlstate, final SmarterWifiService.ControlType type) {
@@ -137,9 +114,11 @@ public class FragmentMain extends SmarterFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mainView = inflater.inflate(R.layout.fragment_main, container, false);
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        eventBus.register(this);
+
+        mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mainIcon = (ImageView) mainView.findViewById(R.id.imageWifiStatus);
         headlineText = (TextView) mainView.findViewById(R.id.textViewMain);
@@ -209,6 +188,8 @@ public class FragmentMain extends SmarterFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        eventBus.unregister(this);
     }
 
     private boolean setManageWifi(boolean b) {
@@ -219,7 +200,7 @@ public class FragmentMain extends SmarterFragment {
         e.putBoolean(getString(R.string.pref_enable), b);
         e.commit();
 
-        serviceBinder.doUpdatePreferences();
+        eventBus.post(new EventPreferencesChanged());
 
         return true;
     }
@@ -238,5 +219,33 @@ public class FragmentMain extends SmarterFragment {
     @Override
     public int getTitle() {
         return R.string.tab_main;
+    }
+
+    @Subscribe
+    public void onEvent(EventPreferencesChanged evt) {
+        if (sharedPreferences == null || switchManageWifi == null || switchAutoLearn == null)
+            return;
+
+        Activity ma = getActivity();
+
+        if (ma == null)
+            return;
+
+        ma.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
+                    switchManageWifi.setChecked(true);
+                } else {
+                    switchManageWifi.setChecked(false);
+                }
+
+                if (sharedPreferences.getBoolean(getString(R.string.pref_learn), true)) {
+                    switchAutoLearn.setChecked(true);
+                } else {
+                    switchAutoLearn.setChecked(false);
+                }
+            }
+        });
     }
 }

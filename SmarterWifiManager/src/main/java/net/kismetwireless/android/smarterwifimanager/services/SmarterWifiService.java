@@ -33,6 +33,7 @@ import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventCellTower;
+import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiConnected;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisconnected;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiState;
@@ -154,10 +155,6 @@ public class SmarterWifiService extends Service {
 
             return;
         }
-
-        public void preferencesChanged() {
-            return;
-        }
     }
 
     ArrayList<SmarterServiceCallback> callbackList = new ArrayList<SmarterServiceCallback>();
@@ -227,7 +224,7 @@ public class SmarterWifiService extends Service {
         // Get the initial BT enable state
         initialBluetoothState = getBluetoothState() != BluetoothState.BLUETOOTH_OFF;
 
-        updatePreferences();
+        onEvent(new EventPreferencesChanged());
 
         // telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CELL_LOCATION);
         telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CELL_INFO | PhoneStateListener.LISTEN_CELL_LOCATION);
@@ -418,7 +415,8 @@ public class SmarterWifiService extends Service {
         }
     }
 
-    public void updatePreferences() {
+    @Subscribe
+    public void onEvent(EventPreferencesChanged ev) {
         everBeenRun = preferences.getBoolean("everbeenrun", false);
 
         learnWifi = preferences.getBoolean(getString(R.string.pref_learn), true);
@@ -439,8 +437,6 @@ public class SmarterWifiService extends Service {
         performTowerPurges = preferences.getBoolean(getString(R.string.prefs_item_towermaintenance), false);
 
         configureWifiState();
-
-        triggerCallbackPrefsChanged();
     }
 
     public void shutdownService() {
@@ -741,14 +737,6 @@ public class SmarterWifiService extends Service {
 
         synchronized (callbackList) {
             callbackList.remove(cb);
-        }
-    }
-
-    public void triggerCallbackPrefsChanged() {
-        synchronized (callbackList) {
-            for (SmarterServiceCallback cb : callbackList) {
-                cb.preferencesChanged();
-            }
         }
     }
 

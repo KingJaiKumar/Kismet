@@ -27,8 +27,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 
 import java.util.ArrayList;
@@ -45,6 +48,9 @@ public class MainActivity extends ActionBarActivity {
 
     @Inject
     SmarterWifiServiceBinder serviceBinder;
+
+    @Inject
+    Bus eventBus;
 
     private static int PREFS_REQ = 1;
 
@@ -74,12 +80,7 @@ public class MainActivity extends ActionBarActivity {
         e.putBoolean("everbeenrun", true);
         e.commit();
 
-        serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
-            @Override
-            public void run(SmarterWifiServiceBinder b) {
-                b.doUpdatePreferences();
-            }
-        });
+        eventBus.post(new EventPreferencesChanged());
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
@@ -258,7 +259,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PREFS_REQ) {
-            serviceBinder.doUpdatePreferences();
+            eventBus.post(new EventPreferencesChanged());
         }
     }
 

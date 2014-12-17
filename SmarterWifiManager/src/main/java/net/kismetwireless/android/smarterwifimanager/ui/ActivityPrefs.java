@@ -5,10 +5,19 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.squareup.otto.Bus;
+
+import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
+
+import javax.inject.Inject;
+
 /**
  * Created by dragorn on 9/24/13.
  */
 public class ActivityPrefs extends Activity {
+    @Inject
+    Bus eventBus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +32,8 @@ public class ActivityPrefs extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        eventBus.post(new EventPreferencesChanged());
     }
 
     @Override

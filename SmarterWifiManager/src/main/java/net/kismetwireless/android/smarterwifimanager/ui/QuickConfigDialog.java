@@ -24,6 +24,7 @@ import com.squareup.otto.Bus;
 
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
@@ -170,12 +171,7 @@ public class QuickConfigDialog extends DialogFragment {
         e.putBoolean("everbeenrun", true);
         e.commit();
 
-        serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
-            @Override
-            public void run(SmarterWifiServiceBinder b) {
-                b.doUpdatePreferences();
-            }
-        });
+        eventBus.post(new EventPreferencesChanged());
 
         wifiManager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
         btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -265,20 +261,8 @@ public class QuickConfigDialog extends DialogFragment {
         e.putBoolean(getString(R.string.pref_enable), b);
         e.commit();
 
-        try {
-            Activity activity = getActivity();
+        eventBus.post(new EventPreferencesChanged());
 
-            SmarterWifiServiceBinder binder = new SmarterWifiServiceBinder(activity);
-            binder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
-                @Override
-                public void run(SmarterWifiServiceBinder b) {
-                    b.doUpdatePreferences();
-                }
-            });
-
-        } catch (NullPointerException npe) {
-
-        }
         return true;
     }
 

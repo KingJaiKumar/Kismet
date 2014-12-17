@@ -146,11 +146,6 @@ public class SmarterWifiServiceBinder {
         isBound = false;
     }
 
-    public void doUpdatePreferences() {
-        if (smarterService != null)
-            smarterService.updatePreferences();
-    }
-
     public void configureWifiState() {
         if (smarterService == null) {
             Log.e("smarter", "service null configurewifistate");

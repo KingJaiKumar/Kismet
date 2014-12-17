@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
-import android.util.Log;
 
 import net.kismetwireless.android.smarterwifimanager.R;
 
