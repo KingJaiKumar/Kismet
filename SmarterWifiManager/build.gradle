@@ -4,12 +4,21 @@ android {
     compileSdkVersion 21
     buildToolsVersion '21.0.2'
 
+    signingConfigs {
+        config {
+            keyAlias RELEASE_KEY_ALIAS
+            storeFile file(RELEASE_STORE_FILE)
+            keyPassword RELEASE_KEY_PASSWORD
+            storePassword RELEASE_STORE_PASSWORD
+        }
+    }
+
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 50
-        versionName "2014.12.50"
-        // signingConfig signingConfigs.config
+        versionCode 51
+        versionName "2014.12.51"
+        signingConfig signingConfigs.config
     }
 
     lintOptions {
