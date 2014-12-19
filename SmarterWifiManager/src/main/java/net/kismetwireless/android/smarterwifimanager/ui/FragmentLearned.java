@@ -178,7 +178,7 @@ public class FragmentLearned extends SmarterFragment {
                 ImageView trashImage = (ImageView) v.findViewById(R.id.ssidListDelete);
 
                 ssidView.setText(entry.getDisplaySsid());
-                towerView.setText("Learned " + Integer.toString(entry.getNumTowers()) + " towers");
+                towerView.setText(String.format(getString(R.string.learned_number), entry.getNumTowers()));
 
                 trashImage.setOnClickListener(new View.OnClickListener() {
                     @Override

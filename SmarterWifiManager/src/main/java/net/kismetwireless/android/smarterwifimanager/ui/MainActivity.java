@@ -215,7 +215,7 @@ public class MainActivity extends ActionBarActivity {
 
         alert.setView(wv);
 
-        alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(R.string.quicker_close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
             }

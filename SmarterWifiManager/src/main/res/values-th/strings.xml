@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 
-    <string name="app_name">Smarter Wi-Fi Manager</string>
     <string name="prefs_name">การปรับแต่งค่า</string>
 
     <string name="action_settings">การตั้งค่า</string>
@@ -134,5 +133,8 @@
     <string name="nag_tower_maintenance_prefs">ไปยังการปรับแต่งค่า</string>
     <string name="nag_tower_maintenance_cancel">ไม่ ขอบคุณ</string>
     <string name="html_locale">en</string>
+    <string name="learned_number">Learned %1$d towers</string>
+    <string name="action_about">About</string>
+    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
 
 </resources>

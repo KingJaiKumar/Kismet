@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Gestor inteligente de Wi-Fi</string>
     <string name="prefs_name">Preferencias</string>
 
     <string name="action_settings">Ajustes</string>
@@ -134,5 +133,8 @@
     <string name="nag_tower_maintenance_prefs">Ir a pref</string>
     <string name="nag_tower_maintenance_cancel">No gracias</string>
     <string name="html_locale">es</string>
+    <string name="learned_number">%1$d torres guardadas</string>
+    <string name="action_about">Acerca de</string>
+    <string name="no_bluetooth">No hay dispositivos Bluetooth o Bluetooth está desactivado</string>
 
 </resources>

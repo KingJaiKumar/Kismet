@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">Smarter Wi-Fi Manager مدير الواي فاي الاذكى</string>
-  <string name="prefs_name">تفضيلات</string>
+    <string name="prefs_name">تفضيلات</string>
   <string name="action_settings">الاعدادات</string>
   <string name="action_add_timerange">اضافة مدى زمني</string>
   <string name="hello_world">!مرحباً بالعالم</string>
@@ -115,4 +114,7 @@
   <string name="nag_tower_maintenance_prefs">انتقل الى التفضيلات </string>
   <string name="nag_tower_maintenance_cancel">لا شكراً</string>
     <string name="html_locale">en</string>
+    <string name="learned_number">Learned %1$d towers</string>
+    <string name="action_about">About</string>
+    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
 </resources>

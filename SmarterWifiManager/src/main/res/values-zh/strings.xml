@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Smarter Wi-Fi Manager</string>
     <string name="prefs_name">首选项</string>
 
     <string name="action_settings">设置</string>
@@ -134,5 +133,8 @@
     <string name="nag_tower_maintenance_prefs">设置首选项</string>
     <string name="nag_tower_maintenance_cancel">不用谢</string>
     <string name="html_locale">en</string>
+    <string name="learned_number">Learned %1$d towers</string>
+    <string name="action_about">About</string>
+    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
 
 </resources>

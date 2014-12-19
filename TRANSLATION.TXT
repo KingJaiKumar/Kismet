@@ -1,0 +1,9 @@
+
+ADDED
+
+    <string name="action_about">About</string>
+
+    <string name="learned_number">Learned %1$d towers</string>
+
+    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
+

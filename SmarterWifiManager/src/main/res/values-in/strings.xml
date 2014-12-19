@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Manajer Smarter Wi-Fi</string>
     <string name="prefs_name">Preferensi</string>
 
     <string name="action_settings">Setelan</string>
@@ -134,5 +133,8 @@
     <string name="nag_tower_maintenance_prefs">Masuk ke pref.</string>
     <string name="nag_tower_maintenance_cancel">Tidak, trims</string>
     <string name="html_locale">en</string>
+    <string name="learned_number">Learned %1$d towers</string>
+    <string name="action_about">About</string>
+    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
 
 </resources>
