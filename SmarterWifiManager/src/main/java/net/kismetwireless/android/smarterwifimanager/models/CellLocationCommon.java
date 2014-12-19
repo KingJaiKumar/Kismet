@@ -14,13 +14,23 @@ import java.util.Date;
  * Mangle various cell location types
  */
 public class CellLocationCommon {
-    enum LocationType {
+    public enum TowerType {
+        TOWER_UNKNOWN, // Unknown tower, nothing to do
+        TOWER_BLOCK, // Known block tower, currently unimplemented
+        TOWER_ENABLE, // Known enable tower, we want to turn on wifi
+    };
+
+    public enum LocationType {
         GSM, CDMA
     };
 
     private long towerId;
     private boolean valid = true;
+
     private LocationType type = LocationType.GSM;
+
+    private TowerType towerType = TowerType.TOWER_UNKNOWN;
+
     private long seenTime;
 
     // "halfbad" towers look weird but we do what we can with them
@@ -136,7 +146,18 @@ public class CellLocationCommon {
     }
 
     public boolean equals(CellLocationCommon c) {
+        if (c == null)
+            return false;
+
         return (c.getTowerId() == getTowerId());
     }
 
+    public void setTowerEnabled(boolean enabled) {
+        if (enabled)
+            towerType = TowerType.TOWER_ENABLE;
+    }
+
+    public TowerType getTowerType() {
+        return towerType;
+    }
 }

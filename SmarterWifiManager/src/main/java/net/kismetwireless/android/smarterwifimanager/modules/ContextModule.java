@@ -7,6 +7,7 @@ package net.kismetwireless.android.smarterwifimanager.modules;
 import android.content.Context;
 
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+import net.kismetwireless.android.smarterwifimanager.models.SmarterWorldState;
 import net.kismetwireless.android.smarterwifimanager.services.NetworkReceiver;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
 import net.kismetwireless.android.smarterwifimanager.ui.FragmentBluetoothBlacklist;
@@ -24,6 +25,8 @@ import dagger.Provides;
 @Module(
         injects = {
                 SmarterApplication.class,
+
+                SmarterWorldState.class,
 
                 NetworkReceiver.class,
 

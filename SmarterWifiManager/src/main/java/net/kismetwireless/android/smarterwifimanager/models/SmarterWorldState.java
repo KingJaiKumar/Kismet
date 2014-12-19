@@ -1,11 +1,24 @@
 package net.kismetwireless.android.smarterwifimanager.models;
 
+import android.content.Context;
 import android.net.wifi.WifiInfo;
+
+import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+
+import javax.inject.Inject;
 
 /**
  * Created by dragorn on 12/15/14.
  */
 public class SmarterWorldState {
+    // SWS is a singleton so this isn't horrible
+    @Inject
+    SmarterDBSource dbSource;
+
+    @Inject
+    Context context;
+
+    // Control type - what we want to do (and what state we're in now)
     public enum ControlType {
         CONTROL_DISABLED, // We don't control device state
         CONTROL_USER, // User has taken control
@@ -20,6 +33,7 @@ public class SmarterWorldState {
         CONTROL_NEVERRUN // Never run, do nothing until user talks to us
     }
 
+    // The state the wifi is in (combination of current state and target state)
     public enum WifiState {
         WIFI_BLOCKED, // We're off, period
         WIFI_ON, // We want wifi on
@@ -28,11 +42,14 @@ public class SmarterWorldState {
         WIFI_IGNORE // Ignoring wifi state
     }
 
-    private CellLocationCommon lastCellLocation;
-    private WifiInfo lastWifiInfo;
+    private CellLocationCommon cellLocation = null;
+    private WifiInfo wifiInfo = null;
 
-    private SmarterTimeRange currentTimeRange;
-    private SmarterTimeRange nextTimeRange;
+    private CellLocationCommon previousCellLocation = null;
+    private WifiInfo previousWifiInfo = null;
+
+    private SmarterTimeRange currentTimeRange = null;
+    private SmarterTimeRange nextTimeRange = null;
 
     private boolean wifiEnabled = false;
     private boolean bluetoothEnabled = false;
@@ -41,27 +58,24 @@ public class SmarterWorldState {
     private WifiState currentState = WifiState.WIFI_IGNORE;
     private WifiState targetState = WifiState.WIFI_IGNORE;
 
-    public SmarterWorldState() {
-        lastCellLocation = null;
-        lastWifiInfo = null;
-        currentTimeRange = null;
-        nextTimeRange = null;
+    public SmarterWorldState(Context c) {
+        SmarterApplication.get(c).inject(this);
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        if (lastCellLocation != null) {
+        if (cellLocation != null) {
             sb.append("CELL: ");
-            sb.append(lastCellLocation.toString());
+            sb.append(cellLocation.toString());
             sb.append("\n");
         } else {
             sb.append("NO CELL\n");
         }
 
-        if (lastWifiInfo != null) {
+        if (wifiInfo != null) {
             sb.append("WIFI: ");
-            sb.append(lastWifiInfo.toString());
+            sb.append(wifiInfo.toString());
             sb.append("\n");
         } else {
             sb.append("NO WIFI\n");
@@ -70,20 +84,29 @@ public class SmarterWorldState {
         return sb.toString();
     }
 
-    public CellLocationCommon getLastCellLocation() {
-        return lastCellLocation;
+    public CellLocationCommon getCellLocation() {
+        return cellLocation;
     }
 
-    public void setLastCellLocation(CellLocationCommon lastCellLocation) {
-        this.lastCellLocation = lastCellLocation;
+    public void setCellLocation(CellLocationCommon cellLocation) {
+        this.previousCellLocation = this.cellLocation;
+
+        this.cellLocation = cellLocation;
+
+        if (cellLocation.isValid()) {
+            if (dbSource.queryTowerMapped(this.getCellLocation().getTowerId())) {
+                this.cellLocation.setTowerEnabled(true);
+            }
+        }
     }
 
-    public WifiInfo getLastWifiInfo() {
-        return lastWifiInfo;
+    public WifiInfo getWifiInfo() {
+        return wifiInfo;
     }
 
-    public void setLastWifiInfo(WifiInfo lastWifiInfo) {
-        this.lastWifiInfo = lastWifiInfo;
+    public void setWifiInfo(WifiInfo wifiInfo) {
+        this.previousWifiInfo = this.wifiInfo;
+        this.wifiInfo = wifiInfo;
     }
 
     public SmarterTimeRange getCurrentTimeRange() {

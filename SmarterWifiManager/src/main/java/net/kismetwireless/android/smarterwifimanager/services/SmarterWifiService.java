@@ -560,9 +560,7 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventCellTower c) {
-        worldState.setLastCellLocation(c.getLocation());
-
-        handleCellLocation(c.getLocation());
+        setCurrentTower(c.getLocation());
     }
 
     @Produce
@@ -573,7 +571,7 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiConnected e) {
-        worldState.setLastWifiInfo(e.getWifiInfo());
+        worldState.setWifiInfo(e.getWifiInfo());
 
         configureWifiState();
     }
@@ -593,7 +591,7 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiDisconnected e) {
-        worldState.setLastWifiInfo(null);
+        worldState.setWifiInfo(null);
 
         configureWifiState();
     }
@@ -647,25 +645,15 @@ public class SmarterWifiService extends Service {
             curloc = new CellLocationCommon(telephonyManager.getCellLocation());
         }
 
-        /*
-        CellLocationCommon oldLoc = currentCellLocation;
-
-        if (oldLoc != null && oldLoc.getTowerId() == curloc.getTowerId()) {
-            WifiState idlestate = getWifiState();
-
-            if (targetState == WifiState.WIFI_BLOCKED || targetState == WifiState.WIFI_OFF) {
-                startWifiShutdown();
-            }
-
-            if (idlestate == targetState) {
-                // Nothing to do, get out
-                LogAlias.d("smarter", "still in " + curloc.getTowerId() + " so nothing has changed");
-                return;
-            } else if (targetState != WifiState.WIFI_IGNORE) {
-                LogAlias.d("smarter", "tower changed but state " + idlestate + " doesn't match target " + targetState + " so trigger update");
-            }
+        if (curloc.equals(worldState.getCellLocation())) {
+            LogAlias.d("smarter", "Ignoring cell location event, identical to current position");
+            return;
         }
-        */
+
+        worldState.setCellLocation(curloc);
+
+
+
 
         currentCellLocation = curloc;
 
