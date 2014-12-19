@@ -59,7 +59,7 @@
     <string name="explanation_wifi_idle">Wi-Fi habilitada pero no conectada</string>
     <string name="explanation_wifi_blocked">Wi-Fi bloqueada</string>
     <string name="explanation_wifi_enabled">Wi-Fi habilitada</string>
-    <string name="explanation_wifi_enabled_cell">En ubicaciones guardadas automáticamente</string>
+    <string name="explanation_wifi_enabled_cell">En una ubicación guardada automáticamente</string>
     <string name="explanation_wifi_disabled">Wi-Fi deshabilitada</string>
     <string name="explanation_wifi_disabled_cell">Lejos de ubicación conocida</string>
     <string name="explanation_wifi_disabled_bluetooth">Conectado a dispositivo de Bluetooth en lista negra</string>
