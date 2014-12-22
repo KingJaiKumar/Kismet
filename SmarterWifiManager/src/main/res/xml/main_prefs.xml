@@ -13,7 +13,7 @@
             android:title="@string/prefs_item_shutdowntime" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/prefs_item_towermaintenance"
             android:title="@string/prefs_item_towermaintenance"
             android:summary="@string/prefs_item_towermaintenance_explanation"/>

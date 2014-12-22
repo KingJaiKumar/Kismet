@@ -434,7 +434,7 @@ public class SmarterWifiService extends Service {
         else
             notificationManager.notify(0, notificationBuilder.build());
 
-        performTowerPurges = preferences.getBoolean(getString(R.string.prefs_item_towermaintenance), false);
+        performTowerPurges = preferences.getBoolean(getString(R.string.prefs_item_towermaintenance), true);
 
         configureWifiState();
     }
