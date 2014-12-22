@@ -1,12 +1,13 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import com.squareup.otto.Bus;
 
+import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
 
 import javax.inject.Inject;
@@ -14,7 +15,7 @@ import javax.inject.Inject;
 /**
  * Created by dragorn on 9/24/13.
  */
-public class ActivityPrefs extends Activity {
+public class ActivityPrefs extends ActionBarActivity {
     @Inject
     Bus eventBus;
 
@@ -22,7 +23,9 @@ public class ActivityPrefs extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActionBar ab = getActionBar();
+        SmarterApplication.get(this).inject(this);
+
+        ActionBar ab = getSupportActionBar();
 
         ab.setDisplayHomeAsUpEnabled(true);
 
