@@ -129,7 +129,7 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment, "mainfragment").commit();
         }
 
-        showNagCleanup();
+        // showNagCleanup();
     }
 
     @Override
@@ -196,7 +196,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void showAbout() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
         WebView wv = new WebView(this);
 
@@ -236,7 +236,7 @@ public class MainActivity extends ActionBarActivity {
         e.putBoolean("nag_showed_cleanup2", true);
         e.commit();
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         alert.setMessage(R.string.nag_tower_maintenance);
 
         alert.setPositiveButton(R.string.nag_tower_maintenance_prefs, new DialogInterface.OnClickListener() {
