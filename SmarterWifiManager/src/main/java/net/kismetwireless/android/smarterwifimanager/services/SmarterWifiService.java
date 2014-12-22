@@ -652,8 +652,7 @@ public class SmarterWifiService extends Service {
 
         worldState.setCellLocation(curloc);
 
-
-
+        // OLD code
 
         currentCellLocation = curloc;
 
