@@ -7,3 +7,15 @@ ADDED
 
     <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
 
+CHANGED
+
+    <!-- "Smarter W-Fi Manager" should not be translated -->
+    <string name="quicker_explanation">Smarter Wi-Fi Manager may disable or re-enable radios depending on the current configuration.</string>
+
+
+REMOVED
+
+    <!-- We use app title for untranslated text -->
+    <string name="quicker_enable">Smarter Wi-Fi Manager</string>
+    <string name="quicker_startswm">Smarter Wi-Fi Manager</string>
+

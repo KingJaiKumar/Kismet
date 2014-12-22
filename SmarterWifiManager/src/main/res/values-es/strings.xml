@@ -126,7 +126,7 @@
     <string name="quicker_startswm">Gestor inteligente de Wi-Fi</string>
     <string name="quicker_settings">Ajustes de Wi-Fi de Android</string>
     <string name="quicker_close">Cerrar</string>
-    <string name="quicker_explanation">El Gestor inteligente de Wi-Fi puede deshabilitar o rehabilitar radios según la configuración actual.</string>
+    <string name="quicker_explanation">El Smarter W-Fi Manager puede deshabilitar o rehabilitar radios según la configuración actual.</string>
     <string name="quicker_forget">Olvidar ubicación actual</string>
 
     <string name="nag_tower_maintenance">El Gestor inteligente de Wi-Fi ahora tiene un método para mantener automáticamente la lista de ubicaciones para una red Wi-Fi. Habilítela en Preferencias y active Mantenimiento de ubicación.</string>
