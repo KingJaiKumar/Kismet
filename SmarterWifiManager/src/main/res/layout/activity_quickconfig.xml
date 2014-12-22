@@ -26,11 +26,12 @@
         android:layout_gravity="center_horizontal" />
 
     <Switch
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/quicker_wifi"
         android:id="@+id/quickSwitchWifi"
         android:layout_gravity="right"
+        android:gravity="right"
         android:checked="false" />
 
     <Switch
