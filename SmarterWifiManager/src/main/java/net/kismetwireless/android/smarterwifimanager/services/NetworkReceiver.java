@@ -2,7 +2,6 @@ package net.kismetwireless.android.smarterwifimanager.services;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +10,9 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.squareup.otto.Bus;
 
@@ -26,7 +27,7 @@ import javax.inject.Inject;
 /**
  * Created by dragorn on 9/2/13.
  */
-public class NetworkReceiver extends BroadcastReceiver {
+public class NetworkReceiver extends WakefulBroadcastReceiver {
     @Inject
     SmarterWifiServiceBinder serviceBinder;
 
@@ -47,6 +48,9 @@ public class NetworkReceiver extends BroadcastReceiver {
         }
 
         try {
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Smarter Wi-Fi network lock");
+
             LogAlias.d("smarter", "bcast rx: " + intent.getAction());
 
             // Collapse upping/up and downing/down status into single events
@@ -61,11 +65,18 @@ public class NetworkReceiver extends BroadcastReceiver {
                 if ((oldWifiState != WifiManager.WIFI_STATE_ENABLED && oldWifiState != WifiManager.WIFI_STATE_ENABLING) &&
                         (wifiState == WifiManager.WIFI_STATE_ENABLING || wifiState == WifiManager.WIFI_STATE_ENABLED)) {
                     LogAlias.d("smarter", "Generating event: Wifi enabled");
+
+                    wl.acquire();
                     eventBus.post(new EventWifiState(true));
+                    wl.release();
+
                 } else if ((oldWifiState != WifiManager.WIFI_STATE_DISABLING && oldWifiState != WifiManager.WIFI_STATE_DISABLED) &&
                         (wifiState == WifiManager.WIFI_STATE_DISABLED || wifiState == WifiManager.WIFI_STATE_DISABLING)) {
                     LogAlias.d("smarter", "Generating event: Wifi disabled");
+
+                    wl.acquire();
                     eventBus.post(new EventWifiState(false));
+                    wl.release();
                 }
             } else if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                 LogAlias.d("smarter", "rx: Network state changed");
@@ -78,10 +89,18 @@ public class NetworkReceiver extends BroadcastReceiver {
 
                     if (ni.getState() == NetworkInfo.State.CONNECTED) {
                         LogAlias.d("smarter", "Generating event: Wifi connected " + wi.toString());
+
+                        wl.acquire();
                         eventBus.post(new EventWifiConnected(wi));
+                        wl.release();
+
                     } else if (ni.getState() == NetworkInfo.State.DISCONNECTED) {
                         LogAlias.d("smarter", "Generating event: Wifi disconnected");
+
+                        wl.acquire();
                         eventBus.post(new EventWifiDisconnected());
+                        wl.release();
+
                     } else {
                         LogAlias.d("smarter", "NetworkReceiver got wifi state " + ni.getState() + " but it's not being tracked");
                     }
