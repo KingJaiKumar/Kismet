@@ -2,6 +2,7 @@ package net.kismetwireless.android.smarterwifimanager.services;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +13,6 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.v4.content.WakefulBroadcastReceiver;
 
 import com.squareup.otto.Bus;
 
@@ -27,7 +27,7 @@ import javax.inject.Inject;
 /**
  * Created by dragorn on 9/2/13.
  */
-public class NetworkReceiver extends WakefulBroadcastReceiver {
+public class NetworkReceiver extends BroadcastReceiver {
     @Inject
     SmarterWifiServiceBinder serviceBinder;
 
