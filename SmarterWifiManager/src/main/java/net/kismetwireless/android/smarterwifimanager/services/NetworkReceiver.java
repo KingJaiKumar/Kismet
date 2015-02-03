@@ -40,6 +40,8 @@ public class NetworkReceiver extends BroadcastReceiver {
 
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(context);
 
+        LogAlias.d("smarter", "network bcast rx: " + intent.getAction());
+
         if (!p.getBoolean("start_boot", true)) {
             if (!SmarterWifiServiceBinder.isServiceRunning(context)) {
                 LogAlias.d("smarter", "Would have done something but service isn't running and we're not autostarting");
@@ -50,8 +52,6 @@ public class NetworkReceiver extends BroadcastReceiver {
         try {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Smarter Wi-Fi network lock");
-
-            LogAlias.d("smarter", "bcast rx: " + intent.getAction());
 
             // Collapse upping/up and downing/down status into single events
             if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {

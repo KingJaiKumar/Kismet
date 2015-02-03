@@ -1,5 +1,6 @@
 package net.kismetwireless.android.smarterwifimanager.services;
 
+import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -81,14 +82,14 @@ public class SmarterWifiService extends Service {
 
     private boolean shutdown = false;
 
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
 
-    SmarterPhoneStateListener phoneListener;
+    private SmarterPhoneStateListener phoneListener;
 
-    TelephonyManager telephonyManager;
-    WifiManager wifiManager;
-    BluetoothAdapter btAdapter;
-    ConnectivityManager connectivityManager;
+    private TelephonyManager telephonyManager;
+    private WifiManager wifiManager;
+    private BluetoothAdapter btAdapter;
+    private ConnectivityManager connectivityManager;
     private NotificationManager notificationManager;
 
     private boolean proctorWifi = true;
@@ -124,6 +125,9 @@ public class SmarterWifiService extends Service {
     private SmarterTimeRange currentTimeRange, nextTimeRange;
 
     private AlarmReceiver alarmReceiver;
+    private AlarmManager alarmManager;
+    private PendingIntent wifiDownIntent;
+    private PendingIntent wifiUpIntent;
 
     private boolean pendingWifiShutdown = false, pendingBluetoothShutdown = false;
 
@@ -201,6 +205,8 @@ public class SmarterWifiService extends Service {
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new NotificationCompat.Builder(context);
+
+        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         alarmReceiver = new AlarmReceiver();
 
@@ -442,9 +448,31 @@ public class SmarterWifiService extends Service {
     public void shutdownService() {
         shutdown = true;
         timerHandler.removeCallbacks(towerCleanupTask);
-        timerHandler.removeCallbacks(wifiEnableTask);
-        timerHandler.removeCallbacks(wifiDisableTask);
+
+        cancelWifiDownAlarm();
+        cancelWifiUpAlarm();
+
+        // timerHandler.removeCallbacks(wifiEnableTask);
+        // timerHandler.removeCallbacks(wifiDisableTask);
         telephonyManager.listen(phoneListener, 0);
+    }
+
+    public void cancelWifiDownAlarm() {
+        LogAlias.d("smarter", "cancelWifiDownAlarm() cancelling alarm");
+        if (wifiDownIntent != null) {
+            alarmManager.cancel(wifiDownIntent);
+            wifiDownIntent = null;
+        }
+
+        pendingWifiShutdown = false;
+    }
+
+    public void cancelWifiUpAlarm() {
+        LogAlias.d("smarter", "cancelWifiUpAlarm()");
+        if (wifiUpIntent != null) {
+            alarmManager.cancel(wifiUpIntent);
+            wifiUpIntent = null;
+        }
     }
 
     private void startBluetoothEnable() {
@@ -463,47 +491,127 @@ public class SmarterWifiService extends Service {
 
     private void startWifiEnable() {
         pendingWifiShutdown = false;
-        timerHandler.removeCallbacks(wifiEnableTask);
+
+        // timerHandler.removeCallbacks(wifiEnableTask);
+
+        if (wifiDownIntent != null) {
+            LogAlias.d("smarter", "startWifiEnable(), cancelling pending down alarm");
+            alarmManager.cancel(wifiDownIntent);
+            wifiDownIntent = null;
+        }
 
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (!pm.isScreenOn()) {
             LogAlias.d("smarter", "turning on wifi immediately because screen is off");
+
+            LogAlias.d("smarter", "Cancelling pending up alarm");
+            cancelWifiUpAlarm();
+
             wifiManager.setWifiEnabled(true);
             return;
         }
 
-        timerHandler.postDelayed(wifiEnableTask, enableWaitSeconds * 1000);
+        // timerHandler.postDelayed(wifiEnableTask, enableWaitSeconds * 1000);
 
-        LogAlias.d("smarter", "Starting countdown of " + enableWaitSeconds + " to enable wifi");
+        if (wifiUpIntent != null) {
+            LogAlias.d("smarter", "Already trying to bring up wifi, not scheduling another bringup");
+        } else {
+            Intent i = new Intent(context, AlarmReceiver.class);
 
+            i.putExtra(AlarmReceiver.EXTRA_WIFIUP, enableWaitSeconds);
+            wifiUpIntent = PendingIntent.getBroadcast(context, 1000, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (enableWaitSeconds * 1000), wifiUpIntent);
+
+            LogAlias.d("smarter", "Starting countdown of " + enableWaitSeconds + " to enable wifi");
+        }
+
+        // alarmReceiver.setWifiUpAlarm(context, enableWaitSeconds);
     }
 
     private void startWifiShutdown() {
+        LogAlias.d("smarter", "startWifiShutdown()");
+
+        cancelWifiUpAlarm();
+
         // If we're asked to turn off wifi and the screen is off, just do it.
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
         if (!pm.isScreenOn()) {
             LogAlias.d("smarter", "shutting down wifi immediately because screen is off");
 
             pendingWifiShutdown = false;
-            timerHandler.removeCallbacks(wifiDisableTask);
+
+            cancelWifiDownAlarm();
+
+            // alarmReceiver.cancelWifiDownAlarm(context);
+            // timerHandler.removeCallbacks(wifiDisableTask);
+
             wifiManager.setWifiEnabled(false);
             return;
         }
 
-        if (pendingWifiShutdown) {
-            LogAlias.d("smarter", "wifi countdown in progress, not shutting down");
+        if (wifiDownIntent != null) {
+            LogAlias.d("smarter", "Already trying to bring down wifi, not scheduling another bringdown");
+        } else {
+            Intent i = new Intent(context, AlarmReceiver.class);
+
+            i.putExtra(AlarmReceiver.EXTRA_WIFIDOWN, disableWaitSeconds);
+            wifiDownIntent = PendingIntent.getBroadcast(context, 1001, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * disableWaitSeconds), wifiDownIntent);
+
+            LogAlias.d("smarter", "Starting countdown of " + enableWaitSeconds + " to enable wifi");
+
+            pendingWifiShutdown = true;
+
+            LogAlias.d("smarter", "Starting countdown of " + disableWaitSeconds + " to shut down wifi");
+        }
+    }
+
+    public void doWifiEnable() {
+        LogAlias.d("smarter", "doWifiEnable() wifi enable task triggered");
+
+        cancelWifiUpAlarm();
+        cancelWifiDownAlarm();
+
+        if (shutdown) return;
+
+        if (!proctorWifi) return;
+
+        LogAlias.d("smarter", "enabling wifi");
+        wifiManager.setWifiEnabled(true);
+    }
+
+    public void doWifiDisable() {
+        LogAlias.d("smarter", "doWifiDisable() wifi disable task triggered");
+
+        cancelWifiUpAlarm();
+        cancelWifiDownAlarm();
+
+        if (shutdown) {
+            LogAlias.d("smarter", "Wifi disable task triggered, but we're about to shut down the service");
+            pendingWifiShutdown = false;
             return;
         }
 
-        pendingWifiShutdown = true;
-        // Restart the countdown incase we got called while a countdown was already running
-        timerHandler.removeCallbacks(wifiDisableTask);
+        // If we're not proctoring wifi...
+        if (!proctorWifi) {
+            LogAlias.d("smarter", "We were going to shut down wifi, but we're no longer controlling wi-fi");
+            pendingWifiShutdown = false;
+            return;
+        }
 
-        // Set a timer - if we haven't connected to a network by the time this
-        // expires, shut down wifi again
-        timerHandler.postDelayed(wifiDisableTask, disableWaitSeconds * 1000);
+        if (getWifiState() == WifiState.WIFI_ON) {
+            LogAlias.d("smarter", "We were going to shut down wifi, but it's connected now");
+            pendingWifiShutdown = false;
+            return;
+        }
 
-        LogAlias.d("smarter", "Starting countdown of " + disableWaitSeconds + " to shut down wifi");
+        LogAlias.d("smarter", "Shutting down wi-fi, we haven't gotten a link");
+        wifiManager.setWifiEnabled(false);
+
+        pendingWifiShutdown = false;
     }
 
     private Runnable wifiEnableTask = new Runnable() {
@@ -571,6 +679,8 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiConnected e) {
+        LogAlias.d("smarter", "BUS - Wifi Connected");
+
         worldState.setWifiInfo(e.getWifiInfo());
 
         configureWifiState();
@@ -591,6 +701,8 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiDisconnected e) {
+        LogAlias.d("smarter", "BUS - eventwifidisconnected");
+
         worldState.setWifiInfo(null);
 
         configureWifiState();
@@ -621,10 +733,13 @@ public class SmarterWifiService extends Service {
 
     @Subscribe
     public void onEvent(EventWifiState e) {
+        LogAlias.d("smarter", "BUS - EventWifiState");
+
         worldState.setWifiEnabled(e.isEnabled());
 
         configureWifiState();
     }
+
 
     @Produce
     public EventWifiState produceWifiState() {
@@ -771,9 +886,13 @@ public class SmarterWifiService extends Service {
 
             if (targetState == WifiState.WIFI_BLOCKED) {
                 LogAlias.d("smarter", "Target state: Blocked, shutting down wifi now, " + controlTypeToText(lastControlReason));
-                timerHandler.removeCallbacks(wifiEnableTask);
 
-                timerHandler.removeCallbacks(wifiDisableTask);
+                // timerHandler.removeCallbacks(wifiEnableTask);
+                // timerHandler.removeCallbacks(wifiDisableTask);
+
+                cancelWifiDownAlarm();
+                cancelWifiUpAlarm();
+
                 pendingWifiShutdown = false;
 
                 wifiManager.setWifiEnabled(false);
@@ -781,7 +900,8 @@ public class SmarterWifiService extends Service {
                 LogAlias.d("smarter", "Target state: Off, scheduling shutdown, " + controlTypeToText(lastControlReason));
 
                 // Kill any enable pending
-                timerHandler.removeCallbacks(wifiEnableTask);
+                // timerHandler.removeCallbacks(wifiEnableTask);
+                cancelWifiUpAlarm();
 
                 // Start the timered kill
                 startWifiShutdown();

@@ -45,7 +45,9 @@
             android:label="@string/prefs_name" >
         </activity>
 
-        <receiver android:name=".services.NetworkReceiver" >
+        <receiver android:name=".services.NetworkReceiver"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.net.wifi.STATE_CHANGE" />
