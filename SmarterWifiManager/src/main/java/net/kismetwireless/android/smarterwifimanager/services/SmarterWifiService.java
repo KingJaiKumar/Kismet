@@ -1,5 +1,6 @@
 package net.kismetwireless.android.smarterwifimanager.services;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,6 +17,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -489,6 +491,7 @@ public class SmarterWifiService extends Service {
         }
     }
 
+    @SuppressLint("newapi")
     private void startWifiEnable() {
         pendingWifiShutdown = false;
 
@@ -521,7 +524,11 @@ public class SmarterWifiService extends Service {
             i.putExtra(AlarmReceiver.EXTRA_WIFIUP, enableWaitSeconds);
             wifiUpIntent = PendingIntent.getBroadcast(context, 1000, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (enableWaitSeconds * 1000), wifiUpIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (enableWaitSeconds * 1000), wifiUpIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (enableWaitSeconds * 1000), wifiUpIntent);
+            }
 
             LogAlias.d("smarter", "Starting countdown of " + enableWaitSeconds + " to enable wifi");
         }
@@ -559,7 +566,11 @@ public class SmarterWifiService extends Service {
             i.putExtra(AlarmReceiver.EXTRA_WIFIDOWN, disableWaitSeconds);
             wifiDownIntent = PendingIntent.getBroadcast(context, 1001, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * disableWaitSeconds), wifiDownIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * disableWaitSeconds), wifiDownIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * disableWaitSeconds), wifiDownIntent);
+            }
 
             LogAlias.d("smarter", "Starting countdown of " + enableWaitSeconds + " to enable wifi");
 
