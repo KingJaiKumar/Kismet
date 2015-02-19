@@ -202,10 +202,17 @@ public class SmarterTimeRange implements Parcelable {
         c.clear(Calendar.SECOND);
         c.clear(Calendar.MILLISECOND);
 
+        /*
         // Decrement via localization
         while (c.get(Calendar.DAY_OF_WEEK) != c.getFirstDayOfWeek()) {
             c.add(Calendar.DATE, -1);
         }
+        */
+
+        // Slide back to the beginning of the week, sunday
+        c.add(Calendar.DATE, Calendar.SUNDAY - c.get(Calendar.DAY_OF_WEEK));
+
+        LogAlias.d("smarter", "Basing calendar calculation on " + new Date(c.getTimeInMillis()));
 
         // Get the start of the week, in seconds, since the epoch
         long adjustment = c.getTimeInMillis() / 60000;
@@ -214,7 +221,7 @@ public class SmarterTimeRange implements Parcelable {
 
         expandedDurations.clear();
 
-        // No matter what our localization, numerically we go sunday-saturday and we're iterating the bitfield
+        // Go through all the days in the week, sunday to saturday
         for (int d = Calendar.SUNDAY; d <= Calendar.SATURDAY; d++) {
             // For days we're active in
             if ((days & (1 << d)) == 0)
