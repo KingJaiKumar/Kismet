@@ -12,11 +12,18 @@
             android:key="@string/prefs_item_shutdowntime"
             android:title="@string/prefs_item_shutdowntime" />
 
+        <!--
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefs_item_towermaintenance"
             android:title="@string/prefs_item_towermaintenance"
             android:summary="@string/prefs_item_towermaintenance_explanation"/>
+            -->
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/prefs_item_aggressive"
+            android:title="@string/prefs_item_aggressive"
+            android:summary="@string/prefs_item_aggressive_explanation" />
 
         <CheckBoxPreference
             android:defaultValue="true"

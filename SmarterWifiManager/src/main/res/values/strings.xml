@@ -19,6 +19,8 @@
     <string name="prefs_item_boot_explanation">Automatically start Smarter Wi-Fi Manager service on boot or Wi-Fi and cell tower changes.</string>
     <string name="prefs_item_towermaintenance">Location Maintenance</string>
     <string name="prefs_item_towermaintenance_explanation">Keep the list of locations from growing too large by clever maintenance.</string>
+    <string name="prefs_item_aggressive">Aggressive Tower Monitoring</string>
+    <string name="prefs_item_aggressive_explanation">Wake up and check the current tower, even when the screen is off.  This can improve responsiveness, but may use slightly more battery power.</string>
 
     <string name="tab_main">Smarter</string>
     <string name="tab_ignore">Ignore</string>
