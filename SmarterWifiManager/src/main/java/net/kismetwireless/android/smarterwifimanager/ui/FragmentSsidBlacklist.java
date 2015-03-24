@@ -48,7 +48,10 @@ public class FragmentSsidBlacklist extends SmarterFragment {
         ArrayList<SmarterSSID> list = serviceBinder.getSsidBlacklist();
 
         lastSsidList.clear();
-        lastSsidList.addAll(list);
+
+        if (list != null) {
+            lastSsidList.addAll(list);
+        }
 
         if (listAdapter != null) {
             listAdapter.notifyDataSetChanged();

@@ -101,6 +101,7 @@ public class SmarterWifiService extends Service {
     private int disableWaitSeconds = 30;
     private boolean showNotification = true;
     private boolean performTowerPurges = false;
+    private boolean aggressiveTowerCheck = false;
     private int purgeTowerHours = 168;
 
     private WifiState userOverrideState = WifiState.WIFI_IGNORE;
@@ -130,6 +131,8 @@ public class SmarterWifiService extends Service {
     private AlarmManager alarmManager;
     private PendingIntent wifiDownIntent;
     private PendingIntent wifiUpIntent;
+
+    private PendingIntent towerCheckIntent;
 
     private boolean pendingWifiShutdown = false, pendingBluetoothShutdown = false;
 
@@ -442,8 +445,21 @@ public class SmarterWifiService extends Service {
         else
             notificationManager.notify(0, notificationBuilder.build());
 
+        // Always perform tower purging / location management
         // performTowerPurges = preferences.getBoolean(getString(R.string.prefs_item_towermaintenance), true);
         performTowerPurges = true;
+
+        // Set the alarm if we're going into aggressive checking mode.  Let the old alarm time out if we're disabling it.
+        if (preferences.getBoolean(getString(R.string.prefs_item_aggressive), true)) {
+            if (!aggressiveTowerCheck) {
+                // Set the alarm if it isn't set already
+                setAggressiveAlarm();
+            }
+
+            aggressiveTowerCheck = true;
+        } else {
+            aggressiveTowerCheck = false;
+        }
 
         configureWifiState();
     }
@@ -666,6 +682,32 @@ public class SmarterWifiService extends Service {
             pendingWifiShutdown = false;
         }
     };
+
+    private void setAggressiveAlarm() {
+        LogAlias.d("smarter", "Setting timer to wake up and check towers");
+
+        Intent i = new Intent(context, AlarmReceiver.class);
+
+        i.putExtra(AlarmReceiver.EXTRA_AGGRESSIVE, 60);
+
+        PendingIntent wupi = PendingIntent.getBroadcast(context, 1001, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60), wupi);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60), wupi);
+        }
+    }
+
+    public void doAggressiveCheck() {
+        // Look up the current location
+        handleCellLocation(null);
+
+        // Set the alarm to look again
+        if (aggressiveTowerCheck) {
+            setAggressiveAlarm();
+        }
+    }
 
     // Set current tower or fetch current tower
     private void handleCellLocation(CellLocationCommon location) {

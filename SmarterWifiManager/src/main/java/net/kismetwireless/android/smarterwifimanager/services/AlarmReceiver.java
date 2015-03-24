@@ -18,6 +18,7 @@ import javax.inject.Inject;
 public class AlarmReceiver extends BroadcastReceiver {
     public final static String EXTRA_WIFIDOWN = "EXTRA_SWM_WIFI_DOWN";
     public final static String EXTRA_WIFIUP = "EXTRA_SWM_WIFI_UP";
+    public final static String EXTRA_AGGRESSIVE = "EXTRA_AGGRESSIVE";
 
     @Inject
     SmarterWifiServiceBinder serviceBinder;
@@ -38,6 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         final boolean triggerShutdown;
         final boolean triggerBringup;
+        final boolean triggerAggressive;
 
         if (intent.hasExtra(EXTRA_WIFIDOWN)) {
             LogAlias.d("smarter-alarmrx", "Got down alarm");
@@ -53,6 +55,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             triggerBringup = false;
         }
 
+        if (intent.hasExtra(EXTRA_AGGRESSIVE)) {
+            LogAlias.d("smarter-alarmrx", "Got aggressive alarm");
+            triggerAggressive = true;
+        } else {
+            triggerAggressive = false;
+        }
+
         // Make sure we exist before we run
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             public void run(SmarterWifiServiceBinder b) {
@@ -60,6 +69,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     b.getService().doWifiDisable();
                 } else if (triggerBringup) {
                     b.getService().doWifiEnable();
+                } else if (triggerAggressive) {
+                    b.getService().doAggressiveCheck();
                 } else {
                     b.configureTimerangeState();
                 }
