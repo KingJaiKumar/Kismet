@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
 
 import net.kismetwireless.android.smarterwifimanager.LogAlias;
@@ -87,7 +88,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent i = new Intent(context, AlarmReceiver.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        am.setExact(AlarmManager.RTC_WAKEUP, atTime, pi);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            am.setExact(AlarmManager.RTC_WAKEUP, atTime, pi);
+        } else {
+            am.set(AlarmManager.RTC_WAKEUP, atTime, pi);
+        }
 
         // Log.d("smarter", "setting alarm");
     }
