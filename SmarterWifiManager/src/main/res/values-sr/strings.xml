@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Паметни Wi-Fi менаџер</string>
+
+    <string name="html_locale">sr</string>
+
+    <string name="prefs_name">Поставке</string>
+
+    <string name="action_settings">Поставке</string>
+    <string name="action_add_timerange">Додај временски распон</string>
+
+    <string name="hello_world">Здраво свете!</string>
+    <string name="prefs_item_shutdowntime">Време искључења бежичног</string>
+    <string name="prefs_item_shutdowntime_explanation">Ако откријете да је бежични искључен у току додавања нове мреже или се често искључује, повећајте време чекања за искључење.</string>
+    <string name="prefs_item_notification">Прикажи обавештење</string>
+    <string name="prefs_item_notification_explanation">Искључење обавештења може да утиче на позадински сервис у условима недовољне меморије. Ако уочите проблеме, оставите ово укључено.</string>
+    <string name="prefs_item_boot">Аутоматско покретање</string>
+    <string name="prefs_item_boot_explanation">Аутоматски покрени сервис Паметног Wi-Fi менаџера по покретању или промени бежичне мреже и базне станице.</string>
+    <string name="prefs_item_towermaintenance">Одржавање локација</string>
+    <string name="prefs_item_towermaintenance_explanation">Одржавај списак локација да не постане превелик.</string>
+    <string name="prefs_item_aggressive">Агресивно праћење</string>
+    <string name="prefs_item_aggressive_explanation">Пробуди уређај и провери тренутну базну станицу, чак и кад је екран искључен.  Ово може да побољша одзив, али ће за нијансу повећати трошење батерије.</string>
+
+    <string name="tab_main">Паметнији</string>
+    <string name="tab_ignore">Игнориши</string>
+    <string name="tab_learned">Научено</string>
+    <string name="tab_bluetooth">Блутут</string>
+    <string name="tab_time">Време</string>
+
+    <string name="pref_enable">enable_system</string>
+    <string name="pref_learn">enable_learning</string>
+
+    <string name="service_desc">Сервис Паметног Wi-Fi менаџера</string>
+
+    <string name="manage_radio_switch">Базне станице</string>
+    <string name="manage_radio_explanation">Контролишите бежични и блутут на основу аутоматски научених локација, временских распона и других критеријума</string>
+
+    <string name="learn_wifi_switch">Аутоматски учи локације</string>
+
+    <string name="manage_wifi_explanation">Контролишите бежични на основу аутоматски научених локација и других критеријума</string>
+    <string name="autolearn_wifi_description">Аутоматски учи кад да укључи бежични на основу идентитета базних станица.  Да бисте почели учење нове локације, довољно је да укључите бежични.</string>
+    <string name="ssid_blacklist_desc">При вези са игнорисаним ССИД аутоматско учење локације је онемогућено.  Биће опет омогућено кад напустите игнорисану мрежу.</string>
+    <string name="learned_wifi_description">У режиму аутоматског учења идентификатори базних станица се мапирају на имена бежичних мрежа.  Ако се мрежа укључује у неприкладним тренуцима, уклањање њеног уноса ће поништити њено стање.</string>
+    <string name="delete_dialog_title">Обрисати познату мрежу?</string>
+    <string name="delete_learned_message">Брисање научене мреже уклања све њене асоцијације са познатим базним станицама.  Ако је аутоматско учење омогућено, мрежа ће поново учити базне станице.  Да бисте онемогућили мрежу да учи станице, ставите је на списак игнорисаних у одељку „Игнорисане мреже“</string>
+    <string name="bluetooth_blacklist_description">Бежични и аутоматско учење је онемогућено при вези са блутут уређајима са црне листе.</string>
+    <string name="ignoring_dialog_network">Игнорисање мреже</string>
+    <string name="ignoring_dialog_description">Игнорисање мреже неће обрисати научене локације.  Можете их обрисати сада или у одељку Научено, или их оставите ако желите и даље да контролишете бежични на основу локације али не желите да учи додатне нове локације.</string>
+    <string name="ignoring_dialog_leave">Напусти</string>
+    <string name="ignoring_dialog_delete">Обриши</string>
+    <string name="shutdown_time_30s">30 секунди</string>
+    <string name="shutdown_time_1m">1 минут</string>
+    <string name="shutdown_time_2m">2 минуте</string>
+    <string name="time_range_desc">Фиксни временски распони премошћавају друге методе контроле и омогућавају укључење/искључење унутар неког временског периода.</string>
+    <string name="drawer_open">Отвори навигациону фиоку</string>
+    <string name="drawer_close">Затвори навигациону фиоку</string>
+
+    <string name="nav_ignore">Игнорисане мреже</string>
+    <string name="nav_bluetooth">Блутут</string>
+    <string name="nav_time">Временски распони</string>
+    <string name="nav_learned">Научене мреже</string>
+
+    <string name="explanation_autolearned">Претходно научене локације</string>
+    <string name="explanation_wifi_idle">Бежични укључен али није повезан</string>
+    <string name="explanation_wifi_blocked">Бежични блокиран</string>
+    <string name="explanation_wifi_enabled">Бежични укључен</string>
+    <string name="explanation_wifi_enabled_cell">На аутоматски наученој локацији</string>
+    <string name="explanation_wifi_disabled">Бежични искључен</string>
+    <string name="explanation_wifi_disabled_cell">Нисам близу познате локације</string>
+    <string name="explanation_wifi_disabled_bluetooth">Повезан на блутут уређај са црне листе</string>
+    <string name="explanation_wifi_management_disabled">Управљање бежичним онемогућено</string>
+    <string name="explanation_wifi_management_disabled_user">Управљање искључено</string>
+    <string name="explanation_wifi_management_disabled_cell">Нема базних станица у домету</string>
+    <string name="explanation_wifi_geofence_exclude">Искључен геолокацијом</string>
+    <string name="explanation_wifi_geofence_include">Укључен геолокацијом</string>
+    <string name="explanation_wifi_time_include">Укључен временским распоном</string>
+    <string name="explanation_wifi_time_exclude">Искључен временским распоном</string>
+    <string name="explanation_wifi_disabled_towerid">Повезан на базну станицу са црне листе</string>
+    <string name="explanation_wifi_ignore_ssidblacklist">Повезан на игнорисани ССИД</string>
+    <string name="explanation_wifi_forced_user_enabled">Бежични присилно укључен</string>
+    <string name="explanation_wifi_forced_user_disabled">Бежични присилно искључен</string>
+    <string name="explanation_wifi_ignore_airplane">У авионском режиму</string>
+    <string name="explanation_wifi_ignore_tethered">Тетеринг/дељење везе</string>
+    <string name="explanation_wifi_ignore_sleeppolicy">Игноришем у стању спавања</string>
+    <string name="explanation_wifi_idle_disable">Бежични у мировању на непознатој локацији, чекам искључење</string>
+    <string name="explanation_wifi_neverrun">Отворите Паметни Wi-Fi менаџер да почнете контролисати бежични на вашем уређају!</string>
+    <string name="explanation_unknown">Непознат разлог</string>
+
+    <string name="wifistate_blocked">Бежични присилно искључен</string>
+    <string name="wifistate_ignore">Не управљам бежичним</string>
+    <string name="wifistate_on">Бежични укључен</string>
+    <string name="wifistate_off">Бежични искључен</string>
+    <string name="wifistate_idle">Бежични укључен али нема мреже</string>
+
+    <string name="title_activity_ssid_blacklist">Игнорисане мреже</string>
+    <string name="title_activity_bluetooth_blacklist">Блутут</string>
+    <string name="title_activity_timerange">Временски распони</string>
+    <string name="title_activity_learned">Научене мреже</string>
+
+    <string name="learned_number">Научено %1$d базних станица</string>
+
+    <string name="timerange_delete_text">Обриши временски распон</string>
+    <string name="timerange_no_effect">Временски распон не контролише ништа</string>
+    <string name="timerange_no_days">Није одређен ниједан дан</string>
+    <string name="timerange_disabled_text">Временски распон онемогућен</string>
+    <string name="timerange_control_wifi">Бежични</string>
+    <string name="timerange_control_bluetooth">Блутут</string>
+    <string name="timerange_control_on">иск</string>
+    <string name="timerange_control_off">укљ</string>
+
+    <string name="timerange_controlbutton_wifi">Контролиши бежични</string>
+    <string name="timerange_controlbutton_bt">Контролиши блутут</string>
+
+    <string name="timerange_dialog_delete_title">Обрисати временски распон?</string>
+    <string name="timerange_dialog_delete_cancel">Одустани</string>
+    <string name="timerange_dialog_delete_ok">Обриши</string>
+    <string name="timerange_dialog_delete_text">Желите ли заиста да обришете овај временски распон?</string>
+
+    <string name="range_mon">Пон</string>
+    <string name="range_tue">Уто</string>
+    <string name="range_wed">Сре</string>
+    <string name="range_thu">Чет</string>
+    <string name="range_fri">Пет</string>
+    <string name="range_sat">Суб</string>
+    <string name="range_sun">Нед</string>
+
+    <string name="range_fail_nodays">Није одређен ниједан дан</string>
+    <string name="range_fail_notime">Није постављено време</string>
+    <string name="range_fail_nocontrol">Нема утицаја на бежични или блутут</string>
+    <string name="quicker_wifi">Бежични</string>
+    <string name="quicker_bt">Блутут</string>
+
+    <string name="quicker_enable">Паметни Wi-Fi менаџер</string>
+    <string name="quicker_startswm">Паметни Wi-Fi менаџер</string>
+
+    <string name="quicker_settings">Андроидове поставке бежичног</string>
+    <string name="quicker_close">Затвори</string>
+    <string name="quicker_explanation">Паметни менаџер може да укључи или искључи бежични интернет и блутут у зависности од тренутних поставки.</string>
+    <string name="quicker_forget">Заборави тренутну локацију</string>
+
+    <string name="nag_tower_maintenance">Паметни менаџер сада има могућност аутоматског одржавања списка локација за бежичну мрежу.  Омогућите ово у поставкама под Одржавање локација!</string>
+    <string name="nag_tower_maintenance_prefs">Иди на поставке</string>
+    <string name="nag_tower_maintenance_cancel">Нека, хвала</string>
+    <string name="action_about">О програму</string>
+    <string name="no_bluetooth">Нема блутут уређаја или је блутут искључен</string>
+
+</resources>
