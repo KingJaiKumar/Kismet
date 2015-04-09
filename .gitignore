@@ -1,7 +1,8 @@
 */build/*
 */SmarterWifiManager/*.apk
-.idea/*
+*/.idea/*
 */.gradle/*
-libraries/*/build/*
-*.swp
-*.iml
+*/libraries/*/build/*
+*/*.swp
+*/*.iml
+*/*.apk

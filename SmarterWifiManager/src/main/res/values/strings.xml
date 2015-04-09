@@ -101,6 +101,7 @@
     <string name="learned_number">Learned %1$d towers</string>
 
     <string name="timerange_delete_text">Delete Time Range</string>
+    <string name="timerange_no_ranges">No time ranges configured</string>
     <string name="timerange_no_effect">Time range doesn\'t control anything</string>
     <string name="timerange_no_days">Time doesn\'t occur on any days</string>
     <string name="timerange_disabled_text">Time range disabled</string>

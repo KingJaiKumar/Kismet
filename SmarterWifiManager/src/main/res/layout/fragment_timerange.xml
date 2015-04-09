@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="No time ranges configured"
+        android:text="@string/timerange_no_ranges"
         android:id="@+id/textViewNoTime"
         android:visibility="gone"
         android:layout_margin="15dp" />

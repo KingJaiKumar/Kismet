@@ -100,6 +100,7 @@
 
     <string name="learned_number">Научено %1$d базних станица</string>
 
+    <string name="timerange_no_ranges">Нема постављених временских распона</string>
     <string name="timerange_delete_text">Обриши временски распон</string>
     <string name="timerange_no_effect">Временски распон не контролише ништа</string>
     <string name="timerange_no_days">Није одређен ниједан дан</string>

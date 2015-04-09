@@ -15,6 +15,9 @@
     <string name="prefs_item_boot_explanation">Iniciar automáticamente servicio Gestor inteligente de Wi-Fi al iniciar o cuando cambia Wi-Fi o torre celular.</string>
     <string name="prefs_item_towermaintenance">Mantenimiento de ubicación</string>
     <string name="prefs_item_towermaintenance_explanation">Evite que la lista de ubicaciones sea muy extensa mediante un mantenimiento inteligente.</string>
+    <string name="prefs_item_aggressive">Monitorización agresiva de torres</string>
+    <string name="prefs_item_aggressive_explanation">Reanudar y comprobar la torre actual, incluso cuando la pantalla esté apagada. Esto puede mejorar la respuesta, pero puede consumir ligeramente algo más de batería.</string>
+
 
     <string name="tab_main">Inteligente</string>
     <string name="tab_ignore">Ignorar</string>
@@ -93,6 +96,7 @@
     <string name="title_activity_learned">Redes guardadas</string>
 
     <string name="timerange_delete_text">Borrar rango horario</string>
+    <string name="timerang_no_time_ranges">No hay rangos horarios configurados</string>
     <string name="timerange_no_effect">El rango horario no controla nada</string>
     <string name="timerange_no_days">La hora no tiene ningún día</string>
     <string name="timerange_disabled_text">Rango horario deshabilitado</string>
