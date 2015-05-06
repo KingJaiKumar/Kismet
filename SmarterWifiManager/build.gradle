@@ -1,5 +1,8 @@
 apply plugin: 'android'
 
+def VERSION_NUM = 60
+def VERSION_NAME = "2015.05.60"
+
 android {
     compileSdkVersion 21
     buildToolsVersion '21.0.2'
@@ -16,8 +19,6 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 59
-        versionName "2015.04.59"
         signingConfig signingConfigs.config
     }
 
@@ -40,6 +41,17 @@ android {
     }
 
     productFlavors {
+        standard {
+            applicationId "net.kismetwireless.android.smarterwifimanager"
+            versionCode VERSION_NUM
+            versionName VERSION_NAME
+        }
+
+        bpe {
+            applicationId "net.kismetwireless.android.smarterwifimanager.bpe"
+            versionCode VERSION_NUM
+            versionName VERSION_NAME + "bp"
+        }
     }
 }
 
