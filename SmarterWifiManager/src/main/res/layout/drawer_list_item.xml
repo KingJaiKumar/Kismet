@@ -36,7 +36,9 @@
         android:text="Medium Text"
         android:id="@+id/text1"
         android:textColor="#fff"
-        android:layout_gravity="center" /><![CDATA[
+        android:layout_gravity="center" />
+
+    <![CDATA[
 
 
 

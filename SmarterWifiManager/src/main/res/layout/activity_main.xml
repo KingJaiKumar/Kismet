@@ -3,34 +3,76 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <!-- The main content view -->
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!--
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:padding="4dip"
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent" android:layout_height="match_parent">
+    <!-- The navigation drawer -->
+    <RelativeLayout
+        android:layout_width="240dp" android:layout_height="match_parent"
+        android:id="@+id/left_drawer"
+        android:layout_gravity="start">
 
-        <android.support.v4.view.ViewPager
+        <ListView android:id="@+id/drawer_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/pager">
-        </android.support.v4.view.ViewPager>
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:background="#111"
+            android:layout_above="@+id/drawer_separator" />
 
-    </LinearLayout>
-        -->
+        <View
+            android:id="@+id/drawer_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_above="@+id/drawer_settings"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp" />
 
-    <!-- The navigation drawer -->
+        <LinearLayout
+            android:id="@+id/drawer_settings"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:padding="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:clickable="true" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/image1"
+                android:src="@drawable/ic_action_settings"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/action_settings"
+                android:id="@+id/text1"
+                android:textColor="#fff"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:background="#111"/>
+        -->
 </android.support.v4.widget.DrawerLayout>
 
 

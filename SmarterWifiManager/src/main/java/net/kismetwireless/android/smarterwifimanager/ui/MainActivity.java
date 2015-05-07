@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
@@ -61,9 +62,11 @@ public class MainActivity extends ActionBarActivity {
     private ArrayList<Integer[]> drawerContent = new ArrayList<Integer[]>();
 
     private DrawerLayout drawerLayout;
+    private RelativeLayout leftDrawer;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     private DualDrawerListAdapter listAdapter;
+    private View settingsView;
 
     private FragmentMain mainFragment;
 
@@ -83,7 +86,8 @@ public class MainActivity extends ActionBarActivity {
         eventBus.post(new EventPreferencesChanged());
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView) findViewById(R.id.left_drawer);
+        leftDrawer = (RelativeLayout) findViewById(R.id.left_drawer);
+        drawerList = (ListView) findViewById(R.id.drawer_list);
 
         drawerContent.add(new Integer[] {R.string.nav_learned, R.drawable.ic_action_save});
         drawerContent.add(new Integer[] {R.string.nav_ignore, R.drawable.ic_action_bad});
@@ -129,6 +133,16 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment, "mainfragment").commit();
         }
 
+        // Configure the settings view
+        settingsView = findViewById(R.id.drawer_settings);
+        settingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(leftDrawer);
+                startActivityForResult(new Intent(MainActivity.this, ActivityPrefs.class), PREFS_REQ);
+            }
+        });
+
         // showNagCleanup();
     }
 
@@ -171,8 +185,10 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // No menu
+
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -271,19 +287,19 @@ public class MainActivity extends ActionBarActivity {
             switch (item[0]) {
                 case R.string.nav_learned:
                     startActivity(new Intent(MainActivity.this, ActivitySsidLearned.class));
-                    drawerLayout.closeDrawer(drawerList);
+                    drawerLayout.closeDrawer(leftDrawer);
                     break;
                 case R.string.nav_ignore:
                     startActivity(new Intent(MainActivity.this, ActivitySsidBlacklist.class));
-                    drawerLayout.closeDrawer(drawerList);
+                    drawerLayout.closeDrawer(leftDrawer);
                     break;
                 case R.string.nav_bluetooth:
                     startActivity(new Intent(MainActivity.this, ActivityBluetoothBlacklist.class));
-                    drawerLayout.closeDrawer(drawerList);
+                    drawerLayout.closeDrawer(leftDrawer);
                     break;
                 case R.string.nav_time:
                     startActivity(new Intent(MainActivity.this, ActivityTimeRange.class));
-                    drawerLayout.closeDrawer(drawerList);
+                    drawerLayout.closeDrawer(leftDrawer);
                     break;
             }
         }
