@@ -45,26 +45,6 @@
             </intent-filter>
         </activity-alias>
 
-        <!--
-        <activity-alias android:name=".MainActivity"
-            android:targetActivity=".ui.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-alias>
-
-        <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        -->
-
         <activity
             android:name=".ui.ActivityPrefs"
             android:label="@string/prefs_name" >
