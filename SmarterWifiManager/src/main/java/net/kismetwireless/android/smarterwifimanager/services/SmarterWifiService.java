@@ -107,6 +107,7 @@ public class SmarterWifiService extends Service {
     private WifiState userOverrideState = WifiState.WIFI_IGNORE;
     private WifiState curState = WifiState.WIFI_IGNORE;
     private WifiState targetState = WifiState.WIFI_IGNORE;
+    private WifiState previousState = WifiState.WIFI_IGNORE;
 
     private CellLocationCommon currentCellLocation;
     private TowerType currentTowerType = TowerType.TOWER_UNKNOWN;
@@ -228,7 +229,8 @@ public class SmarterWifiService extends Service {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         notificationBuilder.setContentIntent(pIntent);
 
@@ -717,6 +719,7 @@ public class SmarterWifiService extends Service {
 
         LogAlias.d("smarter", "Handling cell location, going to kick curtower and wifistate");
         setCurrentTower(location);
+
         // configureWifiState();
     }
 
@@ -921,12 +924,14 @@ public class SmarterWifiService extends Service {
     }
 
     public void configureWifiState() {
+        previousState = curState;
+
         curState = getWifiState();
         targetState = getShouldWifiBeEnabled();
 
         LogAlias.d("smarter", "World state: " + worldState.toString());
 
-        LogAlias.d("smarter", "configureWifiState current " + curState + " target " + targetState);
+        LogAlias.d("smarter", "configureWifiState previous " + previousState + " current " + curState + " target " + targetState);
 
         if (curState == WifiState.WIFI_IGNORE) {
             triggerCallbackWifiChanged();
@@ -1494,24 +1499,11 @@ public class SmarterWifiService extends Service {
     }
 
     public boolean getWifiAlwaysScanning() {
-        boolean ret = false;
-        Method[] wmMethods = wifiManager.getClass().getDeclaredMethods();
-        for (Method method: wmMethods){
-            if (method.getName().equals("isScanAlwaysAvailable")) {
-                try {
-                    ret = (Boolean) method.invoke(wifiManager);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return wifiManager.isScanAlwaysAvailable();
         }
 
-        // LogAlias.d("smarter", "tethering: " + ret);
-        return ret;
+        return false;
     }
 
     public ArrayList<SmarterTimeRange> getTimeRangeList() {
