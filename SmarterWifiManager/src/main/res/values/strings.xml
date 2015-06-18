@@ -65,9 +65,9 @@
     <string name="explanation_wifi_idle">Wi-Fi enabled but not connected</string>
     <string name="explanation_wifi_blocked">Wi-Fi blocked</string>
     <string name="explanation_wifi_enabled">Wi-Fi enabled</string>
-    <string name="explanation_wifi_enabled_cell">In auto-learned location</string>
+    <string name="explanation_wifi_enabled_cell">You\'ve used Wi-Fi here before</string>
     <string name="explanation_wifi_disabled">Wi-Fi disabled</string>
-    <string name="explanation_wifi_disabled_cell">Not near a known location</string>
+    <string name="explanation_wifi_disabled_cell">Not near somewhere you\'ve used Wi-Fi before</string>
     <string name="explanation_wifi_disabled_bluetooth">Connected to blacklisted Bluetooth device</string>
     <string name="explanation_wifi_management_disabled">Wi-Fi management disabled</string>
     <string name="explanation_wifi_management_disabled_user">Management turned off</string>

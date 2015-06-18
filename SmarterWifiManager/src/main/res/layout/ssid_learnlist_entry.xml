@@ -32,7 +32,8 @@
             android:id="@+id/ssidListSsid"
             android:layout_gravity="left|center_vertical"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:textColor="@color/textColorPrimary"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
             android:text="Small Text"
             android:id="@+id/ssidListTower"
             android:layout_below="@+id/ssidListSsid"
-            android:layout_alignLeft="@+id/ssidListSsid" />
+            android:layout_alignLeft="@+id/ssidListSsid"
+            android:textColor="@color/textColorSecondary" />
     </LinearLayout>
 
 </RelativeLayout>

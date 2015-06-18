@@ -1,24 +1,4 @@
-
-ADDED
-
-    <string name="action_about">About</string>
-
-    <string name="learned_number">Learned %1$d towers</string>
-
-    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
-
-	<string name="prefs_item_aggressive">Aggressive Tower Monitoring</string>
-	<string name="prefs_item_aggressive_explanation">Wake up and check the current tower, even when the screen is off.  This can improve responsiveness, but may use slightly more battery power.</string>
-
 CHANGED
 
-    <!-- "Smarter W-Fi Manager" should not be translated -->
-    <string name="quicker_explanation">Smarter Wi-Fi Manager may disable or re-enable radios depending on the current configuration.</string>
-
-
-REMOVED
-
-    <!-- We use app title for untranslated text -->
-    <string name="quicker_enable">Smarter Wi-Fi Manager</string>
-    <string name="quicker_startswm">Smarter Wi-Fi Manager</string>
-
+    <string name="explanation_wifi_enabled_cell">You\'ve used Wi-Fi here before</string>
+    <string name="explanation_wifi_disabled_cell">Not near somewhere you\'ve used Wi-Fi before</string>

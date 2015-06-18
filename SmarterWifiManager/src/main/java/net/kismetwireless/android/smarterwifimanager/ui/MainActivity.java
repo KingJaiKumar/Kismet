@@ -1,32 +1,19 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 
@@ -35,15 +22,13 @@ import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 
-import java.util.ArrayList;
-
 import javax.inject.Inject;
 
 
 // Main icon color shifts
 // 00e8d5    b8b8b8    a40000
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     @Inject
     Context context;
 
@@ -55,18 +40,12 @@ public class MainActivity extends ActionBarActivity {
 
     private static int PREFS_REQ = 1;
 
-    // private SmarterPagerAdapter pagerAdapter;
-    // private ViewPager viewPager;
-    private ActionBar actionBar;
-
-    private ArrayList<Integer[]> drawerContent = new ArrayList<Integer[]>();
+    private Toolbar toolBar;
 
     private DrawerLayout drawerLayout;
-    private RelativeLayout leftDrawer;
-    private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
-    private DualDrawerListAdapter listAdapter;
-    private View settingsView;
+
+    private NavigationView navigationView;
 
     private FragmentMain mainFragment;
 
@@ -86,27 +65,17 @@ public class MainActivity extends ActionBarActivity {
         eventBus.post(new EventPreferencesChanged());
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        leftDrawer = (RelativeLayout) findViewById(R.id.left_drawer);
-        drawerList = (ListView) findViewById(R.id.drawer_list);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        drawerContent.add(new Integer[] {R.string.nav_learned, R.drawable.ic_action_save});
-        drawerContent.add(new Integer[] {R.string.nav_ignore, R.drawable.ic_action_bad});
-        drawerContent.add(new Integer[] {R.string.nav_bluetooth, R.drawable.ic_action_bluetooth_connected});
-        drawerContent.add(new Integer[] {R.string.nav_time, R.drawable.ic_action_time});
+        toolBar = (Toolbar) findViewById(R.id.toolbar);
 
-        listAdapter = new DualDrawerListAdapter(this, R.layout.drawer_list_item, drawerContent);
+        toolBar.setTitle(R.string.app_name);
 
-        drawerList.setAdapter(listAdapter);
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        // actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        // actionBar.setDisplayHomeAsUpEnabled(false);
+        setSupportActionBar(toolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+                toolBar, R.string.drawer_open, R.string.drawer_close) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
@@ -133,17 +102,35 @@ public class MainActivity extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment, "mainfragment").commit();
         }
 
-        // Configure the settings view
-        settingsView = findViewById(R.id.drawer_settings);
-        settingsView.setOnClickListener(new View.OnClickListener() {
+        // Configure the nav view
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                drawerLayout.closeDrawer(leftDrawer);
-                startActivityForResult(new Intent(MainActivity.this, ActivityPrefs.class), PREFS_REQ);
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.navigation_learned:
+                        startActivity(new Intent(MainActivity.this, ActivitySsidLearned.class));
+                        drawerLayout.closeDrawers();
+                        return true;
+                    case R.id.navigation_ignore:
+                        startActivity(new Intent(MainActivity.this, ActivitySsidBlacklist.class));
+                        drawerLayout.closeDrawers();
+                        return true;
+                    case R.id.navigation_bluetooth:
+                        startActivity(new Intent(MainActivity.this, ActivityBluetoothBlacklist.class));
+                        drawerLayout.closeDrawers();
+                        return true;
+                    case R.id.navigation_time:
+                        startActivity(new Intent(MainActivity.this, ActivityTimeRange.class));
+                        drawerLayout.closeDrawers();
+                        return true;
+                    case R.id.navigation_settings:
+                        startActivityForResult(new Intent(MainActivity.this, ActivityPrefs.class), PREFS_REQ);
+                        drawerLayout.closeDrawers();
+                        return true;
+                }
+                return false;
             }
         });
-
-        // showNagCleanup();
     }
 
     @Override
@@ -203,143 +190,14 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
 
-        if (item.getItemId() == R.id.action_about) {
-            showAbout();
-            return true;
-        }
-
         return true;
     }
 
-    public void showAbout() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-
-        WebView wv = new WebView(this);
-
-        wv.loadUrl("file:///android_asset/html_no_copy/about-" + getString(R.string.html_locale) + ".html");
-
-        wv.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Uri uri = Uri.parse(url);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-
-                return true;
-            }
-        });
-
-        alert.setView(wv);
-
-        alert.setNegativeButton(R.string.quicker_close, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
-
-        alert.show();
-
-    }
-
-    public void showNagCleanup() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        if (prefs.getBoolean("nag_showed_cleanup2", false)) {
-            return;
-        }
-
-        SharedPreferences.Editor e = prefs.edit();
-        e.putBoolean("nag_showed_cleanup2", true);
-        e.commit();
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-        alert.setMessage(R.string.nag_tower_maintenance);
-
-        alert.setPositiveButton(R.string.nag_tower_maintenance_prefs, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                startActivityForResult(new Intent(MainActivity.this, ActivityPrefs.class), PREFS_REQ);
-            }
-        });
-
-        alert.setNegativeButton(R.string.nag_tower_maintenance_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-            }
-        });
-
-        alert.show();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PREFS_REQ) {
             eventBus.post(new EventPreferencesChanged());
-        }
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            Integer[] item = listAdapter.getItem(position);
-
-            switch (item[0]) {
-                case R.string.nav_learned:
-                    startActivity(new Intent(MainActivity.this, ActivitySsidLearned.class));
-                    drawerLayout.closeDrawer(leftDrawer);
-                    break;
-                case R.string.nav_ignore:
-                    startActivity(new Intent(MainActivity.this, ActivitySsidBlacklist.class));
-                    drawerLayout.closeDrawer(leftDrawer);
-                    break;
-                case R.string.nav_bluetooth:
-                    startActivity(new Intent(MainActivity.this, ActivityBluetoothBlacklist.class));
-                    drawerLayout.closeDrawer(leftDrawer);
-                    break;
-                case R.string.nav_time:
-                    startActivity(new Intent(MainActivity.this, ActivityTimeRange.class));
-                    drawerLayout.closeDrawer(leftDrawer);
-                    break;
-            }
-        }
-    }
-
-    public class DualDrawerListAdapter extends ArrayAdapter<Integer[]> {
-        private int layoutResourceId;
-
-        public DualDrawerListAdapter(Context context, int textViewResourceId, ArrayList<Integer[]> items) {
-            super(context, textViewResourceId, items);
-            layoutResourceId = textViewResourceId;
-        }
-
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            try {
-                final Integer[] entry = getItem(position);
-
-                View v = null;
-
-                if (convertView == null) {
-                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                    v = inflater.inflate(layoutResourceId, null);
-                } else {
-                    v = convertView;
-                }
-
-                TextView text1 = (TextView) v.findViewById(R.id.text1);
-                ImageView img1 = (ImageView) v.findViewById(R.id.image1);
-
-                text1.setText(getString(entry[0]));
-                img1.setImageResource(entry[1]);
-
-                return v;
-            } catch (Exception ex) {
-                Log.e("smarter", "error", ex);
-                return null;
-            }
         }
     }
 }

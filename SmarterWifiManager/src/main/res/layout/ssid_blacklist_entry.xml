@@ -24,5 +24,6 @@
         android:layout_alignBottom="@+id/ssidListCheck"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/ssidListCheck"
-        android:layout_marginLeft="15dp" />
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/textColorPrimary" />
 </RelativeLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_learned"
+            android:checked="true"
+            android:icon="@drawable/ic_action_save"
+            android:title="@string/nav_learned" />
+        <item
+            android:id="@+id/navigation_ignore"
+            android:icon="@drawable/ic_action_bad"
+            android:title="@string/nav_ignore" />
+        <item
+            android:id="@+id/navigation_bluetooth"
+            android:icon="@drawable/ic_action_bluetooth_connected"
+            android:title="@string/nav_bluetooth" />
+        <item
+            android:id="@+id/navigation_time"
+            android:icon="@drawable/ic_action_time"
+            android:title="@string/nav_time" />
+        <item
+            android:id="@+id/navigation_settings"
+            android:icon="@drawable/ic_action_settings"
+            android:title="@string/action_settings" />
+    </group>
+</menu>
