@@ -110,8 +110,8 @@
     <string name="timerange_control_on">on</string>
     <string name="timerange_control_off">off</string>
 
-    <string name="timerange_controlbutton_wifi">Manage Wi-Fi</string>
-    <string name="timerange_controlbutton_bt">Manage Bluetooth</string>
+    <string name="timerange_controlbutton_wifi">Control Wi-Fi</string>
+    <string name="timerange_controlbutton_bt">Control Bluetooth</string>
 
     <string name="timerange_dialog_delete_title">Delete time range?</string>
     <string name="timerange_dialog_delete_cancel">Cancel</string>
@@ -145,5 +145,8 @@
     <string name="nag_tower_maintenance_cancel">No thanks</string>
     <string name="action_about">About</string>
     <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
+
+    <string name="snackbar_delete_timerange">Time range deleted</string>
+    <string name="snackbar_delete_undo">Undo</string>
 
 </resources>

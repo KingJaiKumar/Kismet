@@ -107,6 +107,8 @@ public class FragmentTimeRange extends SmarterFragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
+        recyclerView.setHasFixedSize(false);
+
         timeCardAdapter = new TimeCardAdapter(context, (AppCompatActivity) getActivity(), lastTimeList);
 
         recyclerView.setAdapter(timeCardAdapter);
@@ -120,6 +122,18 @@ public class FragmentTimeRange extends SmarterFragment {
         });
 
         return mainView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // Save all the current time ranges
+        for (SmarterTimeRange str : lastTimeList) {
+            str.applyChanges();
+            serviceBinder.updateTimeRange(str);
+            serviceBinder.updateTimeRangeEnabled(str);
+        }
     }
 
     public void addTimeRange() {

@@ -1,18 +1,17 @@
 package net.kismetwireless.android.smarterwifimanager.models;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.support.v7.app.AlertDialog;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +20,7 @@ import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
 
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
-import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
+import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 
 import java.util.ArrayList;
 
@@ -35,15 +34,19 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
     Context context;
 
     @Inject
-    SmarterWifiService smarterWifiService;
+    SmarterWifiServiceBinder smarterWifiServiceBinder;
 
     AppCompatActivity activity;
 
     ArrayList<SmarterTimeRange> timeRanges;
 
+    RecyclerView recyclerView;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        SmarterTimeRange timeRange;
+
         // Containers we pass to the hide/show function
-        LinearLayout timeStartContainer, timeEndContainer, expandView, collapseView;
+        LinearLayout timeStartContainer, timeEndContainer;
 
         CheckBox wifiCb, bluetoothCb;
         CompoundButton wifiSwitch, bluetoothSwitch, enableSwitch;
@@ -51,31 +54,14 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
         // Clock
         TextView startHours, startMinutes, startAmPm, endHours, endMinutes, endAmPm;
 
-        // Expand/collapse are two layouts for simplicity
-        LinearLayout collapsedMain, expandedMain;
-
-        // Main image buttons
-        ImageView deleteCollapse, deleteExpand, undoExpand, saveExpand;
-
         // Blue/bold day picker text
         TextView repMon, repTue, repWed, repThu, repFri, repSat, repSun;
 
         // Red fail text
-        TextView errorText1, errorText2;
-        TextView summaryView;
+        TextView errorText2;
 
         public ViewHolder(View v) {
             super(v);
-
-            collapsedMain = (LinearLayout) v.findViewById(R.id.collapsedMainLayout);
-            expandedMain = (LinearLayout) v.findViewById(R.id.expandedMainLayout);
-            expandView = (LinearLayout) v.findViewById(R.id.expandView);
-            collapseView = (LinearLayout) v.findViewById(R.id.collapseView);
-
-            deleteCollapse = (ImageView) v.findViewById(R.id.timeRangeDeleteCollapse);
-            deleteExpand = (ImageView) v.findViewById(R.id.timeRangeDelete);
-            undoExpand = (ImageView) v.findViewById(R.id.timeRangeUndo);
-            saveExpand= (ImageView) v.findViewById(R.id.timeRangeSave);
 
             timeStartContainer = (LinearLayout) v.findViewById(R.id.timeLayoutStart);
             timeEndContainer = (LinearLayout) v.findViewById(R.id.timeLayoutEnd);
@@ -103,12 +89,23 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
             repSat = (TextView) v.findViewById(R.id.daySat);
             repSun = (TextView) v.findViewById(R.id.daySun);
 
-            summaryView = (TextView) v.findViewById(R.id.rangeSummaryText);
-
-            errorText1 = (TextView) v.findViewById(R.id.errorView1);
             errorText2 = (TextView) v.findViewById(R.id.errorView2);
         }
     }
+
+    ItemTouchHelper.SimpleCallback swipeItemCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            TimeCardAdapter.ViewHolder tcHolder = (TimeCardAdapter.ViewHolder) viewHolder;
+
+            deleteTimeRange(tcHolder.timeRange);
+        }
+    };
 
     public TimeCardAdapter(Context context, AppCompatActivity activity, ArrayList<SmarterTimeRange> timeRanges) {
         this.timeRanges = timeRanges;
@@ -116,6 +113,17 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
         SmarterApplication.get(context).inject(this);
 
         this.activity = activity;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView v) {
+        super.onAttachedToRecyclerView(v);
+
+        recyclerView = v;
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeItemCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
     }
 
     @Override
@@ -139,35 +147,15 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
         // There should be something smarter to do here
         final ViewHolder holder = h;
 
+        h.timeRange = item;
+
         int failcode = item.getRangeValid();
 
         if (failcode < 0) {
-            holder.errorText1.setVisibility(View.GONE);
             holder.errorText2.setVisibility(View.GONE);
-            holder.summaryView.setVisibility(View.VISIBLE);
         } else {
-            holder.errorText1.setText(failcode);
             holder.errorText2.setText(failcode);
-            holder.errorText1.setVisibility(View.VISIBLE);
             holder.errorText2.setVisibility(View.VISIBLE);
-            holder.summaryView.setVisibility(View.GONE);
-        }
-
-        if (item.getDirty()) {
-            if (item.getRevertable())
-                toggleImageViewEnable(holder.undoExpand, true);
-            else
-                toggleImageViewEnable(holder.undoExpand, false);
-
-            // toggleImageViewEnable(saveExpand, true);
-            // Save turns back into save
-            holder.saveExpand.setImageResource(R.drawable.ic_action_save);
-        } else {
-            toggleImageViewEnable(holder.undoExpand, false);
-
-            //toggleImageViewEnable(saveExpand, false);
-            // Turn save into collapse
-            holder.saveExpand.setImageResource(R.drawable.navigation_collapse);
         }
 
         // There are more efficient ways of doing this but it only happens in this one
@@ -393,38 +381,27 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
         holder.enableSwitch.setChecked(item.getEnabled());
 
-        collapseView(holder, item.getCollapsed(), item);
-
         holder.enableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 item.setEnabled(b);
-                smarterWifiService.updateTimeRangeEnabled(item);
+                // Set enabled/disabled at the end
+                // smarterWifiServiceBinder.updateTimeRangeEnabled(item);
 
-                // Disable and open, close
+                // Disable, don't allow clicking things
                 if (!b) {
                     holder.timeStartContainer.setClickable(false);
                     holder.timeEndContainer.setClickable(false);
                     holder.timeStartContainer.setEnabled(false);
                     holder.timeEndContainer.setEnabled(false);
-
-                    if (!item.getCollapsed()) {
-                        item.setCollapsed(true);
-                        collapseView(holder, item.getCollapsed(), item);
-                    }
                 }
 
-                // Enable and closed, open
+                // Enabled, turn on features again
                 if (b) {
                     holder.timeStartContainer.setClickable(true);
                     holder.timeEndContainer.setClickable(true);
                     holder.timeStartContainer.setEnabled(true);
                     holder.timeEndContainer.setEnabled(true);
-
-                    if (item.getCollapsed()) {
-                        item.setCollapsed(false);
-                        collapseView(holder, item.getCollapsed(), item);
-                    }
                 }
 
                 notifyDataSetChanged();
@@ -469,187 +446,37 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
                 notifyDataSetChanged();
             }
         });
-
-        holder.collapseView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                item.setCollapsed(!item.getCollapsed());
-
-                collapseView(holder, item.getCollapsed(), item);
-            }
-        });
-
-        holder.deleteCollapse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteDialog(item);
-            }
-        });
-
-        holder.deleteExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteDialog(item);
-            }
-        });
-
-        holder.undoExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!item.getRevertable())
-                    return;
-
-                item.revertChanges();
-
-                notifyDataSetChanged();
-            }
-        });
-
-        holder.saveExpand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!item.getDirty()) {
-                    // We're a collapse button
-                    item.setCollapsed(true);
-                    collapseView(holder, item.getCollapsed(), item);
-                    notifyDataSetChanged();
-                    return;
-                }
-
-                // Otherwise save
-                smarterWifiService.updateTimeRange(item);
-                item.applyChanges();
-                notifyDataSetChanged();
-            }
-        });
-
     }
 
     public int getItemCount() {
         return timeRanges.size();
     }
 
-    private void collapseView(final ViewHolder holder, boolean collapse, SmarterTimeRange item) {
-        // Extract from the main views
-        TextView daysRepeatView = (TextView) holder.collapseView.findViewById(R.id.daysRepeatCollapse);
-
-        TextView summaryView = (TextView) holder.collapsedMain.findViewById(R.id.rangeSummaryText);
-
-        if (!item.getEnabled()) {
-            summaryView.setText(R.string.timerange_disabled_text);
-        } else {
-            if (item.getDays() == 0) {
-                summaryView.setText(R.string.timerange_no_days);
-            } else if (!item.getBluetoothControlled() && !item.getWifiControlled()) {
-                summaryView.setText(context.getString(R.string.timerange_no_effect));
-            } else {
-                StringBuilder sb = new StringBuilder();
-
-                if (item.getWifiControlled()) {
-                    sb.append(context.getString(R.string.timerange_control_wifi));
-                    sb.append(" ");
-                    if (item.getWifiEnabled())
-                        sb.append(context.getString(R.string.timerange_control_on));
-                    else
-                        sb.append(context.getString(R.string.timerange_control_off));
-                }
-
-                if (item.getBluetoothControlled()) {
-                    if (sb.length() > 0)
-                        sb.append(", ");
-
-                    sb.append(context.getString(R.string.timerange_control_bluetooth));
-                    sb.append(" ");
-                    if (item.getBluetoothEnabled())
-                        sb.append(context.getString(R.string.timerange_control_on));
-                    else
-                        sb.append(context.getString(R.string.timerange_control_off));
-                }
-
-                summaryView.setText(sb.toString());
-            }
+    private void deleteTimeRange(final SmarterTimeRange item) {
+        if (item == null) {
+            return;
         }
 
-        if (collapse) {
-            holder.collapseView.setVisibility(View.GONE);
-            holder.expandView.setVisibility(View.VISIBLE);
+        timeRanges.remove(item);
+        smarterWifiServiceBinder.deleteTimeRange(item);
 
-            holder.collapsedMain.setVisibility(View.VISIBLE);
-            holder.expandedMain.setVisibility(View.GONE);
-
-            daysRepeatView.setText(SmarterTimeRange.getHumanDayText(context, item.getDays()));
-        } else {
-            holder.collapseView.setVisibility(View.VISIBLE);
-            holder.expandView.setVisibility(View.GONE);
-
-            holder.collapsedMain.setVisibility(View.GONE);
-            holder.expandedMain.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void toggleImageViewEnable(ImageView v, boolean b) {
-        // If we dont' leave the background view clickable, we can use this to disable the buttons
-        v.setEnabled(b);
-        v.setClickable(b);
-
-        if (b) {
-            AlphaAnimation alpha = new AlphaAnimation(1.0F, 1.0F);
-            alpha.setDuration(0);
-            alpha.setFillAfter(true);
-            v.startAnimation(alpha);
-
-                /* We don't need this if we dont' use the whole background row as a clickable collapse; leave for reference
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-                    TypedArray a = context.obtainStyledAttributes(new int[] { android.R.attr.selectableItemBackground });
-                    int resource = a.getResourceId(0, 0);
-                    a.recycle();
-
-                    v.setBackground(context.getResources().getDrawable(resource));
-                }
-                */
-        } else {
-            AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
-            alpha.setDuration(0);
-            alpha.setFillAfter(true);
-            v.startAnimation(alpha);
-            // v.setBackground(null);
-        }
-    }
-
-    // TODO change this to automatic delete with a snackbar to undo
-    private void deleteDialog(final SmarterTimeRange item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        builder.setTitle(R.string.timerange_dialog_delete_title);
-        builder.setMessage(R.string.timerange_dialog_delete_text);
-
-        builder.setNegativeButton(R.string.timerange_dialog_delete_cancel, new DialogInterface.OnClickListener() {
+        // Avoid hitting it during a recalculation
+        Handler h = new Handler();
+        h.post(new Runnable() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
+            public void run() {
+                notifyDataSetChanged();
             }
         });
 
-        /*
-        builder.setPositiveButton(R.string.timerange_dialog_delete_ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                serviceBinder.deleteTimeRange(item);
-
-                lastTimeList.remove(item);
-                listAdapter.notifyDataSetChanged();
-
-                if (lastTimeList.size() <= 0) {
-                    emptyView.setVisibility(View.VISIBLE);
-                    lv.setVisibility(View.GONE);
-                } else {
-                    emptyView.setVisibility(View.GONE);
-                    lv.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-        */
-
-        builder.create().show();
+        Snackbar.make(recyclerView, R.string.snackbar_delete_timerange, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_delete_undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        timeRanges.add(item);
+                        notifyDataSetChanged();
+                    }
+                })
+                .show();
     }
 }
