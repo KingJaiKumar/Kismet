@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingBottom="10dp">
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    card_view:cardCornerRadius="4dp"
+    android:layout_margin="5dp">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="#272727">
+        android:layout_marginRight="5dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -26,39 +28,39 @@
                 android:layout_margin="5dp"
                 android:background="?android:attr/selectableItemBackground" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="00"
-                android:id="@+id/timeStartHours"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="00"
+                    android:id="@+id/timeStartHours"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=":"
-                android:id="@+id/textView2"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text=":"
+                    android:id="@+id/textView2"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="11"
-                android:id="@+id/timeStartMinutes"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="11"
+                    android:id="@+id/timeStartMinutes"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="AM"
-                android:id="@+id/timeStart12hr"
-                android:layout_gravity="center_horizontal|top"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="AM"
+                    android:id="@+id/timeStart12hr"
+                    android:layout_gravity="center_horizontal|top"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -80,41 +82,41 @@
                 android:layout_margin="5dp"
                 android:background="?android:attr/selectableItemBackground" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="00"
-                android:id="@+id/timeEndHours"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="00"
+                    android:id="@+id/timeEndHours"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=":"
-                android:id="@+id/textView2"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text=":"
+                    android:id="@+id/textView2"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="11"
-                android:id="@+id/timeEndMinutes"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="11"
+                    android:id="@+id/timeEndMinutes"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="AM"
-                android:id="@+id/timeEnd12hr"
-                android:layout_gravity="center_horizontal|top"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="AM"
+                    android:id="@+id/timeEnd12hr"
+                    android:layout_gravity="center_horizontal|top"
+                    android:textStyle="bold" />
 
-                </LinearLayout>
+            </LinearLayout>
 
             <Switch
                 android:layout_width="fill_parent"
@@ -309,7 +311,7 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1px"
-            android:background="@android:color/darker_gray"
+            android:background="@color/colorDivider"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
@@ -335,7 +337,7 @@
             <View
                 android:layout_width="1px"
                 android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray"
+                android:background="@color/colorDivider"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp" />
@@ -394,7 +396,7 @@
                 <View
                     android:layout_width="1px"
                     android:layout_height="fill_parent"
-                    android:background="@android:color/darker_gray"
+                    android:background="@color/colorDivider"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp" />
@@ -413,7 +415,7 @@
                 <View
                     android:layout_width="1px"
                     android:layout_height="fill_parent"
-                    android:background="@android:color/darker_gray"
+                    android:background="@color/colorDivider"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp" />
@@ -435,4 +437,4 @@
 
 
     </LinearLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView>

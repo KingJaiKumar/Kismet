@@ -52,7 +52,7 @@
     <string name="shutdown_time_30s">30 seconds</string>
     <string name="shutdown_time_1m">One minute</string>
     <string name="shutdown_time_2m">Two minutes</string>
-    <string name="time_range_desc">Fixed time ranges override other control methods and allow enabling or disabling radios within a time period.</string>
+    <string name="time_range_desc">Time ranges let you keep Wi-Fi on (or off) at specific times.</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 

@@ -2,3 +2,4 @@ CHANGED
 
     <string name="explanation_wifi_enabled_cell">You\'ve used Wi-Fi here before</string>
     <string name="explanation_wifi_disabled_cell">Not near somewhere you\'ve used Wi-Fi before</string>
+    <string name="time_range_desc">Time ranges let you keep Wi-Fi on (or off) at specific times.</string>

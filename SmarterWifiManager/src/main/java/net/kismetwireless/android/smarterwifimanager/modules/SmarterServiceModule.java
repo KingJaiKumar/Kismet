@@ -2,6 +2,7 @@ package net.kismetwireless.android.smarterwifimanager.modules;
 
 import android.content.Context;
 
+import net.kismetwireless.android.smarterwifimanager.models.TimeCardAdapter;
 import net.kismetwireless.android.smarterwifimanager.services.AlarmReceiver;
 import net.kismetwireless.android.smarterwifimanager.services.BootReceiver;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
@@ -31,7 +32,9 @@ import dagger.Provides;
                 MainActivity.class, ActivityQuickconfig.class,
 
                 SmarterFragment.class, FragmentBluetoothBlacklist.class, FragmentLearned.class, FragmentMain.class, FragmentPrefs.class,
-                FragmentSsidBlacklist.class, FragmentTimeRange.class
+                FragmentSsidBlacklist.class, FragmentTimeRange.class,
+
+                TimeCardAdapter.class
         },
         includes = {
                 ContextModule.class
