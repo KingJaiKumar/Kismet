@@ -210,6 +210,15 @@ public class FragmentTimeRange extends SmarterFragment {
                     @Override
                     public void onClick(View v) {
                         lastTimeList.add(item);
+
+                        if (lastTimeList.size() <= 0) {
+                            emptyView.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.INVISIBLE);
+                        } else {
+                            emptyView.setVisibility(View.INVISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                        }
+
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
