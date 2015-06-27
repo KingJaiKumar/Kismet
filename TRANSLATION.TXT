@@ -2,10 +2,11 @@ CHANGED
 
     <string name="explanation_wifi_enabled_cell">You\'ve used Wi-Fi here before</string>
     <string name="explanation_wifi_disabled_cell">Not near somewhere you\'ve used Wi-Fi before</string>
-    <string name="time_range_desc">Time ranges let you keep Wi-Fi on (or off) at specific times.</string>
 
     <string name="timerange_controlbutton_wifi">Control Wi-Fi</string>
     <string name="timerange_controlbutton_bt">Control Bluetooth</string>
+
+    <string name="time_range_desc">Force Wi-Fi on or off at a specific time by adding a time range.</string>
 
 ADDED
     <string name="snackbar_delete_timerange">Time range deleted</string>

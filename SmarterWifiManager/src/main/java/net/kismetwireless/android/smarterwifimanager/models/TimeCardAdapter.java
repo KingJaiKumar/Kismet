@@ -3,7 +3,6 @@ package net.kismetwireless.android.smarterwifimanager.models;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -191,49 +190,49 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
             holder.repMon.setTextColor(context.getResources().getColor(R.color.blue));
             holder.repMon.setTypeface(null, Typeface.BOLD);
         } else {
-            holder.repMon.setTextColor(context.getResources().getColor(R.color.white));
+            holder.repMon.setTextColor(context.getResources().getColor(R.color.textColorPrimary));
             holder.repMon.setTypeface(null, Typeface.NORMAL);
         }
         if ((dayRep & SmarterTimeRange.REPEAT_TUE) != 0) {
             holder.repTue.setTextColor(context.getResources().getColor(R.color.blue));
             holder.repTue.setTypeface(null, Typeface.BOLD);
         } else {
-            holder.repTue.setTextColor(context.getResources().getColor(R.color.white));
+            holder.repTue.setTextColor(context.getResources().getColor(R.color.textColorPrimary));
             holder.repTue.setTypeface(null, Typeface.NORMAL);
         }
         if ((dayRep & SmarterTimeRange.REPEAT_WED) != 0) {
             holder.repWed.setTextColor(context.getResources().getColor(R.color.blue));
             holder.repWed.setTypeface(null, Typeface.BOLD);
         } else {
-            holder.repWed.setTextColor(context.getResources().getColor(R.color.white));
+            holder.repWed.setTextColor(context.getResources().getColor(R.color.textColorPrimary));
             holder.repWed.setTypeface(null, Typeface.NORMAL);
         }
         if ((dayRep & SmarterTimeRange.REPEAT_THU) != 0) {
             holder.repThu.setTextColor(context.getResources().getColor(R.color.blue));
             holder.repThu.setTypeface(null, Typeface.BOLD);
         } else {
-            holder.repThu.setTextColor(context.getResources().getColor(R.color.white));
+            holder.repThu.setTextColor(context.getResources().getColor(R.color.textColorPrimary));
             holder.repThu.setTypeface(null, Typeface.NORMAL);
         }
         if ((dayRep & SmarterTimeRange.REPEAT_FRI) != 0) {
             holder.repFri.setTextColor(context.getResources().getColor(R.color.blue));
             holder.repFri.setTypeface(null, Typeface.BOLD);
         } else {
-            holder.repFri.setTextColor(context.getResources().getColor(R.color.white));
+            holder.repFri.setTextColor(context.getResources().getColor(R.color.textColorPrimary));
             holder.repFri.setTypeface(null, Typeface.NORMAL);
         }
         if ((dayRep & SmarterTimeRange.REPEAT_SAT) != 0) {
             holder.repSat.setTextColor(context.getResources().getColor(R.color.blue));
             holder.repSat.setTypeface(null, Typeface.BOLD);
         } else {
-            holder.repSat.setTextColor(context.getResources().getColor(R.color.white));
+            holder.repSat.setTextColor(context.getResources().getColor(R.color.textColorPrimary));
             holder.repSat.setTypeface(null, Typeface.NORMAL);
         }
         if ((dayRep & SmarterTimeRange.REPEAT_SUN) != 0) {
             holder.repSun.setTextColor(context.getResources().getColor(R.color.blue));
             holder.repSun.setTypeface(null, Typeface.BOLD);
         } else {
-            holder.repSun.setTextColor(context.getResources().getColor(R.color.white));
+            holder.repSun.setTextColor(context.getResources().getColor(R.color.textColorPrimary));
             holder.repSun.setTypeface(null, Typeface.NORMAL);
         }
 

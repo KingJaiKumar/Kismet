@@ -10,11 +10,29 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textAppearance">@android:style/TextAppearance</item>
     </style>
 
     <style name="Theme.Transparent" parent="@android:style/Theme.Material.Dialog">
         <item name="android:windowBackground">@drawable/dialog_background_material</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:textAppearance">@android:style/TextAppearance</item>
+    </style>
+
+    <style name="TextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="TextMedium" parent="@style/TextAppearance">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextLarge" parent="@style/TextAppearance">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextSmall" parent="@style/TextAppearance">
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

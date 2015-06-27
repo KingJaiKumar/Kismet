@@ -32,7 +32,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="@style/TextLarge"
                     android:text="00"
                     android:id="@+id/timeStartHours"
                     android:textStyle="bold"
@@ -41,14 +41,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="@style/TextLarge"
                     android:text=":"
                     android:layout_gravity="center_horizontal|bottom" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="@style/TextLarge"
                     android:text="11"
                     android:id="@+id/timeStartMinutes"
                     android:layout_gravity="center_horizontal|bottom" />
@@ -56,7 +56,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textAppearance="@style/TextSmall"
                     android:text="AM"
                     android:id="@+id/timeStart12hr"
                     android:layout_gravity="center_horizontal|top"
@@ -67,7 +67,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="@style/TextLarge"
                 android:text="-"
                 android:id="@+id/textView5"
                 android:paddingLeft="15dp"
@@ -85,7 +85,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="@style/TextLarge"
                     android:text="00"
                     android:id="@+id/timeEndHours"
                     android:textStyle="bold"
@@ -94,14 +94,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="@style/TextLarge"
                     android:text=":"
                     android:layout_gravity="center_horizontal|bottom" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAppearance="@style/TextLarge"
                     android:text="11"
                     android:id="@+id/timeEndMinutes"
                     android:layout_gravity="center_horizontal|bottom" />
@@ -109,7 +109,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textAppearance="@style/TextSmall"
                     android:text="AM"
                     android:id="@+id/timeEnd12hr"
                     android:layout_gravity="center_horizontal|top"
@@ -146,7 +146,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_mon"
                         android:id="@+id/dayMon"
                         android:layout_gravity="center"
@@ -158,7 +158,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_tue"
                         android:id="@+id/dayTue"
                         android:layout_gravity="center"
@@ -170,7 +170,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_wed"
                         android:id="@+id/dayWed"
                         android:layout_gravity="center"
@@ -182,7 +182,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_thu"
                         android:id="@+id/dayThu"
                         android:layout_gravity="center"
@@ -194,7 +194,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_fri"
                         android:id="@+id/dayFri"
                         android:layout_gravity="center"
@@ -206,7 +206,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_sat"
                         android:id="@+id/daySat"
                         android:layout_gravity="center"
@@ -218,7 +218,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_sun"
                         android:id="@+id/daySun"
                         android:layout_gravity="center"
@@ -262,7 +262,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="@style/TextMedium"
                 android:text="Medium Text"
                 android:id="@+id/errorView2"
                 android:background="@android:color/holo_red_dark"
