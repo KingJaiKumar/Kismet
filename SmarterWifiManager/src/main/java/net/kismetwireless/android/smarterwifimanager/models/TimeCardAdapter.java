@@ -10,6 +10,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -21,6 +23,7 @@ import com.doomonafireball.betterpickers.timepicker.TimePickerDialogFragment;
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
+import net.kismetwireless.android.smarterwifimanager.ui.FragmentTimeRange;
 
 import java.util.ArrayList;
 
@@ -38,12 +41,20 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
     AppCompatActivity activity;
 
+    FragmentTimeRange fragment;
+
     ArrayList<SmarterTimeRange> timeRanges;
 
     RecyclerView recyclerView;
 
+    Handler handler = new Handler();
+
+    int lastPosition = -1;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         SmarterTimeRange timeRange;
+
+        View card;
 
         // Containers we pass to the hide/show function
         LinearLayout timeStartContainer, timeEndContainer;
@@ -62,6 +73,8 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
         public ViewHolder(View v) {
             super(v);
+
+            card = v.findViewById(R.id.card);
 
             timeStartContainer = (LinearLayout) v.findViewById(R.id.timeLayoutStart);
             timeEndContainer = (LinearLayout) v.findViewById(R.id.timeLayoutEnd);
@@ -103,16 +116,18 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             TimeCardAdapter.ViewHolder tcHolder = (TimeCardAdapter.ViewHolder) viewHolder;
 
-            deleteTimeRange(tcHolder.timeRange);
+            fragment.deleteTimeRange(tcHolder.timeRange);
         }
     };
 
-    public TimeCardAdapter(Context context, AppCompatActivity activity, ArrayList<SmarterTimeRange> timeRanges) {
+    public TimeCardAdapter(Context context,
+                           FragmentTimeRange fragment, ArrayList<SmarterTimeRange> timeRanges) {
         this.timeRanges = timeRanges;
 
         SmarterApplication.get(context).inject(this);
 
-        this.activity = activity;
+        this.activity = (AppCompatActivity) fragment.getActivity();
+        this.fragment = fragment;
     }
 
     @Override
@@ -124,6 +139,14 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeItemCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
+    }
+
+    private void setAnimation(View viewToAnimate, int position) {
+        if (position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     @Override
@@ -140,6 +163,8 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
      // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder h, int position) {
+        setAnimation(h.card, position);
+
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final SmarterTimeRange item = timeRanges.get(position);
@@ -224,7 +249,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
                 item.setDays(d);
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
         holder.repTue.setOnClickListener(new View.OnClickListener() {
@@ -239,7 +269,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
                 item.setDays(d);
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
         holder.repWed.setOnClickListener(new View.OnClickListener() {
@@ -254,7 +289,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
                 item.setDays(d);
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
         holder.repThu.setOnClickListener(new View.OnClickListener() {
@@ -269,7 +309,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
                 item.setDays(d);
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
         holder.repFri.setOnClickListener(new View.OnClickListener() {
@@ -284,7 +329,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
                 item.setDays(d);
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
         holder.repSat.setOnClickListener(new View.OnClickListener() {
@@ -299,7 +349,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
                 item.setDays(d);
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
         holder.repSun.setOnClickListener(new View.OnClickListener() {
@@ -314,7 +369,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
 
                 item.setDays(d);
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -328,7 +388,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
                     holder.wifiSwitch.setVisibility(View.GONE);
                 }
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -342,7 +407,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
                     holder.bluetoothSwitch.setVisibility(View.GONE);
                 }
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -350,7 +420,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 item.setWifiEnabled(b);
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -358,7 +433,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 item.setBluetoothEnabled(b);
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -404,7 +484,12 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
                     holder.timeEndContainer.setEnabled(true);
                 }
 
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -420,11 +505,21 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
                     @Override
                     public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
                         item.setStartTime(hourOfDay, minute);
-                        notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                notifyDataSetChanged();
+                            }
+                        });
                     }
                 });
                 tpb.show();
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
 
@@ -439,11 +534,21 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
                     @Override
                     public void onDialogTimeSet(int reference, int hourOfDay, int minute) {
                         item.setEndTime(hourOfDay, minute);
-                        notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                notifyDataSetChanged();
+                            }
+                        });
                     }
                 });
                 tpb.show();
-                notifyDataSetChanged();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
             }
         });
     }
@@ -452,31 +557,4 @@ public class TimeCardAdapter extends RecyclerView.Adapter<TimeCardAdapter.ViewHo
         return timeRanges.size();
     }
 
-    private void deleteTimeRange(final SmarterTimeRange item) {
-        if (item == null) {
-            return;
-        }
-
-        timeRanges.remove(item);
-        smarterWifiServiceBinder.deleteTimeRange(item);
-
-        // Avoid hitting it during a recalculation
-        Handler h = new Handler();
-        h.post(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChanged();
-            }
-        });
-
-        Snackbar.make(recyclerView, R.string.snackbar_delete_timerange, Snackbar.LENGTH_LONG)
-                .setAction(R.string.snackbar_delete_undo, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        timeRanges.add(item);
-                        notifyDataSetChanged();
-                    }
-                })
-                .show();
-    }
 }

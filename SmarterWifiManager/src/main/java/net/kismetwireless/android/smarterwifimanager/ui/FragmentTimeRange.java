@@ -3,9 +3,10 @@ package net.kismetwireless.android.smarterwifimanager.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,6 +32,8 @@ public class FragmentTimeRange extends SmarterFragment {
 
     @Inject
     SmarterWifiServiceBinder serviceBinder;
+
+    private View coordinatorView;
 
     private View mainView;
     private FragmentActivity activity;
@@ -58,7 +61,7 @@ public class FragmentTimeRange extends SmarterFragment {
             lastTimeList = savedInstanceState.getParcelableArrayList("timelist");
 
             if (recyclerView != null) {
-                timeCardAdapter = new TimeCardAdapter(context, (AppCompatActivity) getActivity(), lastTimeList);
+                timeCardAdapter = new TimeCardAdapter(context, this, lastTimeList);
                 recyclerView.setAdapter(timeCardAdapter);
             }
         } else {
@@ -98,6 +101,8 @@ public class FragmentTimeRange extends SmarterFragment {
 
         mainView = inflater.inflate(R.layout.fragment_timerange, container, false);
 
+        coordinatorView = mainView.findViewById(R.id.timerange_container);
+
         activity = getActivity();
         context = activity.getApplicationContext();
 
@@ -109,7 +114,7 @@ public class FragmentTimeRange extends SmarterFragment {
 
         recyclerView.setHasFixedSize(false);
 
-        timeCardAdapter = new TimeCardAdapter(context, (AppCompatActivity) getActivity(), lastTimeList);
+        timeCardAdapter = new TimeCardAdapter(context, this, lastTimeList);
 
         recyclerView.setAdapter(timeCardAdapter);
 
@@ -173,6 +178,39 @@ public class FragmentTimeRange extends SmarterFragment {
             emptyView.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void deleteTimeRange(final SmarterTimeRange item) {
+        if (item == null) {
+            return;
+        }
+
+        lastTimeList.remove(item);
+        serviceBinder.deleteTimeRange(item);
+
+        // Avoid hitting it during a recalculation
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                timeCardAdapter.notifyDataSetChanged();
+            }
+        });
+
+        Snackbar.make(recyclerView, R.string.snackbar_delete_timerange, Snackbar.LENGTH_LONG)
+                .setAction(R.string.snackbar_delete_undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        lastTimeList.add(item);
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                timeCardAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                })
+                .show();
     }
 
     @Override
