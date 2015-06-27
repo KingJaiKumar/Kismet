@@ -153,9 +153,9 @@ public class FragmentTimeRange extends SmarterFragment {
         if (emptyView != null && recyclerView != null) {
             if (lastTimeList.size() <= 0) {
                 emptyView.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.INVISIBLE);
             } else {
-                emptyView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.INVISIBLE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
         }
@@ -173,9 +173,9 @@ public class FragmentTimeRange extends SmarterFragment {
 
         if (lastTimeList.size() <= 0) {
             emptyView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.INVISIBLE);
         } else {
-            emptyView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
@@ -188,6 +188,14 @@ public class FragmentTimeRange extends SmarterFragment {
         lastTimeList.remove(item);
         serviceBinder.deleteTimeRange(item);
 
+        if (lastTimeList.size() <= 0) {
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+        } else {
+            emptyView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
         // Avoid hitting it during a recalculation
         final Handler handler = new Handler();
         handler.post(new Runnable() {
@@ -197,7 +205,7 @@ public class FragmentTimeRange extends SmarterFragment {
             }
         });
 
-        Snackbar.make(recyclerView, R.string.snackbar_delete_timerange, Snackbar.LENGTH_LONG)
+        Snackbar.make(coordinatorView, R.string.snackbar_delete_timerange, Snackbar.LENGTH_LONG)
                 .setAction(R.string.snackbar_delete_undo, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
