@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,10 +37,9 @@ public class FragmentMain extends SmarterFragment {
 
     View mainView;
 
-    ImageView mainIcon;
-    TextView headlineText, smallText;
+    ImageView mainImageView;
 
-    CompoundButton switchManageWifi, switchAutoLearn;
+    TextView headlineText;
 
     SharedPreferences sharedPreferences;
 
@@ -59,7 +57,8 @@ public class FragmentMain extends SmarterFragment {
             ma.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    int wifiIconId = R.drawable.ic_launcher_notification_ignore;
+
+                    int iconResource = R.drawable.main_swm_idle;
                     int wifiTextResource = -1;
                     int reasonTextResource = -1;
 
@@ -67,44 +66,35 @@ public class FragmentMain extends SmarterFragment {
                     reasonTextResource = SmarterWifiService.controlTypeToTextResource(type, state);
 
                     if (state == SmarterWifiService.WifiState.WIFI_IDLE) {
-                        wifiIconId = R.drawable.ic_launcher_notification_idle;
+                        iconResource = R.drawable.main_swm_idle;
                     } else if (state == SmarterWifiService.WifiState.WIFI_BLOCKED) {
-                        wifiIconId = R.drawable.ic_launcher_notification_disabled;
+                        iconResource = R.drawable.main_swm_disabled;
                     } else if (state == SmarterWifiService.WifiState.WIFI_IGNORE) {
-                        wifiIconId = R.drawable.ic_launcher_notification_idle;
+                        iconResource = R.drawable.main_swm_ignore;
                     } else if (state == SmarterWifiService.WifiState.WIFI_OFF) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
-                            wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
+                            iconResource = R.drawable.main_swm_bluetooth;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TIME)
-                            wifiIconId = R.drawable.ic_launcher_notification_clock;
+                            iconResource = R.drawable.main_swm_time;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TOWER)
-                            wifiIconId = R.drawable.ic_launcher_notification_cell;
+                            iconResource = R.drawable.main_swm_cell;
                         else
-                            wifiIconId = R.drawable.ic_launcher_notification_disabled;
+                            iconResource = R.drawable.main_swm_disabled;
                     } else if (state == SmarterWifiService.WifiState.WIFI_ON) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
-                            wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
+                            iconResource = R.drawable.main_swm_bluetooth;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TIME)
-                            wifiIconId = R.drawable.ic_launcher_notification_clock;
+                            iconResource = R.drawable.main_swm_time;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TOWER)
-                            wifiIconId = R.drawable.ic_launcher_notification_cell;
+                            iconResource = R.drawable.main_swm_cell;
                         else
-                            wifiIconId = R.drawable.ic_launcher_notification_ignore;
+                            iconResource = R.drawable.main_swm_ignore;
                     }
 
-                    mainIcon.setImageResource(wifiIconId);
+                    mainImageView.setImageResource(iconResource);
 
-                    if (wifiTextResource > 0) {
-                        headlineText.setText(wifiTextResource);
-                    } else {
-                        headlineText.setText("");
-                    }
+                    headlineText.setText(serviceBinder.currentStateToComplexText());
 
-                    if (reasonTextResource > 0) {
-                        smallText.setText(reasonTextResource);
-                    } else {
-                        smallText.setText("");
-                    }
                 }
             });
         }
@@ -120,12 +110,8 @@ public class FragmentMain extends SmarterFragment {
 
         mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mainIcon = (ImageView) mainView.findViewById(R.id.imageWifiStatus);
-        headlineText = (TextView) mainView.findViewById(R.id.textViewMain);
-        smallText = (TextView) mainView.findViewById(R.id.textViewMinor);
-
-        switchManageWifi = (CompoundButton) mainView.findViewById(R.id.switchManageWifi);
-        switchAutoLearn =  (CompoundButton) mainView.findViewById(R.id.switchAutoLearn);
+        mainImageView = (ImageView) mainView.findViewById(R.id.imageMain);
+        headlineText = (TextView) mainView.findViewById(R.id.textViewHeadline);
 
         // Defer main setup until we've bound
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
@@ -134,35 +120,7 @@ public class FragmentMain extends SmarterFragment {
                 if (!isAdded())
                     return;
 
-                switchManageWifi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        switchAutoLearn.setEnabled(b);
-                        setManageWifi(b);
-                    }
-                });
-
                 serviceBinder.addCallback(guiCallback);
-
-                switchAutoLearn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        setLearnWifi(b);
-                    }
-                });
-
-                if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
-                    switchManageWifi.setChecked(true);
-                } else {
-                    switchManageWifi.setChecked(false);
-                }
-
-                if (sharedPreferences.getBoolean(getString(R.string.pref_learn), true)) {
-                    switchAutoLearn.setChecked(true);
-                } else {
-                    switchAutoLearn.setChecked(false);
-                }
-
             }
         });
 
@@ -223,7 +181,7 @@ public class FragmentMain extends SmarterFragment {
 
     @Subscribe
     public void onEvent(EventPreferencesChanged evt) {
-        if (sharedPreferences == null || switchManageWifi == null || switchAutoLearn == null)
+        if (sharedPreferences == null)
             return;
 
         Activity ma = getActivity();
@@ -231,6 +189,7 @@ public class FragmentMain extends SmarterFragment {
         if (ma == null)
             return;
 
+        /*
         ma.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -247,5 +206,6 @@ public class FragmentMain extends SmarterFragment {
                 }
             }
         });
+        */
     }
 }

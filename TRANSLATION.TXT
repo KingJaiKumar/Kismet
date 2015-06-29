@@ -11,3 +11,19 @@ CHANGED
 ADDED
     <string name="snackbar_delete_timerange">Time range deleted</string>
     <string name="snackbar_delete_undo">Undo</string>
+
+    <string name="simple_explanation_learning">Connected, we\'ll remember you use Wi-Fi here.</string>
+    <string name="simple_explanation_idle">You\'ve used Wi-Fi here before, waiting for a network.</string>
+    <string name="simple_explanation_off">You haven\'t used Wi-Fi here before.</string>
+    <string name="simple_explanation_time">You set Wi-Fi to be turned %1$s from %2$d:%3$d to %4$d:%5$d</string>
+    <string name="simple_explanation_bt">Connected to a bluetooth device you picked to block Wi-Fi.</string>
+    <string name="simple_explanation_blackssid">Connected to a network you\'ve ignored, we won\'t remember this spot.</string>
+    <string name="simple_explanation_airplane">You\'re in airplane mode, we won\'t change the wi-fi settings.</string>
+
+RENAMED
+    <string name="simple_explanation_neverrun">Open Smarter Wi-Fi Manager to start controlling your Wi-Fi!</string>
+
+DELETED
+    <string name="nag_tower_maintenance">Smarter Wi-Fi Manager now has a method for automatically maintaining the list of locations for a Wi-Fi network.  Enable it by going to Preferences and turning on Location Maintenance!</string>
+    <string name="nag_tower_maintenance_prefs">Go to prefs</string>
+    <string name="nag_tower_maintenance_cancel">No thanks</string>

@@ -1,106 +1,47 @@
-<LinearLayout
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageWifiStatus"
-                android:src="@drawable/ic_launcher_notification_idle"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="20dp" />
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Starting up..."
-                    android:id="@+id/textViewMain" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="..."
-                    android:id="@+id/textViewMinor" />
-            </LinearLayout>
-
-        </TableRow>
-    </TableLayout>
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp" />
-
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView" >
-
-    </ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:svgimageview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout">
 
-        <include layout="@layout/main_switch_manage"
-            android:layout_alignTop="@+id/textView3"
-            android:layout_alignParentRight="true" />
-
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/manage_radio_explanation"
-            android:id="@+id/textView3"
-            android:layout_below="@+id/switchManageWifi"
-            android:layout_alignParentRight="true"
+            android:id="@+id/imageMain"
+            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="10dp" />
-
-        <View
-            android:layout_width="100dp"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray"
-            android:layout_below="@+id/textView3"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:id="@+id/view" />
-
-        <include layout="@layout/main_switch_learn" />
+            android:layout_alignParentStart="true"
+            android:minHeight="96dp"
+            android:minWidth="96dp"
+            android:maxHeight="96dp"
+            android:maxWidth="96dp"
+            android:src="@drawable/main_swm_idle"
+            android:cropToPadding="false"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/autolearn_wifi_description"
-            android:id="@+id/textView4"
-            android:layout_below="@+id/switchAutoLearn"
-            android:layout_alignRight="@+id/textView3"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="10dp" />
+            android:text="@string/simple_explanation_idle"
+            android:id="@+id/textViewHeadline"
+            style="@style/TextHugeLight"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/imageMain"
+            android:layout_toRightOf="@+id/imageMain"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="8dp" />
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

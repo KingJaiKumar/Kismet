@@ -31,6 +31,11 @@
         <item name="android:textSize">22sp</item>
     </style>
 
+    <style name="TextHugeLight" parent="@style/TextAppearance">
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="TextSmall" parent="@style/TextAppearance">
         <item name="android:textSize">14sp</item>
     </style>

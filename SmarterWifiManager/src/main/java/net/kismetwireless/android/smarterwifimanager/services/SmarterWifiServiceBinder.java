@@ -321,4 +321,13 @@ public class SmarterWifiServiceBinder {
 
     }
 
+    public String currentStateToComplexText() {
+        if (smarterService == null) {
+            Log.e("smarter", "currentStateToComplexText while service null");
+            return "Can't get state, service is null in binder";
+        }
+
+        return smarterService.currentStateToComplexText();
+    }
+
 }

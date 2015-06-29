@@ -1300,6 +1300,67 @@ public class SmarterWifiService extends Service {
         return false;
     }
 
+    // Convert the current state to text, with fill-ins on formatting, etc
+    public String currentStateToComplexText() {
+        if (curState == WifiState.WIFI_BLOCKED) {
+            if (lastControlReason == ControlType.CONTROL_BLUETOOTH) {
+                return getString(R.string.simple_explanation_bt);
+            } else if (lastControlReason == ControlType.CONTROL_TIME) {
+                if (currentTimeRange == null) {
+                    return "We think we're in a time range but something is wrong.";
+                }
+
+                return String.format(getString(R.string.simple_explanation_time), getString(R.string.timerange_control_off),
+                        currentTimeRange.getStartHour(), currentTimeRange.getStartMinute(), currentTimeRange.getEndHour(),
+                        currentTimeRange.getEndMinute());
+            }
+        } else if (curState == WifiState.WIFI_IGNORE) {
+            if (lastControlReason == ControlType.CONTROL_AIRPLANE) {
+                return getString(R.string.simple_explanation_airplane);
+            } else if (lastControlReason == ControlType.CONTROL_SSIDBLACKLIST) {
+                return getString(R.string.simple_explanation_blackssid);
+            } else if (lastControlReason == ControlType.CONTROL_DISABLED) {
+                return getString(R.string.simple_explanation_disabled);
+            } else if (lastControlReason == ControlType.CONTROL_NEVERRUN) {
+                return getString(R.string.simple_explanation_neverrun);
+            }
+        } else if (curState == WifiState.WIFI_ON) {
+            if (lastControlReason == ControlType.CONTROL_TIME) {
+                if (currentTimeRange == null) {
+                    return "We think we're in a time range but something is wrong.";
+                }
+
+                return String.format(getString(R.string.simple_explanation_time), getString(R.string.timerange_control_on),
+                        currentTimeRange.getStartHour(), currentTimeRange.getStartMinute(), currentTimeRange.getEndHour(),
+                        currentTimeRange.getEndMinute());
+            }
+
+            // Otherwise we're connected, are we learning?
+            if (learnWifi) {
+                return getString(R.string.simple_explanation_learning);
+            }
+
+        } else if (curState == WifiState.WIFI_OFF) {
+            if (lastControlReason == ControlType.CONTROL_BLUETOOTH) {
+                return getString(R.string.simple_explanation_bt);
+            } else if (lastControlReason == ControlType.CONTROL_TIME) {
+                if (currentTimeRange == null) {
+                    return "We think we're in a time range but something is wrong.";
+                }
+
+                return String.format(getString(R.string.simple_explanation_time), getString(R.string.timerange_control_off),
+                        currentTimeRange.getStartHour(), currentTimeRange.getStartMinute(), currentTimeRange.getEndHour(),
+                        currentTimeRange.getEndMinute());
+            } else if (lastControlReason == ControlType.CONTROL_TOWER) {
+                return getString(R.string.simple_explanation_off);
+            }
+        } else if (curState == WifiState.WIFI_IDLE) {
+            return getString(R.string.simple_explanation_idle);
+        }
+
+        return "Something went weird describing config - state " + curState + " control " + lastControlReason;
+    }
+
     static public int wifiStateToTextResource(WifiState s) {
         switch (s) {
             case WIFI_BLOCKED:
