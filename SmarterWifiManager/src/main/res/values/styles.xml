@@ -19,24 +19,27 @@
         <item name="android:textAppearance">@android:style/TextAppearance</item>
     </style>
 
-    <style name="TextAppearance" parent="@android:style/TextAppearance">
+    <style name="TextAppearanceBase" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/textColorPrimary</item>
     </style>
 
-    <style name="TextMedium" parent="@style/TextAppearance">
+    <style name="TextMedium">
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="TextLarge" parent="@style/TextAppearance">
+    <style name="TextLarge">
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">22sp</item>
     </style>
 
-    <style name="TextHugeLight" parent="@style/TextAppearance">
+    <style name="TextHugeLight">
         <item name="android:textColor">@color/colorPrimaryLight</item>
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="TextSmall" parent="@style/TextAppearance">
+    <style name="TextSmall">
+        <item name="android:textColor">@color/textColorPrimary</item>
         <item name="android:textSize">14sp</item>
     </style>
 

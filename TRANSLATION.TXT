@@ -8,17 +8,25 @@ CHANGED
 
     <string name="time_range_desc">Force Wi-Fi on or off at a specific time by adding a time range.</string>
 
+    <string name="quicker_explanation">Smarter Wi-Fi Manager will automatically control your Wi-Fi.</string>
+
 ADDED
     <string name="snackbar_delete_timerange">Time range deleted</string>
+    <string name="snackbar_delete_network">Network forgotten</string>
     <string name="snackbar_delete_undo">Undo</string>
 
     <string name="simple_explanation_learning">Connected, we\'ll remember you use Wi-Fi here.</string>
-    <string name="simple_explanation_idle">You\'ve used Wi-Fi here before, waiting for a network.</string>
-    <string name="simple_explanation_off">You haven\'t used Wi-Fi here before.</string>
+    <string name="simple_explanation_idle">You\'ve used Wi-Fi here before, looking for a network.</string>
+    <string name="simple_explanation_off">Wi-Fi turned off, you haven\t used a network here before.</string>
     <string name="simple_explanation_time">You set Wi-Fi to be turned %1$s from %2$d:%3$d to %4$d:%5$d</string>
     <string name="simple_explanation_bt">Connected to a bluetooth device you picked to block Wi-Fi.</string>
     <string name="simple_explanation_blackssid">Connected to a network you\'ve ignored, we won\'t remember this spot.</string>
     <string name="simple_explanation_airplane">You\'re in airplane mode, we won\'t change the wi-fi settings.</string>
+    <string name="simple_explanation_add">Waiting to connect to a new network.</string>
+
+    <string name="main_pause_text">Pause Smarter Wi-Fi Manager and add a new Wi-Fi network</string>
+    <string name="main_pause_button">Pause</string>
+    <string name="main_resume_button">Resume</string>
 
 RENAMED
     <string name="simple_explanation_neverrun">Open Smarter Wi-Fi Manager to start controlling your Wi-Fi!</string>

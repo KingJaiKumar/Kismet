@@ -1,10 +1,13 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +45,8 @@ public class FragmentMain extends SmarterFragment {
     TextView headlineText;
 
     SharedPreferences sharedPreferences;
+
+    View advancedWifiSettingsView;
 
     private SmarterWifiService.SmarterServiceCallback guiCallback = new SmarterWifiService.SmarterServiceCallback() {
         @Override
@@ -95,6 +100,7 @@ public class FragmentMain extends SmarterFragment {
 
                     headlineText.setText(serviceBinder.currentStateToComplexText());
 
+
                 }
             });
         }
@@ -121,6 +127,38 @@ public class FragmentMain extends SmarterFragment {
                     return;
 
                 serviceBinder.addCallback(guiCallback);
+            }
+        });
+
+        advancedWifiSettingsView = mainView.findViewById(R.id.textViewBackgroundAlertButton);
+        advancedWifiSettingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                // Try to run the default advanced
+                try {
+                    intent.setClassName("com.android.settings", "com.android.settings.Settings$AdvancedWifiSettingsActivity");
+                    startActivity(intent);
+                    return;
+                } catch (ActivityNotFoundException e) {
+                    ;
+                }
+
+                // Try LG's BS alternate
+                try {
+                    intent.setClassName("com.lge.wifisettings", "com.lge.wifisettings.activity.AdvancedWifiSettingsActivity");
+                    startActivity(intent);
+                    return;
+                } catch (ActivityNotFoundException e) {
+                    ;
+                }
+
+                // Go to the standard wifi settings and the user has to get to advanced themselves, sorry
+                Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
             }
         });
 
