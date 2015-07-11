@@ -330,4 +330,13 @@ public class SmarterWifiServiceBinder {
         return smarterService.currentStateToComplexText();
     }
 
+    public boolean getWifiAlwaysScanning() {
+        if (smarterService == null) {
+            Log.e("smarter", "getWifiAlwaysScanning while service null");
+            return false;
+        }
+
+        return smarterService.getWifiAlwaysScanning();
+    }
+
 }

@@ -161,11 +161,15 @@
 
     <string name="main_explanation_swm_disabled">Turn Smarter Wi-Fi Manager on to automatically manage your Wi-Fi</string>
 
-    <string name="main_pause_text">Pause Smarter Wi-Fi Manager and add a new Wi-Fi network</string>
-    <string name="main_pause_button">Pause</string>
+    <string name="main_pause_text">Wi-Fi is turned off right now.  You can pause Smarter Wi-Fi Manager and add a new network.</string>
+    <string name="main_pause_button">Add new network</string>
     <string name="main_resume_button">Resume</string>
+
+    <string name="main_open_text">You\'re connected to a network with no encryption.  Open networks are much easier to spoof, and your traffic may be monitored.</string>
 
     <string name="main_alert_alwaysscan">Your device allows scanning for Wi-Fi even when Wi-Fi is turned off.  We recommend turning off \"Always Allow Scanning\"</string>
     <string name="main_alert_alwaysscan_advanced">Advanced Wi-Fi Settings</string>
+
+    <string name="main_forget_text">We think you\'ve used Wi-Fi here before, but can\'t find a network right now.  You can forget this location to keep Wi-Fi off here in the future.</string>
 
 </resources>

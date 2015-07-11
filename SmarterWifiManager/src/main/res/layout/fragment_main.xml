@@ -71,7 +71,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -140,12 +141,77 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:id="@+id/layoutMainForgetHolder"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageViewMainForget"
+                    android:src="@drawable/ic_highlight_off"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_forget_text"
+                    android:id="@+id/textViewMainForget"
+                    style="@style/TextMedium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/imageViewMainForget"
+                    android:layout_toEndOf="@+id/imageViewMainForget"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textViewMainForget"
+                    android:background="@android:color/white"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="10dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/quicker_forget"
+                        android:id="@+id/textViewMainForgetButton"
+                        android:layout_gravity="right|bottom"
+                        android:theme="@style/TextMedium"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp" />
+                </FrameLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
                 android:id="@+id/layoutMainBackgroundAlertHolder"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
-                android:background="#ffaeaf">
+                android:background="#ffaeaf"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -199,6 +265,73 @@
                 </FrameLayout>
 
             </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:id="@+id/layoutMainOpenHolder"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="#ffe97e"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageViewOpenAlert"
+                    android:src="@drawable/ic_lock_open"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_open_text"
+                    android:id="@+id/textViewOpenAlert"
+                    style="@style/TextMedium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/imageViewOpenAlert"
+                    android:layout_toEndOf="@+id/imageViewOpenAlert"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#ffc12b"
+                    android:layout_below="@+id/textViewOpenAlert"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="10dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/main_alert_alwaysscan_advanced"
+                        android:id="@+id/textViewOpenAlertButton"
+                        android:layout_gravity="right|bottom"
+                        android:theme="@style/TextMedium"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp" />
+                </FrameLayout>
+
+            </RelativeLayout>
+
         </LinearLayout>
 
 
