@@ -339,4 +339,22 @@ public class SmarterWifiServiceBinder {
         return smarterService.getWifiAlwaysScanning();
     }
 
+    public void setPauseAddNewNetwork(boolean v) {
+        if (smarterService == null) {
+            Log.e("smarter", "setPauseAddNewNetwork while service null");
+            return;
+        }
+
+        smarterService.setPauseAddNewNetwork(v);
+    }
+
+    public boolean getPauseAddNewNetwork() {
+        if (smarterService == null) {
+            Log.e("smarter", "getPauseAddNewNetwork while service null");
+            return false;
+        }
+
+        return smarterService.getPauseAddNewNetwork();
+    }
+
 }

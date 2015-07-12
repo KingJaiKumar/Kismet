@@ -80,6 +80,7 @@ public class FragmentMain extends SmarterFragment {
                         forgetViewHolder.setVisibility(View.GONE);
                         opennetworkViewHolder.setVisibility(View.GONE);
 
+                        // If wifi is blocked off, offer the option to add a network
                         pauseSwmHolder.setVisibility(View.VISIBLE);
 
                     } else if (state == SmarterWifiService.WifiState.WIFI_IGNORE) {
@@ -93,6 +94,13 @@ public class FragmentMain extends SmarterFragment {
                             iconResource = R.drawable.main_swm_cell;
                         else
                             iconResource = R.drawable.main_swm_disabled;
+
+                        forgetViewHolder.setVisibility(View.GONE);
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
+                        // If wifi is off, show the option to pause and add
+                        pauseSwmHolder.setVisibility(View.VISIBLE);
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_ON) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
                             iconResource = R.drawable.main_swm_bluetooth;
@@ -100,8 +108,16 @@ public class FragmentMain extends SmarterFragment {
                             iconResource = R.drawable.main_swm_time;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TOWER)
                             iconResource = R.drawable.main_swm_cell;
+                        else if (type == SmarterWifiService.ControlType.CONTROL_PAUSED)
+                            iconResource = R.drawable.main_swm_add_waiting;
                         else
                             iconResource = R.drawable.main_swm_ignore;
+
+                        // TODO set up forget, open alert, etc
+                        forgetViewHolder.setVisibility(View.GONE);
+                        opennetworkViewHolder.setVisibility(View.GONE);
+                        // We're connected to something, so we don't need the ignore
+                        pauseSwmHolder.setVisibility(View.GONE);
                     }
 
                     mainImageView.setImageResource(iconResource);
@@ -109,6 +125,31 @@ public class FragmentMain extends SmarterFragment {
                     headlineText.setText(serviceBinder.currentStateToComplexText());
                 }
             });
+        }
+    };
+
+    private View.OnClickListener pauseClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((TextView) v).setText(R.string.main_resume_button);
+            v.setOnClickListener(resumeClickListener);
+
+            serviceBinder.setPauseAddNewNetwork(true);
+
+            // Launch wifi settings activity to connect to a new network
+            Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+        }
+    };
+
+    private View.OnClickListener resumeClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((TextView) v).setText(R.string.main_pause_button);
+            v.setOnClickListener(pauseClickListener);
+
+            serviceBinder.setPauseAddNewNetwork(false);
         }
     };
 
@@ -142,6 +183,8 @@ public class FragmentMain extends SmarterFragment {
 
         pauseSwmHolder = mainView.findViewById(R.id.layoutMainPauseHolder);
         pauseSwmButton = mainView.findViewById(R.id.textViewPauseButton);
+
+        pauseSwmButton.setOnClickListener(pauseClickListener);
 
         forgetViewHolder = mainView.findViewById(R.id.layoutMainForgetHolder);
         forgetButton = mainView.findViewById(R.id.textViewMainForgetButton);

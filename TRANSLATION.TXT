@@ -22,7 +22,7 @@ ADDED
     <string name="simple_explanation_bt">Connected to a bluetooth device you picked to block Wi-Fi.</string>
     <string name="simple_explanation_blackssid">Connected to a network you\'ve ignored, we won\'t remember this spot.</string>
     <string name="simple_explanation_airplane">You\'re in airplane mode, we won\'t change the wi-fi settings.</string>
-    <string name="simple_explanation_add">Waiting to connect to a new network.</string>
+    <string name="simple_explanation_add">SWM is paused, we\'ll keep Wi-Fi enabled until you connect to a network.</string>
 
     <string name="main_pause_text">Pause Smarter Wi-Fi Manager and add a new Wi-Fi network</string>
     <string name="main_pause_button">Pause</string>

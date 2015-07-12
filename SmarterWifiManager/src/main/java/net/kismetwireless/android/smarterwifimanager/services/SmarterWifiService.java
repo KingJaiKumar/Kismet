@@ -64,7 +64,7 @@ public class SmarterWifiService extends Service {
     public enum ControlType {
         CONTROL_DISABLED, CONTROL_USER, CONTROL_TOWER, CONTROL_TOWERID, CONTROL_GEOFENCE,
         CONTROL_BLUETOOTH, CONTROL_TIME, CONTROL_SSIDBLACKLIST, CONTROL_AIRPLANE, CONTROL_TETHER,
-        CONTROL_SLEEPPOLICY, CONTROL_NEVERRUN
+        CONTROL_SLEEPPOLICY, CONTROL_PAUSED, CONTROL_NEVERRUN
     }
 
     public enum WifiState {
@@ -119,6 +119,9 @@ public class SmarterWifiService extends Service {
     private NotificationCompat.Builder notificationBuilder;
 
     private long lastTowerMap = 0;
+
+    // Are we paused waiting to connect to a new network?
+    private boolean pausedNewNetwork = false;
 
     private boolean bluetoothEnabled = false;
     private boolean bluetoothBlocking = false;
@@ -738,6 +741,11 @@ public class SmarterWifiService extends Service {
     public void onEvent(EventWifiConnected e) {
         LogAlias.d("smarter", "BUS - Wifi Connected");
 
+        if (pausedNewNetwork) {
+            LogAlias.d("smarter", "connected to a network, no longer paused waiting to connect.");
+            pausedNewNetwork = false;
+        }
+
         worldState.setWifiInfo(e.getWifiInfo());
 
         configureWifiState();
@@ -1135,6 +1143,12 @@ public class SmarterWifiService extends Service {
             return WifiState.WIFI_IGNORE;
         }
 
+        if (pausedNewNetwork) {
+            LogAlias.d("smarter", "Pausing to add a new network");
+            lastControlReason = ControlType.CONTROL_PAUSED;
+            return WifiState.WIFI_ON;
+        }
+
         // If the user wants spefically to turn it on or off via the SWM UI, do so
         if (userOverrideState == WifiState.WIFI_OFF) {
             LogAlias.d("smarter", "User-controled wifi, user wants wifi off");
@@ -1333,6 +1347,8 @@ public class SmarterWifiService extends Service {
                 return String.format(getString(R.string.simple_explanation_time), getString(R.string.timerange_control_on),
                         currentTimeRange.getStartHour(), currentTimeRange.getStartMinute(), currentTimeRange.getEndHour(),
                         currentTimeRange.getEndMinute());
+            } else if (lastControlReason == ControlType.CONTROL_PAUSED) {
+                return getString(R.string.simple_explanation_add);
             }
 
             // Otherwise we're connected, are we learning?
@@ -1565,6 +1581,15 @@ public class SmarterWifiService extends Service {
         }
 
         return false;
+    }
+
+    public void setPauseAddNewNetwork(boolean v) {
+        pausedNewNetwork = v;
+        configureWifiState();
+    }
+
+    public boolean getPauseAddNewNetwork() {
+        return pausedNewNetwork;
     }
 
     public ArrayList<SmarterTimeRange> getTimeRangeList() {

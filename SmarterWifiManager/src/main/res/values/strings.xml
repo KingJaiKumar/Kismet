@@ -157,7 +157,7 @@
     <string name="simple_explanation_disabled">You\'ve turned off Wi-Fi management.</string>
     <string name="simple_explanation_airplane">You\'re in airplane mode, we won\'t change the wi-fi settings.</string>
     <string name="simple_explanation_neverrun">Open Smarter Wi-Fi Manager to start controlling your Wi-Fi!</string>
-    <string name="simple_explanation_add">Waiting to connect to a new network.</string>
+    <string name="simple_explanation_add">SWM is paused, we\'ll keep Wi-Fi enabled until you connect to a network.</string>
 
     <string name="main_explanation_swm_disabled">Turn Smarter Wi-Fi Manager on to automatically manage your Wi-Fi</string>
 
