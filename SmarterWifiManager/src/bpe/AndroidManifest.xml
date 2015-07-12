@@ -3,7 +3,7 @@
     package="net.kismetwireless.android.smarterwifimanager" >
 
     <uses-feature
-        android:name="android.hardware.blackphone"
+        android:name="sc.hardware.blackphone"
         android:required="true" />
 
     <uses-feature
