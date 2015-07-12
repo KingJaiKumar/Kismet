@@ -72,7 +72,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="gone">
+                android:visibility="invisible"
+                android:paddingBottom="8dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -101,7 +102,7 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
+                    android:background="@color/colorPrimaryDark"
                     android:layout_below="@+id/textViewPauseAdd"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
@@ -122,20 +123,11 @@
                         android:paddingLeft="16dp"
                         android:paddingTop="3dp"
                         android:paddingRight="16dp"
-                        android:paddingBottom="3dp" />
+                        android:paddingBottom="3dp"
+                        android:textColor="@color/colorPrimaryLight" />
                 </FrameLayout>
 
             </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:background="@color/colorDivider"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="8dp"
-                android:id="@+id/mainDivider1" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -146,7 +138,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:paddingBottom="8dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -176,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textViewMainForget"
-                    android:background="@android:color/white"
+                    android:background="@color/colorPrimaryDark"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="10dp"
@@ -196,7 +189,8 @@
                         android:paddingLeft="16dp"
                         android:paddingTop="3dp"
                         android:paddingRight="16dp"
-                        android:paddingBottom="3dp" />
+                        android:paddingBottom="3dp"
+                        android:textColor="@color/colorPrimaryLight" />
                 </FrameLayout>
 
             </RelativeLayout>
@@ -211,7 +205,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:background="#ffaeaf"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:paddingBottom="8dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -261,7 +256,8 @@
                         android:paddingLeft="16dp"
                         android:paddingTop="3dp"
                         android:paddingRight="16dp"
-                        android:paddingBottom="3dp" />
+                        android:paddingBottom="3dp"
+                        android:textColor="@color/colorPrimaryLight" />
                 </FrameLayout>
 
             </RelativeLayout>
@@ -277,7 +273,8 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:background="#ffe97e"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:paddingBottom="8dp">
 
                 <ImageView
                     android:layout_width="wrap_content"
