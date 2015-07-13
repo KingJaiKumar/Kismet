@@ -6,3 +6,7 @@ libraries/*/build/*
 *.apk
 
 build
+SmarterWifiManager/manifest-merger-standard-release-report.txt
+SmarterWifiManager/manifest-merger-bpe-release-report.txt
+SmarterWifiManager/manifest-merger-release-report.txt
+SmarterWifiManager/build.gradle.old
