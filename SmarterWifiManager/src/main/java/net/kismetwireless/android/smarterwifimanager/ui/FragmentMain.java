@@ -74,6 +74,21 @@ public class FragmentMain extends SmarterFragment {
 
                     if (state == SmarterWifiService.WifiState.WIFI_IDLE) {
                         iconResource = R.drawable.main_swm_idle;
+
+                        // We don't have a network but we think we should, offer to forget
+                        if (type == SmarterWifiService.ControlType.CONTROL_TOWER) {
+                            forgetViewHolder.setVisibility(View.VISIBLE);
+                        }
+
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
+                        // If we're paused, allow unpausing
+                        if (type == SmarterWifiService.ControlType.CONTROL_PAUSED) {
+                            pauseSwmHolder.setVisibility(View.VISIBLE);
+                            ((TextView) pauseSwmButton).setText(R.string.main_resume_button);
+                            pauseSwmButton.setOnClickListener(resumeClickListener);
+                        }
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_BLOCKED) {
                         iconResource = R.drawable.main_swm_disabled;
 
@@ -100,6 +115,8 @@ public class FragmentMain extends SmarterFragment {
 
                         // If wifi is off, show the option to pause and add
                         pauseSwmHolder.setVisibility(View.VISIBLE);
+                        ((TextView) pauseSwmButton).setText(R.string.main_pause_button);
+                        pauseSwmButton.setOnClickListener(pauseClickListener);
 
                     } else if (state == SmarterWifiService.WifiState.WIFI_ON) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
@@ -116,6 +133,7 @@ public class FragmentMain extends SmarterFragment {
                         // TODO set up forget, open alert, etc
                         forgetViewHolder.setVisibility(View.GONE);
                         opennetworkViewHolder.setVisibility(View.GONE);
+
                         // We're connected to something, so we don't need the ignore
                         pauseSwmHolder.setVisibility(View.GONE);
                     }

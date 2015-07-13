@@ -5,10 +5,13 @@
       <configuration>
         <option name="SELECTED_BUILD_VARIANT" value="standardDebug" />
         <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
-        <option name="ASSEMBLE_TASK_NAME" value="assembleBpeRelease" />
-        <option name="COMPILE_JAVA_TASK_NAME" value="compileBpeReleaseSources" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleStandardDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileStandardDebugSources" />
+        <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleStandardDebugTest" />
+        <option name="COMPILE_JAVA_TEST_TASK_NAME" value="compileStandardDebugTestSources" />
         <afterSyncTasks>
-          <task>generateBpeReleaseSources</task>
+          <task>generateStandardDebugSources</task>
+          <task>generateStandardDebugTestSources</task>
         </afterSyncTasks>
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
@@ -24,7 +27,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/build/intermediates/classes/bpe/release" />
+    <output url="file://$MODULE_DIR$/build/intermediates/classes/standard/debug" />
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/test/standard/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
