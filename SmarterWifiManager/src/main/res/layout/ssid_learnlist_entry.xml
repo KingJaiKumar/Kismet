@@ -27,7 +27,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="@style/TextMedium"
             android:text="Medium Text"
             android:id="@+id/ssidListSsid"
             android:layout_gravity="left|center_vertical"
@@ -38,7 +38,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="@style/TextSmall"
             android:text="Small Text"
             android:id="@+id/ssidListTower"
             android:layout_below="@+id/ssidListSsid"
