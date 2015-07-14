@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,8 +53,6 @@ public class FragmentMain extends SmarterFragment {
     private CompoundButton mainEnableToggle;
 
     private SharedPreferences sharedPreferences;
-
-    View advancedWifiSettingsView;
 
     private SmarterWifiService.SmarterServiceCallback guiCallback = new SmarterWifiService.SmarterServiceCallback() {
         @Override
@@ -206,6 +205,14 @@ public class FragmentMain extends SmarterFragment {
 
         forgetViewHolder = mainView.findViewById(R.id.layoutMainForgetHolder);
         forgetButton = mainView.findViewById(R.id.textViewMainForgetButton);
+
+        forgetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                serviceBinder.deleteCurrentTower();
+                Snackbar.make(mainView, R.string.snackbar_delete_tower, Snackbar.LENGTH_LONG);
+            }
+        });
 
         backgroundscanViewHolder = mainView.findViewById(R.id.layoutMainBackgroundAlertHolder);
         backgroundScanButton = mainView.findViewById(R.id.textViewBackgroundAlertButton);

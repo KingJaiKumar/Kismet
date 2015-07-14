@@ -146,6 +146,7 @@
 
     <string name="snackbar_delete_timerange">Time range deleted</string>
     <string name="snackbar_delete_network">Network forgotten</string>
+    <string name="snackbar_delete_tower">Location forgotten</string>
     <string name="snackbar_delete_undo">Undo</string>
 
     <string name="simple_explanation_learning">Connected, we\'ll remember you use Wi-Fi here.</string>
