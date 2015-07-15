@@ -77,6 +77,8 @@ public class FragmentMain extends SmarterFragment {
                         // We don't have a network but we think we should, offer to forget
                         if (type == SmarterWifiService.ControlType.CONTROL_TOWER) {
                             forgetViewHolder.setVisibility(View.VISIBLE);
+                        } else {
+                            forgetViewHolder.setVisibility(View.GONE);
                         }
 
                         opennetworkViewHolder.setVisibility(View.GONE);
@@ -210,7 +212,7 @@ public class FragmentMain extends SmarterFragment {
             @Override
             public void onClick(View v) {
                 serviceBinder.deleteCurrentTower();
-                Snackbar.make(mainView, R.string.snackbar_delete_tower, Snackbar.LENGTH_LONG);
+                Snackbar.make(mainView, R.string.snackbar_delete_tower, Snackbar.LENGTH_LONG).show();
             }
         });
 

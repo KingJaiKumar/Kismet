@@ -1547,6 +1547,7 @@ public class SmarterWifiService extends Service {
         dbSource.deleteSsidTowerInstance(currentCellLocation.getTowerId());
 
         handleCellLocation(null);
+        configureWifiState();
     }
 
     public long getLastTowerMap() {
