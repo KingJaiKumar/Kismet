@@ -329,7 +329,6 @@
 
             </RelativeLayout>
 
-            <!-- holder for all the quick buttons -->
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
@@ -340,6 +339,7 @@
                 android:layout_marginRight="25dp"
                 android:layout_marginBottom="10dp" />
 
+            <!-- holder for all the quick buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -457,7 +457,7 @@
                     android:layout_marginBottom="5dp"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
-                    android:id="@+id/layoutMainTime">
+                    android:id="@+id/layoutMainNavTime">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -483,8 +483,40 @@
                         android:layout_marginLeft="40dp" />
                 </RelativeLayout>
 
-            </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:id="@+id/layoutMainNavSettings">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imageView6"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:src="@drawable/ic_list_small"
+                        android:tint="@color/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/action_settings"
+                        android:id="@+id/textView8"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/imageView6"
+                        android:layout_toEndOf="@+id/imageView6"
+                        android:theme="@style/TextMedium"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginLeft="40dp" />
+                </RelativeLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 

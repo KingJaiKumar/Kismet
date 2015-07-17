@@ -54,6 +54,8 @@ public class FragmentMain extends SmarterFragment {
 
     private SharedPreferences sharedPreferences;
 
+    private View learnedView, ignoreView, bluetoothView, timeView, settingsView;
+
     private SmarterWifiService.SmarterServiceCallback guiCallback = new SmarterWifiService.SmarterServiceCallback() {
         @Override
         public void wifiStateChanged(final SmarterSSID ssid, final SmarterWifiService.WifiState state,
@@ -131,8 +133,8 @@ public class FragmentMain extends SmarterFragment {
                         else
                             iconResource = R.drawable.main_swm_ignore;
 
-                        // TODO set up forget, open alert, etc
                         forgetViewHolder.setVisibility(View.GONE);
+
                         opennetworkViewHolder.setVisibility(View.GONE);
 
                         // We're connected to something, so we don't need the ignore
@@ -263,6 +265,48 @@ public class FragmentMain extends SmarterFragment {
                 Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(i);
+            }
+        });
+
+        learnedView = mainView.findViewById(R.id.layoutMainNavLearned);
+        ignoreView = mainView.findViewById(R.id.layoutMainNavIgnored);
+        bluetoothView = mainView.findViewById(R.id.layoutMainNavBluetooth);
+        timeView = mainView.findViewById(R.id.layoutMainNavTime);
+        settingsView = mainView.findViewById(R.id.layoutMainNavSettings);
+
+        learnedView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivitySsidLearned.class));
+            }
+        });
+
+        ignoreView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivitySsidBlacklist.class));
+            }
+        });
+
+        bluetoothView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivityBluetoothBlacklist.class));
+
+            }
+        });
+
+        timeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivityTimeRange.class));
+            }
+        });
+
+        settingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivityPrefs.class));
             }
         });
 

@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.squareup.otto.Bus;
 
@@ -64,26 +63,25 @@ public class MainActivity extends AppCompatActivity {
 
         eventBus.post(new EventPreferencesChanged());
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        // drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         toolBar = (Toolbar) findViewById(R.id.toolbar);
 
         toolBar.setTitle(R.string.app_name);
 
         setSupportActionBar(toolBar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        /*
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
                 toolBar, R.string.drawer_open, R.string.drawer_close) {
 
-            /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 getSupportActionBar().setTitle(getTitle());
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
-            /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 getSupportActionBar().setTitle(getTitle());
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -92,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(drawerToggle);
+        */
 
         if (savedInstanceState != null) {
             mainFragment = (FragmentMain) getSupportFragmentManager().findFragmentByTag("mainfragment");
@@ -103,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Configure the nav view
+        /*
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        */
     }
 
     @Override
@@ -160,13 +161,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        drawerToggle.syncState();
+        // drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
+        // drawerToggle.onConfigurationChanged(newConfig);
     }
 
 
