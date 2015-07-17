@@ -98,7 +98,7 @@ public class SmarterWifiService extends Service {
     private boolean learnWifi = true;
 
     private int enableWaitSeconds = 1;
-    private int disableWaitSeconds = 30;
+    private int disableWaitSeconds = 60;
     private boolean showNotification = true;
     private boolean performTowerPurges = false;
     private boolean aggressiveTowerCheck = false;
@@ -438,7 +438,7 @@ public class SmarterWifiService extends Service {
         learnWifi = preferences.getBoolean(getString(R.string.pref_learn), true);
         proctorWifi = preferences.getBoolean(getString(R.string.pref_enable), true);
 
-        disableWaitSeconds = Integer.parseInt(preferences.getString(getString(R.string.prefs_item_shutdowntime), "30"));
+        disableWaitSeconds = Integer.parseInt(preferences.getString(getString(R.string.prefs_item_shutdowntime), "60"));
 
         if (disableWaitSeconds < 30)
             disableWaitSeconds = 30;
