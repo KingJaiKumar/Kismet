@@ -157,21 +157,29 @@ public class FragmentLearned extends SmarterFragment {
                 trashImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                        builder.setTitle(R.string.delete_dialog_title);
-                        builder.setMessage(R.string.delete_learned_message);
+                        builder.setTitle(R.string.ignore_dialog_title);
+                        builder.setMessage(R.string.ignore_dialog_desc);
 
-                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(R.string.ignore_dialog_button_normal, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                serviceBinder.deleteSsidTowerMap(entry);
 
+                                lastSsidList = serviceBinder.getSsidTowerlist();
+                                listAdapter.clear();
+                                listAdapter.addAll(lastSsidList);
+                                listAdapter.notifyDataSetChanged();
                             }
                         });
 
-                        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton(R.string.dialog_button_ignore, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                serviceBinder.setSsidBlacklisted(entry, true);
+
                                 serviceBinder.deleteSsidTowerMap(entry);
 
                                 lastSsidList = serviceBinder.getSsidTowerlist();
@@ -181,7 +189,6 @@ public class FragmentLearned extends SmarterFragment {
                         });
 
                         builder.create().show();
-
                     }
                 });
 
