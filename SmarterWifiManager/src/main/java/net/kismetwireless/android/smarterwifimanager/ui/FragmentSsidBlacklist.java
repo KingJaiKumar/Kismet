@@ -1,9 +1,7 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -138,26 +136,7 @@ public class FragmentSsidBlacklist extends SmarterFragment {
                         listAdapter.notifyDataSetChanged();
 
                         if (entry.isBlacklisted()) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                            builder.setTitle(R.string.ignoring_dialog_network);
-                            builder.setMessage(R.string.ignoring_dialog_description);
-
-                            builder.setNegativeButton(R.string.ignoring_dialog_leave, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            });
-
-                            builder.setPositiveButton(R.string.ignoring_dialog_delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    serviceBinder.deleteSsidTowerMap(entry);
-                                }
-                            });
-
-                            builder.create().show();
+                            serviceBinder.deleteSsidTowerMap(entry);
                         }
                     }
                 });

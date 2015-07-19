@@ -58,3 +58,8 @@ DELETED
 
     <string name="timerange_dialog_delete_cancel">
     <string name="timerange_dialog_delete_ok">
+
+    <string name="ignoring_dialog_network">
+    <string name="ignoring_dialog_description">
+    <string name="ignoring_dialog_leave">
+    <string name="ignoring_dialog_delete">

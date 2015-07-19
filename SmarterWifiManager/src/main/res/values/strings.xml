@@ -50,10 +50,6 @@
     <string name="ignore_dialog_desc">Would you like to also ignore this network in the future?  Ignored networks can be connected to normally, but their location will not be remembered.</string>
     <string name="ignore_dialog_button_normal">No thanks</string>
 
-    <string name="ignoring_dialog_network">Ignoring network</string>
-    <string name="ignoring_dialog_description">Ignoring a network will not automatically delete the learned locations.  You can delete them now or via the Learning tab, or you can leave them if you wish to continue enabling Wi-Fi based on known positions, but do not want to learn additional new locations.</string>
-    <string name="ignoring_dialog_leave">Leave</string>
-    <string name="ignoring_dialog_delete">Delete</string>
     <string name="shutdown_time_30s">30 seconds</string>
     <string name="shutdown_time_1m">One minute</string>
     <string name="shutdown_time_2m">Two minutes</string>
