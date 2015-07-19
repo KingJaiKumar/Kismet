@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterBluetooth;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterTimeRange;
@@ -44,6 +45,7 @@ public class SmarterWifiServiceBinder {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
+            LogAlias.d("smarter", "binder serviceConnection onserviceconnected");
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             SmarterWifiService.ServiceBinder binder = (SmarterWifiService.ServiceBinder) service;
             smarterService = binder.getService();
@@ -73,6 +75,7 @@ public class SmarterWifiServiceBinder {
     };
 
     public SmarterWifiServiceBinder(Context c) {
+        LogAlias.d("smarter", "service binder new()");
         context = c;
     }
 
@@ -96,8 +99,13 @@ public class SmarterWifiServiceBinder {
 
     // Call a cb as soon as we finish binding
     public void doCallAndBindService(BinderCallback cb) {
-        if (isBound)
+        LogAlias.d("smarter", "service binder call and bind, isbound=" + isBound);
+
+        if (isBound) {
+            LogAlias.d("smarter", "service binder already bound, not rebinding");
             cb.run(this);
+            return;
+        }
 
         onBindCb = cb;
 

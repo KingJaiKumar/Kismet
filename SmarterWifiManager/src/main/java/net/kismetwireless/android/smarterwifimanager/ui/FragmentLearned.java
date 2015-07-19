@@ -213,9 +213,6 @@ public class FragmentLearned extends SmarterFragment {
         super.onDestroy();
 
         timeHandler.removeCallbacks(updateTowerRunnable);
-
-        if (serviceBinder != null)
-            serviceBinder.doUnbindService();
     }
 
     @Override

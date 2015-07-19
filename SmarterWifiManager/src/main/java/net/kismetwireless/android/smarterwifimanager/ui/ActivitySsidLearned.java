@@ -1,13 +1,12 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import net.kismetwireless.android.smarterwifimanager.R;
 
-public class ActivitySsidLearned extends ActionBarActivity {
+public class ActivitySsidLearned extends SmarterActivity {
     FragmentLearned ssidLearned;
 
     @Override

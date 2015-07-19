@@ -1,6 +1,5 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -9,34 +8,19 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.squareup.otto.Bus;
-
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
-import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
-
-import javax.inject.Inject;
 
 
 // Main icon color shifts
 // 00e8d5    b8b8b8    a40000
 
-public class MainActivity extends AppCompatActivity {
-    @Inject
-    Context context;
-
-    @Inject
-    SmarterWifiServiceBinder serviceBinder;
-
-    @Inject
-    Bus eventBus;
-
+public class MainActivity extends SmarterActivity {
     private static int PREFS_REQ = 1;
 
     private Toolbar toolBar;

@@ -6,9 +6,16 @@ import com.squareup.otto.ThreadEnforcer;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterPhoneStateListener;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
+import net.kismetwireless.android.smarterwifimanager.ui.ActivityBluetoothBlacklist;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivityPrefs;
+import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
+import net.kismetwireless.android.smarterwifimanager.ui.ActivitySsidBlacklist;
+import net.kismetwireless.android.smarterwifimanager.ui.ActivitySsidLearned;
+import net.kismetwireless.android.smarterwifimanager.ui.ActivityTimeRange;
 import net.kismetwireless.android.smarterwifimanager.ui.MainActivity;
 import net.kismetwireless.android.smarterwifimanager.ui.QuickConfigDialog;
+import net.kismetwireless.android.smarterwifimanager.ui.SmarterActivity;
+import net.kismetwireless.android.smarterwifimanager.ui.SmarterFragment;
 
 import javax.inject.Singleton;
 
@@ -25,7 +32,12 @@ import dagger.Provides;
 
                 SmarterPhoneStateListener.class,
 
-                MainActivity.class, QuickConfigDialog.class, ActivityPrefs.class
+                QuickConfigDialog.class,
+
+                MainActivity.class, ActivityBluetoothBlacklist.class, ActivityQuickconfig.class, ActivitySsidBlacklist.class,
+                ActivitySsidLearned.class, ActivityTimeRange.class, ActivityPrefs.class,
+
+                SmarterActivity.class, SmarterFragment.class
 
         },
         complete = false,

@@ -1510,13 +1510,16 @@ public class SmarterWifiService extends Service {
         ArrayList<SmarterSSID> blist = new ArrayList<SmarterSSID>();
         List<WifiConfiguration> wic = wifiManager.getConfiguredNetworks();
 
-        if (wic == null)
+        if (wic == null) {
+            LogAlias.d("smarter", "getssidblacklist - wifimanager configuration list was null");
             return blist;
+        }
 
         for (WifiConfiguration w : wic) {
             blist.add(dbSource.getSsidBlacklisted(w.SSID));
         }
 
+        LogAlias.d("smarter", "blacklist returning list of " + blist.size());
         return blist;
     }
 
