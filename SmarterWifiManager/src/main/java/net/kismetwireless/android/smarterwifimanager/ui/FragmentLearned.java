@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -172,6 +173,8 @@ public class FragmentLearned extends SmarterFragment {
                                 listAdapter.clear();
                                 listAdapter.addAll(lastSsidList);
                                 listAdapter.notifyDataSetChanged();
+
+                                Snackbar.make(mainView, R.string.snackbar_forgotten, Snackbar.LENGTH_LONG).show();
                             }
                         });
 
@@ -185,6 +188,8 @@ public class FragmentLearned extends SmarterFragment {
                                 lastSsidList = serviceBinder.getSsidTowerlist();
                                 listAdapter.clear();
                                 listAdapter.addAll(lastSsidList);
+
+                                Snackbar.make(mainView, R.string.snackbar_forgotten, Snackbar.LENGTH_LONG).show();
                             }
                         });
 
