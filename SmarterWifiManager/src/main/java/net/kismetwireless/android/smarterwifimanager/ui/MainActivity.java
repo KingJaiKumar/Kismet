@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,11 +21,6 @@ public class MainActivity extends SmarterActivity {
     private static int PREFS_REQ = 1;
 
     private Toolbar toolBar;
-
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
-
-    private NavigationView navigationView;
 
     private FragmentMain mainFragment;
 
@@ -55,26 +47,6 @@ public class MainActivity extends SmarterActivity {
         toolBar.setTitle(R.string.app_name);
 
         setSupportActionBar(toolBar);
-        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        /*
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-                toolBar, R.string.drawer_open, R.string.drawer_close) {
-
-            public void onDrawerClosed(View view) {
-                getSupportActionBar().setTitle(getTitle());
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getSupportActionBar().setTitle(getTitle());
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        // Set the drawer toggle as the DrawerListener
-        drawerLayout.setDrawerListener(drawerToggle);
-        */
 
         if (savedInstanceState != null) {
             mainFragment = (FragmentMain) getSupportFragmentManager().findFragmentByTag("mainfragment");
@@ -85,37 +57,6 @@ public class MainActivity extends SmarterActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment, "mainfragment").commit();
         }
 
-        // Configure the nav view
-        /*
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.navigation_learned:
-                        startActivity(new Intent(MainActivity.this, ActivitySsidLearned.class));
-                        drawerLayout.closeDrawers();
-                        return true;
-                    case R.id.navigation_ignore:
-                        startActivity(new Intent(MainActivity.this, ActivitySsidBlacklist.class));
-                        drawerLayout.closeDrawers();
-                        return true;
-                    case R.id.navigation_bluetooth:
-                        startActivity(new Intent(MainActivity.this, ActivityBluetoothBlacklist.class));
-                        drawerLayout.closeDrawers();
-                        return true;
-                    case R.id.navigation_time:
-                        startActivity(new Intent(MainActivity.this, ActivityTimeRange.class));
-                        drawerLayout.closeDrawers();
-                        return true;
-                    case R.id.navigation_settings:
-                        startActivityForResult(new Intent(MainActivity.this, ActivityPrefs.class), PREFS_REQ);
-                        drawerLayout.closeDrawers();
-                        return true;
-                }
-                return false;
-            }
-        });
-        */
     }
 
     @Override
@@ -144,14 +85,11 @@ public class MainActivity extends SmarterActivity {
       @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        // drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // drawerToggle.onConfigurationChanged(newConfig);
     }
 
 
@@ -159,17 +97,11 @@ public class MainActivity extends SmarterActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // No menu
 
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-          return true;
-        }
-
         if (item.getItemId() == R.id.action_settings) {
             startActivityForResult(new Intent(MainActivity.this, ActivityPrefs.class), PREFS_REQ);
             return true;
