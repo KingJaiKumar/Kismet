@@ -44,6 +44,8 @@ ADDED
     <string name="dialog_button_delete">
     <string name="dialog_button_ignore">
 
+    <string name="snackbar_ignored">
+
 RENAMED
     <string name="simple_explanation_neverrun">
 

@@ -3,6 +3,7 @@ package net.kismetwireless.android.smarterwifimanager.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,6 +138,8 @@ public class FragmentSsidBlacklist extends SmarterFragment {
 
                         if (entry.isBlacklisted()) {
                             serviceBinder.deleteSsidTowerMap(entry);
+
+                            Snackbar.make(mainView, R.string.snackbar_ignored, Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });

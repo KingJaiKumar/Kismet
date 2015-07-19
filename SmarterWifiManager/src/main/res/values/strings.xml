@@ -50,6 +50,8 @@
     <string name="ignore_dialog_desc">Would you like to also ignore this network in the future?  Ignored networks can be connected to normally, but their location will not be remembered.</string>
     <string name="ignore_dialog_button_normal">No thanks</string>
 
+    <string name="snackbar_ignored">Network ignored...</string>
+
     <string name="shutdown_time_30s">30 seconds</string>
     <string name="shutdown_time_1m">One minute</string>
     <string name="shutdown_time_2m">Two minutes</string>
