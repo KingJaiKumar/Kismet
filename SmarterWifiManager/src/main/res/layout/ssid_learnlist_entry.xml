@@ -13,7 +13,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
         android:clickable="true"
-        android:background="?android:attr/selectableItemBackground"/>
+        android:background="?android:attr/selectableItemBackground"
+        android:tint="@color/colorPrimary" />
 
     <LinearLayout
         android:orientation="vertical"

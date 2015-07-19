@@ -41,3 +41,4 @@ DELETED
     <string name="nag_tower_maintenance">Smarter Wi-Fi Manager now has a method for automatically maintaining the list of locations for a Wi-Fi network.  Enable it by going to Preferences and turning on Location Maintenance!</string>
     <string name="nag_tower_maintenance_prefs">Go to prefs</string>
     <string name="nag_tower_maintenance_cancel">No thanks</string>
+    <string name="learned_wifi_description">...</string>

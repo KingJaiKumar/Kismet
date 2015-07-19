@@ -42,8 +42,6 @@ public class FragmentLearned extends SmarterFragment {
     private ListView lv;
     private TextView emptyView;
 
-    private View forgetView, forgetSeparator;
-
     private Handler timeHandler = new Handler();
 
     private void updateTowerList() {
@@ -85,20 +83,6 @@ public class FragmentLearned extends SmarterFragment {
 
             if (ma == null)
                 return;
-
-            ma.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (controlstate == SmarterWifiService.WifiState.WIFI_ON && type == SmarterWifiService.ControlType.CONTROL_TOWER &&
-                            forgetView != null) {
-                        forgetView.setVisibility(View.VISIBLE);
-                        forgetSeparator.setVisibility(View.VISIBLE);
-                    } else {
-                        forgetView.setVisibility(View.GONE);
-                        forgetSeparator.setVisibility(View.GONE);
-                    }
-                }
-            });
         }
     };
 
@@ -116,16 +100,6 @@ public class FragmentLearned extends SmarterFragment {
         lv.setAdapter(listAdapter);
 
         serviceBinder.addCallback(serviceCallback);
-
-        forgetView = (View) mainView.findViewById(R.id.forget);
-        forgetSeparator = (View) mainView.findViewById(R.id.forgetSeparator);
-
-        forgetView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                serviceBinder.deleteCurrentTower();
-            }
-        });
 
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             @Override
