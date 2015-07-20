@@ -47,6 +47,21 @@ ADDED
     <string name="snackbar_ignored">
     <string name="snackbar_forgotten">
 
+    <string name="notification_title_on">
+    <string name="notification_title_off">
+    <string name="notification_title_ignore">
+
+    <string name="notification_learning">
+    <string name="notification_idle">
+    <string name="notification_ignoring">
+    <string name="notification_swm_disabled">
+    <string name="notification_wifi_neverrun">
+    <string name="notification_wifi_time">
+    <string name="notification_wifi_bt">
+    <string name="notification_wifi_off">
+    <string name="notification_airplane">
+    <string name="notification_tethered">
+
 RENAMED
     <string name="simple_explanation_neverrun">
 
@@ -66,3 +81,29 @@ DELETED
     <string name="ignoring_dialog_description">
     <string name="ignoring_dialog_leave">
     <string name="ignoring_dialog_delete">
+
+    <string name="explanation_autolearned">
+    <string name="explanation_wifi_idle">
+    <string name="explanation_wifi_blocked">
+    <string name="explanation_wifi_enabled">
+    <string name="explanation_wifi_enabled_cell">
+    <string name="explanation_wifi_disabled">
+    <string name="explanation_wifi_disabled_cell">
+    <string name="explanation_wifi_disabled_bluetooth">
+    <string name="explanation_wifi_management_disabled">
+    <string name="explanation_wifi_management_disabled_user">
+    <string name="explanation_wifi_management_disabled_cell">
+    <string name="explanation_wifi_geofence_exclude">
+    <string name="explanation_wifi_geofence_include">
+    <string name="explanation_wifi_time_include">
+    <string name="explanation_wifi_time_exclude">
+    <string name="explanation_wifi_disabled_towerid">
+    <string name="explanation_wifi_ignore_ssidblacklist">
+    <string name="explanation_wifi_forced_user_enabled">
+    <string name="explanation_wifi_forced_user_disabled">
+
+    <string name="explanation_wifi_ignore_airplane">
+    <string name="explanation_wifi_ignore_tethered">
+    <string name="explanation_wifi_ignore_sleeppolicy">
+    <string name="explanation_wifi_idle_disable">
+    <string name="explanation_unknown">

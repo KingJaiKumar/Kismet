@@ -65,31 +65,20 @@
     <string name="nav_time">Time ranges</string>
     <string name="nav_learned">Learned networks</string>
 
-    <string name="explanation_autolearned">Previously learned location</string>
-    <string name="explanation_wifi_idle">Wi-Fi enabled but not connected</string>
-    <string name="explanation_wifi_blocked">Wi-Fi blocked</string>
-    <string name="explanation_wifi_enabled">Wi-Fi enabled</string>
-    <string name="explanation_wifi_enabled_cell">You\'ve used Wi-Fi here before</string>
-    <string name="explanation_wifi_disabled">Wi-Fi disabled</string>
-    <string name="explanation_wifi_disabled_cell">Not near somewhere you\'ve used Wi-Fi before</string>
-    <string name="explanation_wifi_disabled_bluetooth">Connected to blacklisted Bluetooth device</string>
-    <string name="explanation_wifi_management_disabled">Wi-Fi management disabled</string>
-    <string name="explanation_wifi_management_disabled_user">Management turned off</string>
-    <string name="explanation_wifi_management_disabled_cell">No cell towers in range</string>
-    <string name="explanation_wifi_geofence_exclude">Disabled by geofence</string>
-    <string name="explanation_wifi_geofence_include">Enabled by geofence</string>
-    <string name="explanation_wifi_time_include">Enabled by time range</string>
-    <string name="explanation_wifi_time_exclude">Disabled by time range</string>
-    <string name="explanation_wifi_disabled_towerid">Connected to blacklisted cell tower</string>
-    <string name="explanation_wifi_ignore_ssidblacklist">Connected to ignored SSID</string>
-    <string name="explanation_wifi_forced_user_enabled">Wi-Fi forced on</string>
-    <string name="explanation_wifi_forced_user_disabled">Wi-Fi forced off</string>
-    <string name="explanation_wifi_ignore_airplane">In airplane mode</string>
-    <string name="explanation_wifi_ignore_tethered">Tethering / sharing connection</string>
-    <string name="explanation_wifi_ignore_sleeppolicy">Ignoring due to sleep policy</string>
-    <string name="explanation_wifi_idle_disable">Wi-Fi idle in unknown location, waiting to disable</string>
-    <string name="explanation_wifi_neverrun">Open Smarter Wi-Fi Manager to start controlling your Wi-Fi!</string>
-    <string name="explanation_unknown">Unknown reason</string>
+    <string name="notification_title_on">Wi-Fi turned on</string>
+    <string name="notification_title_off">Wi-Fi turned off</string>
+    <string name="notification_title_ignore">Not controlling Wi-Fi</string>
+
+    <string name="notification_learning">Remembering you use Wi-Fi here</string>
+    <string name="notification_ignoring">Connected to an ignored Wi-Fi network</string>
+    <string name="notification_idle">You\'ve used Wi-Fi here before, looking for a network</string>
+    <string name="notification_swm_disabled">Smarter Wi-Fi Manager is disabled</string>
+    <string name="notification_wifi_neverrun">Open Smarter Wi-Fi Manager to start controlling your Wi-Fi!</string>
+    <string name="notification_wifi_time">Wi-Fi controlled by timer</string>
+    <string name="notification_wifi_bt">Connected to blacklisted bluetooth</string>
+    <string name="notification_wifi_off">You haven\'t used a network here before</string>
+    <string name="notification_airplane">Airplane mode</string>
+    <string name="notification_tethered">Tethering / sharing connection</string>
 
     <string name="wifistate_blocked">Wi-Fi forced off</string>
     <string name="wifistate_ignore">Not managing Wi-Fi</string>

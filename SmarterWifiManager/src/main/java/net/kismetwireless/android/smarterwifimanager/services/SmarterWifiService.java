@@ -270,33 +270,67 @@ public class SmarterWifiService extends Service {
                 int wifiTextResource = -1;
                 int reasonTextResource = -1;
 
-                wifiTextResource = wifiStateToTextResource(state);
-                reasonTextResource = controlTypeToTextResource(type, state);
-
                 if (state == WifiState.WIFI_IDLE) {
                     wifiIconId = R.drawable.ic_launcher_notification_idle;
                 } else if (state == WifiState.WIFI_BLOCKED) {
                     wifiIconId = R.drawable.ic_launcher_notification_disabled;
+
+                    wifiTextResource = R.string.notification_title_off;
+
+                    if (type == ControlType.CONTROL_BLUETOOTH) {
+                        wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
+                        reasonTextResource = R.string.notification_wifi_bt;
+                    } else if (type == ControlType.CONTROL_TIME) {
+                        wifiIconId = R.drawable.ic_launcher_notification_clock;
+                        reasonTextResource = R.string.notification_wifi_time;
+                    }
                 } else if (state == WifiState.WIFI_IGNORE) {
                     wifiIconId = R.drawable.ic_launcher_notification_idle;
+
+                    wifiTextResource = R.string.notification_title_ignore;
+
+                    if (type == ControlType.CONTROL_AIRPLANE) {
+                        reasonTextResource = R.string.notification_airplane;
+                    } else if (type == ControlType.CONTROL_SSIDBLACKLIST) {
+                        reasonTextResource = R.string.notification_ignoring;
+                    } else if (type == ControlType.CONTROL_DISABLED) {
+                        reasonTextResource = R.string.notification_swm_disabled;
+                    } else if (type == ControlType.CONTROL_NEVERRUN) {
+                        reasonTextResource = R.string.notification_wifi_neverrun;
+                    }
+
                 } else if (state == WifiState.WIFI_OFF) {
-                    if (type == ControlType.CONTROL_BLUETOOTH)
+                    wifiTextResource = R.string.notification_title_off;
+
+                    if (type == ControlType.CONTROL_BLUETOOTH) {
                         wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
-                    else if (type == ControlType.CONTROL_TIME)
+                        reasonTextResource = R.string.notification_wifi_bt;
+                    } else if (type == ControlType.CONTROL_TIME) {
                         wifiIconId = R.drawable.ic_launcher_notification_clock;
-                    else if (type == ControlType.CONTROL_TOWER)
+                        reasonTextResource = R.string.notification_wifi_time;
+                    } else if (type == ControlType.CONTROL_TOWER) {
                         wifiIconId = R.drawable.ic_launcher_notification_cell;
-                    else
+                        reasonTextResource = R.string.notification_wifi_off;
+                    } else {
                         wifiIconId = R.drawable.ic_launcher_notification_disabled;
+                        reasonTextResource = R.string.notification_swm_disabled;
+                    }
                 } else if (state == WifiState.WIFI_ON) {
-                    if (type == ControlType.CONTROL_BLUETOOTH)
+                    wifiTextResource = R.string.notification_title_on;
+
+                    if (type == ControlType.CONTROL_BLUETOOTH) {
                         wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
-                    else if (type == ControlType.CONTROL_TIME)
+                        reasonTextResource = R.string.notification_wifi_bt;
+                    } else if (type == ControlType.CONTROL_TIME) {
                         wifiIconId = R.drawable.ic_launcher_notification_clock;
-                    else if (type == ControlType.CONTROL_TOWER)
+                        reasonTextResource = R.string.notification_wifi_time;
+                    } else if (type == ControlType.CONTROL_TOWER) {
                         wifiIconId = R.drawable.ic_launcher_notification_cell;
-                    else
+                        reasonTextResource = R.string.notification_learning;
+                    } else {
                         wifiIconId = R.drawable.ic_launcher_notification_ignore;
+                        reasonTextResource = R.string.notification_swm_disabled;
+                    }
                 }
 
                 notificationBuilder.setSmallIcon(wifiIconId);
@@ -945,10 +979,7 @@ public class SmarterWifiService extends Service {
             LogAlias.d("smarter", "configureWifiState " + curState);
 
             if (targetState == WifiState.WIFI_BLOCKED) {
-                LogAlias.d("smarter", "Target state: Blocked, shutting down wifi now, " + controlTypeToText(lastControlReason));
-
-                // timerHandler.removeCallbacks(wifiEnableTask);
-                // timerHandler.removeCallbacks(wifiDisableTask);
+                LogAlias.d("smarter", "Target state: Blocked, shutting down wifi now, " + lastControlReason);
 
                 cancelWifiDownAlarm();
                 cancelWifiUpAlarm();
@@ -957,7 +988,7 @@ public class SmarterWifiService extends Service {
 
                 wifiManager.setWifiEnabled(false);
             } else if (targetState == WifiState.WIFI_OFF) {
-                LogAlias.d("smarter", "Target state: Off, scheduling shutdown, " + controlTypeToText(lastControlReason));
+                LogAlias.d("smarter", "Target state: Off, scheduling shutdown, " + lastControlReason);
 
                 // Kill any enable pending
                 // timerHandler.removeCallbacks(wifiEnableTask);
@@ -968,7 +999,7 @@ public class SmarterWifiService extends Service {
             }
         } else {
             if (targetState == WifiState.WIFI_ON) {
-                LogAlias.d("smarter", "Target state: On, scheduling bringup, " + controlTypeToText(lastControlReason));
+                LogAlias.d("smarter", "Target state: On, scheduling bringup, " + lastControlReason);
                 startWifiEnable();
             }
         }
@@ -1368,90 +1399,6 @@ public class SmarterWifiService extends Service {
         }
 
         return "Something went weird describing config - state " + curState + " control " + lastControlReason;
-    }
-
-    static public int wifiStateToTextResource(WifiState s) {
-        switch (s) {
-            case WIFI_BLOCKED:
-                return R.string.wifistate_blocked;
-            case WIFI_IDLE:
-                return R.string.wifistate_idle;
-            case WIFI_IGNORE:
-                return R.string.wifistate_ignore;
-            case WIFI_ON:
-                return R.string.wifistate_on;
-            case WIFI_OFF:
-                return R.string.wifistate_off;
-        }
-
-        return R.string.wifistate_ignore;
-    }
-
-    static public int controlTypeToTextResource(ControlType t, WifiState s) {
-        switch (t) {
-            case CONTROL_DISABLED:
-                return R.string.explanation_wifi_management_disabled;
-            case CONTROL_BLUETOOTH:
-                // BT always indicates off (for now)
-                return R.string.explanation_wifi_disabled_bluetooth;
-            case CONTROL_TIME:
-                if (s == WifiState.WIFI_OFF)
-                    return R.string.explanation_wifi_time_exclude;
-                return R.string.explanation_wifi_time_include;
-            case CONTROL_GEOFENCE:
-                if (s == WifiState.WIFI_OFF)
-                    return R.string.explanation_wifi_geofence_exclude;
-                return R.string.explanation_wifi_geofence_include;
-            case CONTROL_TOWER:
-                if (s == WifiState.WIFI_OFF)
-                    return R.string.explanation_wifi_disabled_cell;
-                if (s == WifiState.WIFI_IDLE)
-                    return R.string.explanation_wifi_idle_disable;
-                return R.string.explanation_wifi_enabled_cell;
-            case CONTROL_TOWERID:
-                return R.string.explanation_wifi_disabled_towerid;
-            case CONTROL_USER:
-                if (s == WifiState.WIFI_OFF || s == WifiState.WIFI_BLOCKED)
-                    return R.string.explanation_wifi_forced_user_disabled;
-                return R.string.explanation_wifi_forced_user_enabled;
-            case CONTROL_SSIDBLACKLIST:
-                return R.string.explanation_wifi_ignore_ssidblacklist;
-            case CONTROL_AIRPLANE:
-                return R.string.explanation_wifi_ignore_airplane;
-            case CONTROL_TETHER:
-                return R.string.explanation_wifi_ignore_tethered;
-            case CONTROL_NEVERRUN:
-                return R.string.explanation_wifi_neverrun;
-        }
-
-        return R.string.explanation_unknown;
-    }
-
-    static public String controlTypeToText(ControlType t) {
-        switch (t) {
-            case CONTROL_DISABLED:
-                return "Wi-Fi management disabled";
-            case CONTROL_BLUETOOTH:
-                return "Bluetooth";
-            case CONTROL_GEOFENCE:
-                return "Geofence";
-            case CONTROL_TOWER:
-                return "Auto-learned location";
-            case CONTROL_TIME:
-                return "Time range";
-            case CONTROL_TOWERID:
-                return "Tower ID";
-            case CONTROL_USER:
-                return "User override";
-            case CONTROL_SSIDBLACKLIST:
-                return "SSID blacklisted";
-            case CONTROL_AIRPLANE:
-                return "Airplane mode";
-            case CONTROL_TETHER:
-                return "Tethering";
-        }
-
-        return "Unknown";
     }
 
     public ArrayList<SmarterBluetooth> getBluetoothBlacklist() {
