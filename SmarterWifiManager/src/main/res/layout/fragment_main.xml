@@ -277,7 +277,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:background="#ffe97e"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:paddingBottom="8dp">
 
                 <ImageView
@@ -341,7 +341,8 @@
                 android:id="@+id/viewMainLauncherSeparator"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:visibility="gone" />
 
             <!-- holder for all the quick buttons -->
             <LinearLayout
