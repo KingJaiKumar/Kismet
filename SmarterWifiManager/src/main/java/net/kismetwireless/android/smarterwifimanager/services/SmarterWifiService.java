@@ -46,7 +46,7 @@ import net.kismetwireless.android.smarterwifimanager.models.SmarterDBSource;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterTimeRange;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterWorldState;
-import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
+import net.kismetwireless.android.smarterwifimanager.ui.MainActivity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -227,10 +227,9 @@ public class SmarterWifiService extends Service {
         notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setOngoing(true);
 
-        //Intent intent = new Intent(this, MainActivity.class);
-        Intent intent = new Intent(this, ActivityQuickconfig.class);
+        Intent intent = new Intent(this, MainActivity.class);
+        // Intent intent = new Intent(this, ActivityQuickconfig.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
@@ -242,12 +241,7 @@ public class SmarterWifiService extends Service {
 
         onEvent(new EventPreferencesChanged());
 
-        // telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CELL_LOCATION);
         telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CELL_INFO | PhoneStateListener.LISTEN_CELL_LOCATION);
-
-        // Kick an update
-        // configureWifiState();
-
 
         // Register the event bus
         eventBus.register(this);
