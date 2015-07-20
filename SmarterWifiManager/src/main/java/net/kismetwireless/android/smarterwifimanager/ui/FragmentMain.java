@@ -49,6 +49,7 @@ public class FragmentMain extends SmarterFragment {
     private View forgetViewHolder, forgetButton;
     private View backgroundscanViewHolder, backgroundScanButton;
     private View opennetworkViewHolder, opennetworkButton;
+    private View dynamicSeparator;
 
     private CompoundButton mainEnableToggle;
 
@@ -70,6 +71,7 @@ public class FragmentMain extends SmarterFragment {
             ma.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    boolean showSeparator = serviceBinder.getWifiAlwaysScanning();
 
                     int iconResource = R.drawable.main_swm_idle;
 
@@ -79,6 +81,7 @@ public class FragmentMain extends SmarterFragment {
                         // We don't have a network but we think we should, offer to forget
                         if (type == SmarterWifiService.ControlType.CONTROL_TOWER) {
                             forgetViewHolder.setVisibility(View.VISIBLE);
+                            showSeparator = true;
                         } else {
                             forgetViewHolder.setVisibility(View.GONE);
                         }
@@ -101,6 +104,8 @@ public class FragmentMain extends SmarterFragment {
                         // If wifi is blocked off, offer the option to add a network
                         pauseSwmHolder.setVisibility(View.VISIBLE);
 
+                        showSeparator = true;
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_IGNORE) {
                         iconResource = R.drawable.main_swm_ignore;
                     } else if (state == SmarterWifiService.WifiState.WIFI_OFF) {
@@ -120,6 +125,8 @@ public class FragmentMain extends SmarterFragment {
                         pauseSwmHolder.setVisibility(View.VISIBLE);
                         ((TextView) pauseSwmButton).setText(R.string.main_pause_button);
                         pauseSwmButton.setOnClickListener(pauseClickListener);
+
+                        showSeparator = true;
 
                     } else if (state == SmarterWifiService.WifiState.WIFI_ON) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
@@ -144,6 +151,11 @@ public class FragmentMain extends SmarterFragment {
                     mainImageView.setImageResource(iconResource);
 
                     headlineText.setText(serviceBinder.currentStateToComplexText());
+
+                    if (showSeparator)
+                        dynamicSeparator.setVisibility(View.VISIBLE);
+                    else
+                        dynamicSeparator.setVisibility(View.GONE);
                 }
             });
         }
@@ -267,6 +279,15 @@ public class FragmentMain extends SmarterFragment {
                 startActivity(i);
             }
         });
+
+        if (serviceBinder.getWifiAlwaysScanning()) {
+            backgroundscanViewHolder.setVisibility(View.VISIBLE);
+            dynamicSeparator.setVisibility(View.VISIBLE);
+        } else {
+            backgroundscanViewHolder.setVisibility(View.GONE);
+        }
+
+        dynamicSeparator = mainView.findViewById(R.id.viewMainLauncherSeparator);
 
         learnedView = mainView.findViewById(R.id.layoutMainNavLearned);
         ignoreView = mainView.findViewById(R.id.layoutMainNavIgnored);
