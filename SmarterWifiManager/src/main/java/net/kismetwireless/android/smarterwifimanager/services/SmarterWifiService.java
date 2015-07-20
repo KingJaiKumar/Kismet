@@ -228,8 +228,7 @@ public class SmarterWifiService extends Service {
         notificationBuilder.setOngoing(true);
 
         Intent intent = new Intent(this, MainActivity.class);
-        // Intent intent = new Intent(this, ActivityQuickconfig.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
