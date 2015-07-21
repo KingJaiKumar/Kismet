@@ -9,7 +9,6 @@ import net.kismetwireless.android.smarterwifimanager.services.BootReceiver;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivityBluetoothBlacklist;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivityPrefs;
-import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivitySsidBlacklist;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivitySsidLearned;
 import net.kismetwireless.android.smarterwifimanager.ui.ActivityTimeRange;
@@ -38,7 +37,7 @@ import dagger.Provides;
 
                 SmarterFragment.class, SmarterActivity.class,
 
-                MainActivity.class, ActivityBluetoothBlacklist.class, ActivityQuickconfig.class, ActivitySsidBlacklist.class,
+                MainActivity.class, ActivityBluetoothBlacklist.class, ActivitySsidBlacklist.class,
                 ActivitySsidLearned.class, ActivityTimeRange.class, ActivityPrefs.class,
 
                 FragmentBluetoothBlacklist.class, FragmentLearned.class, FragmentMain.class, FragmentPrefs.class,
