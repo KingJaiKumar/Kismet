@@ -280,13 +280,6 @@ public class FragmentMain extends SmarterFragment {
             }
         });
 
-        if (serviceBinder.getWifiAlwaysScanning()) {
-            backgroundscanViewHolder.setVisibility(View.VISIBLE);
-            dynamicSeparator.setVisibility(View.VISIBLE);
-        } else {
-            backgroundscanViewHolder.setVisibility(View.GONE);
-        }
-
         dynamicSeparator = mainView.findViewById(R.id.viewMainLauncherSeparator);
 
         learnedView = mainView.findViewById(R.id.layoutMainNavLearned);
@@ -330,6 +323,14 @@ public class FragmentMain extends SmarterFragment {
                 startActivity(new Intent(getActivity(), ActivityPrefs.class));
             }
         });
+
+        if (serviceBinder.getWifiAlwaysScanning()) {
+            backgroundscanViewHolder.setVisibility(View.VISIBLE);
+            dynamicSeparator.setVisibility(View.VISIBLE);
+        } else {
+            backgroundscanViewHolder.setVisibility(View.GONE);
+        }
+
 
         return mainView;
     }
