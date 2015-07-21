@@ -107,3 +107,29 @@ DELETED
     <string name="explanation_wifi_ignore_sleeppolicy">
     <string name="explanation_wifi_idle_disable">
     <string name="explanation_unknown">
+
+    <string name="quicker_enable">
+    <string name="quicker_startswm">
+    <string name="quicker_settings">
+    <string name="quicker_close">
+    <string name="quicker_explanation">
+    <string name="quicker_forget">
+
+    <string name="action_about">
+
+    <string name="timerange_delete_text">
+
+    <string name="html_locale">
+
+    <string name="hello_world">
+
+    <string name="manage_radio_switch">
+    <string name="manage_radio_explanation">
+
+    <string name="manage_wifi_explanation">
+    <string name="autolearn_wifi_description">
+
+    <string name="learned_wifi_description">
+
+    <string name="drawer_open">
+    <string name="drawer_close">
