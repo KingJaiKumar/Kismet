@@ -365,4 +365,13 @@ public class SmarterWifiServiceBinder {
         return smarterService.getPauseAddNewNetwork();
     }
 
+    public void doWifiDisable() {
+        if (smarterService == null) {
+            Log.e("smarter", "doWifiDisabled while service null");
+            return;
+        }
+
+        smarterService.doWifiDisable();
+    }
+
 }

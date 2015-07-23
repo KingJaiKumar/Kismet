@@ -183,7 +183,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/quicker_forget"
+                        android:text="@string/main_forget_button"
                         android:id="@+id/textViewMainForgetButton"
                         android:layout_gravity="right|bottom"
                         android:theme="@style/TextMedium"

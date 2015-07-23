@@ -124,7 +124,7 @@
     <string name="simple_explanation_learning">Connected, we\'ll remember you use Wi-Fi here.</string>
     <string name="simple_explanation_blackssid">Connected to a network you\'ve ignored, we won\'t remember this spot.</string>
     <string name="simple_explanation_idle">You\'ve used Wi-Fi here before, looking for a network.</string>
-    <string name="simple_explanation_off">Wi-Fi turned off, you haven\t used a network here before.</string>
+    <string name="simple_explanation_off">Wi-Fi turned off, you haven\'t used a network here before.</string>
     <string name="simple_explanation_time">You set Wi-Fi to be turned %1$s from %2$d:%3$d to %4$d:%5$d.</string>
     <string name="simple_explanation_bt">Connected to a bluetooth device you picked to block Wi-Fi.</string>
     <string name="simple_explanation_disabled">You\'ve turned off Wi-Fi management.</string>
@@ -144,5 +144,6 @@
     <string name="main_alert_alwaysscan_advanced">Advanced Wi-Fi Settings</string>
 
     <string name="main_forget_text">We think you\'ve used Wi-Fi here before, but can\'t find a network right now.  You can forget this location to keep Wi-Fi off here in the future.</string>
+    <string name="main_forget_button">Forget location</string>
 
 </resources>

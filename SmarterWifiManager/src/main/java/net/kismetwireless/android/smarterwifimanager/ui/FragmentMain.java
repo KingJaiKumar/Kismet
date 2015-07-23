@@ -78,6 +78,8 @@ public class FragmentMain extends SmarterFragment {
                     if (state == SmarterWifiService.WifiState.WIFI_IDLE) {
                         iconResource = R.drawable.main_swm_idle;
 
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
                         // We don't have a network but we think we should, offer to forget
                         if (type == SmarterWifiService.ControlType.CONTROL_TOWER) {
                             forgetViewHolder.setVisibility(View.VISIBLE);
@@ -86,13 +88,14 @@ public class FragmentMain extends SmarterFragment {
                             forgetViewHolder.setVisibility(View.GONE);
                         }
 
-                        opennetworkViewHolder.setVisibility(View.GONE);
-
                         // If we're paused, allow unpausing
                         if (type == SmarterWifiService.ControlType.CONTROL_PAUSED) {
+                            showSeparator = true;
                             pauseSwmHolder.setVisibility(View.VISIBLE);
                             ((TextView) pauseSwmButton).setText(R.string.main_resume_button);
                             pauseSwmButton.setOnClickListener(resumeClickListener);
+                        } else {
+                            pauseSwmHolder.setVisibility(View.GONE);
                         }
 
                     } else if (state == SmarterWifiService.WifiState.WIFI_BLOCKED) {
@@ -108,6 +111,11 @@ public class FragmentMain extends SmarterFragment {
 
                     } else if (state == SmarterWifiService.WifiState.WIFI_IGNORE) {
                         iconResource = R.drawable.main_swm_ignore;
+
+                        forgetViewHolder.setVisibility(View.GONE);
+                        pauseSwmHolder.setVisibility(View.GONE);
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_OFF) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
                             iconResource = R.drawable.main_swm_bluetooth;
@@ -226,6 +234,7 @@ public class FragmentMain extends SmarterFragment {
             @Override
             public void onClick(View v) {
                 serviceBinder.deleteCurrentTower();
+                serviceBinder.doWifiDisable();
                 Snackbar.make(mainView, R.string.snackbar_delete_tower, Snackbar.LENGTH_LONG).show();
             }
         });

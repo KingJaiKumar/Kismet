@@ -272,6 +272,10 @@ public class SmarterWifiService extends Service {
 
                 if (state == WifiState.WIFI_IDLE) {
                     wifiIconId = R.drawable.ic_launcher_notification_idle;
+
+                    wifiTextResource = R.string.notification_title_on;
+                    reasonTextResource = R.string.notification_idle;
+
                 } else if (state == WifiState.WIFI_BLOCKED) {
                     wifiIconId = R.drawable.ic_launcher_notification_disabled;
 
