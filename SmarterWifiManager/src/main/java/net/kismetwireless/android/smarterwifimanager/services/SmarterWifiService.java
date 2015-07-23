@@ -896,13 +896,9 @@ public class SmarterWifiService extends Service {
                     currentTowerType = TowerType.TOWER_ENABLE;
                 }
             }
-
-            triggerCallbackTowerChanged();
-            configureWifiState();
-
-            return;
         }
 
+        configureWifiState();
         triggerCallbackTowerChanged();
     }
 
