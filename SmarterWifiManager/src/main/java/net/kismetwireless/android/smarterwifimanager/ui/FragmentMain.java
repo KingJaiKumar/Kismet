@@ -47,9 +47,9 @@ public class FragmentMain extends SmarterFragment {
 
     private View pauseSwmHolder, pauseSwmButton;
     private View forgetViewHolder, forgetButton;
-    private View backgroundscanViewHolder, backgroundScanButton;
+    private View backgroundScanViewHolder, backgroundScanButton, backgroundScanHideButton;
     private View opennetworkViewHolder, opennetworkButton;
-    private View dynamicSeparator;
+    private View backgroundScanViewMiniHolder, backgroundScanMiniButton;
 
     private CompoundButton mainEnableToggle;
 
@@ -160,10 +160,6 @@ public class FragmentMain extends SmarterFragment {
 
                     headlineText.setText(serviceBinder.currentStateToComplexText());
 
-                    if (showSeparator)
-                        dynamicSeparator.setVisibility(View.VISIBLE);
-                    else
-                        dynamicSeparator.setVisibility(View.GONE);
                 }
             });
         }
@@ -239,22 +235,15 @@ public class FragmentMain extends SmarterFragment {
             }
         });
 
-        backgroundscanViewHolder = mainView.findViewById(R.id.layoutMainBackgroundAlertHolder);
+        backgroundScanViewHolder = mainView.findViewById(R.id.layoutMainBackgroundAlertHolder);
         backgroundScanButton = mainView.findViewById(R.id.textViewBackgroundAlertButton);
+        backgroundScanHideButton = mainView.findViewById(R.id.textViewBackgroundIgnoreButton);
+
+        backgroundScanViewMiniHolder = mainView.findViewById(R.id.layoutMainSmallBackgroundHolder);
+        backgroundScanMiniButton = mainView.findViewById(R.id.textButtonBackgroundMore);
 
         opennetworkViewHolder= mainView.findViewById(R.id.layoutMainOpenHolder);
         opennetworkButton = mainView.findViewById(R.id.textViewOpenAlertButton);
-
-        // Defer main setup until we've bound
-        serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
-            @Override
-            public void run(SmarterWifiServiceBinder b) {
-                if (!isAdded())
-                    return;
-
-                serviceBinder.addCallback(guiCallback);
-            }
-        });
 
 
         // Open the advanced settings
@@ -289,7 +278,29 @@ public class FragmentMain extends SmarterFragment {
             }
         });
 
-        dynamicSeparator = mainView.findViewById(R.id.viewMainLauncherSeparator);
+        backgroundScanHideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putBoolean("MAIN_HIDE_BG_SCAN", true);
+                e.commit();
+
+                backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
+                backgroundScanViewHolder.setVisibility(View.GONE);
+            }
+        });
+
+        backgroundScanMiniButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putBoolean("MAIN_HIDE_BG_SCAN", false);
+                e.commit();
+
+                backgroundScanViewMiniHolder.setVisibility(View.GONE);
+                backgroundScanViewHolder.setVisibility(View.VISIBLE);
+            }
+        });
 
         learnedView = mainView.findViewById(R.id.layoutMainNavLearned);
         ignoreView = mainView.findViewById(R.id.layoutMainNavIgnored);
@@ -333,12 +344,27 @@ public class FragmentMain extends SmarterFragment {
             }
         });
 
-        if (serviceBinder.getWifiAlwaysScanning()) {
-            backgroundscanViewHolder.setVisibility(View.VISIBLE);
-            dynamicSeparator.setVisibility(View.VISIBLE);
-        } else {
-            backgroundscanViewHolder.setVisibility(View.GONE);
-        }
+        // Defer main setup until we've bound
+        serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
+            @Override
+            public void run(SmarterWifiServiceBinder b) {
+                if (!isAdded())
+                    return;
+
+                serviceBinder.addCallback(guiCallback);
+
+                if (serviceBinder.getWifiAlwaysScanning()) {
+                    if (sharedPreferences.getBoolean("MAIN_HIDE_BG_SCAN", false)) {
+                        backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
+                    } else {
+                        backgroundScanViewHolder.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    backgroundScanViewHolder.setVisibility(View.GONE);
+                    backgroundScanViewMiniHolder.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
         return mainView;
@@ -359,11 +385,16 @@ public class FragmentMain extends SmarterFragment {
         if (serviceBinder != null) {
             serviceBinder.addCallback(guiCallback);
 
-            if (backgroundscanViewHolder != null) {
+            if (backgroundScanViewHolder != null) {
                 if (serviceBinder.getWifiAlwaysScanning()) {
-                    backgroundscanViewHolder.setVisibility(View.VISIBLE);
+                    if (sharedPreferences.getBoolean("MAIN_HIDE_BG_SCAN", false)) {
+                        backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
+                    } else {
+                        backgroundScanViewHolder.setVisibility(View.VISIBLE);
+                    }
                 } else {
-                    backgroundscanViewHolder.setVisibility(View.GONE);
+                    backgroundScanViewHolder.setVisibility(View.GONE);
+                    backgroundScanViewMiniHolder.setVisibility(View.GONE);
                 }
             }
         }

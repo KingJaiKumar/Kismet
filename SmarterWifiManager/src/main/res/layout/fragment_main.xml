@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:svgimageview="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,6 +52,75 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layoutMainSmallBackgroundHolder"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="#ffaeaf">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_perm_scan_wifi"
+            android:tint="@color/red" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/frameLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/main_alert_alwaysscan_mini_more"
+                android:id="@+id/textButtonBackgroundMore"
+                android:layout_gravity="right|center_vertical"
+                android:clickable="true"
+                android:theme="@style/TextMedium"
+                android:background="?android:attr/selectableItemBackground"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="2px"
+            android:layout_height="25dp"
+            android:background="@android:color/darker_gray"
+            android:layout_toLeftOf="@+id/frameLayout"
+            android:layout_toStartOf="@+id/frameLayout"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/main_alert_alwaysscan_mini"
+            android:id="@+id/textView2"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/frameLayout"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="5dp"
+            android:theme="@style/TextMedium"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp" />
+
     </RelativeLayout>
 
     <ScrollView
@@ -208,7 +278,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:background="#ffaeaf"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:paddingBottom="8dp">
 
                 <ImageView
@@ -246,7 +316,8 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginRight="10dp"
-                    android:elevation="2dp">
+                    android:elevation="2dp"
+                    android:id="@+id/frameLayout2">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -262,6 +333,32 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="3dp"
                         android:textColor="@color/colorPrimaryLight" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/frameLayout2"
+                    android:layout_toLeftOf="@+id/frameLayout2"
+                    android:layout_toStartOf="@+id/frameLayout2"
+                    android:background="#ff3d41"
+                    android:elevation="2dp"
+                    android:layout_marginRight="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/main_alert_alwaysscan_hide"
+                        android:id="@+id/textViewBackgroundIgnoreButton"
+                        android:layout_gravity="center"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp"
+                        android:textColor="@color/colorPrimaryLight"
+                        android:theme="@style/TextMedium" />
                 </FrameLayout>
 
             </RelativeLayout>
@@ -332,17 +429,6 @@
                 </FrameLayout>
 
             </RelativeLayout>
-
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorDivider"
-                android:layout_below="@+id/textViewDesc"
-                android:id="@+id/viewMainLauncherSeparator"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_marginBottom="10dp"
-                android:visibility="gone" />
 
             <!-- holder for all the quick buttons -->
             <LinearLayout
@@ -538,5 +624,4 @@
 
     </ScrollView>
 
-
-</RelativeLayout>
+</LinearLayout>

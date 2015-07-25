@@ -1521,9 +1521,11 @@ public class SmarterWifiService extends Service {
 
     public boolean getWifiAlwaysScanning() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            LogAlias.d("smarter", "getwifiscanning: " + wifiManager.isScanAlwaysAvailable());
             return wifiManager.isScanAlwaysAvailable();
         }
 
+        LogAlias.d("smarter", "we can't support wifi always scanning");
         return false;
     }
 

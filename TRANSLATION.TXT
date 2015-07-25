@@ -1,3 +1,18 @@
+---- R69 ----
+
+ADDED
+
+    <string name="main_alert_alwaysscan_mini">
+    <string name="main_alert_alwaysscan_mini_more">
+
+    <string name="main_alert_alwaysscan_hide">
+
+CHANGED
+
+    <string name="main_alert_alwaysscan_advanced">
+
+---- R68 ----
+
 CHANGED
 
     <string name="timerange_controlbutton_wifi">
