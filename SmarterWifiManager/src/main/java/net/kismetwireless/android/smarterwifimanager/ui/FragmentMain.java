@@ -356,8 +356,10 @@ public class FragmentMain extends SmarterFragment {
                 if (serviceBinder.getWifiAlwaysScanning()) {
                     if (sharedPreferences.getBoolean("MAIN_HIDE_BG_SCAN", false)) {
                         backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
+                        backgroundScanViewHolder.setVisibility(View.GONE);
                     } else {
                         backgroundScanViewHolder.setVisibility(View.VISIBLE);
+                        backgroundScanViewMiniHolder.setVisibility(View.GONE);
                     }
                 } else {
                     backgroundScanViewHolder.setVisibility(View.GONE);
