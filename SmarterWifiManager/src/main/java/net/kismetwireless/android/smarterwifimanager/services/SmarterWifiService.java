@@ -1381,7 +1381,10 @@ public class SmarterWifiService extends Service {
             }
 
         } else if (curState == WifiState.WIFI_OFF) {
-            if (lastControlReason == ControlType.CONTROL_BLUETOOTH) {
+            if (lastControlReason == ControlType.CONTROL_AIRPLANE) {
+                return getString(R.string.simple_explanation_airplane);
+
+            } else if (lastControlReason == ControlType.CONTROL_BLUETOOTH) {
                 return getString(R.string.simple_explanation_bt);
             } else if (lastControlReason == ControlType.CONTROL_TIME) {
                 if (currentTimeRange == null) {
