@@ -25,8 +25,8 @@
     <string name="tab_bluetooth">Bluetooth</string>
     <string name="tab_time">Time</string>
 
-    <string name="pref_enable">enable_system</string>
-    <string name="pref_learn">enable_learning</string>
+    <string name="pref_enable" translateable="false">enable_system</string>
+    <string name="pref_learn" translateable="false">enable_learning</string>
 
     <string name="service_desc" translatable="false">Smarter Wi-Fi Service</string>
 
