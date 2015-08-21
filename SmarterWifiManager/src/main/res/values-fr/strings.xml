@@ -9,15 +9,15 @@
     <string name="action_add_timerange">Ajouter intervalle de temps</string>
 
     <string name="prefs_item_shutdowntime">Temps de déconnexion du Wi-Fi</string>
-    <string name="prefs_item_shutdowntime_explanation">Si vous constatez que le Wi-Fi est désactivé lorsque vous ajoutez un nouveau réseau, ou s'il est activé trop souvent, vous pouvez augmenter le délai avant qu'il soit désactivé.</string>
+    <string name="prefs_item_shutdowntime_explanation">Si vous constatez que le Wi-Fi est désactivé lorsque vous ajoutez un nouveau réseau, ou s\'il est activé trop souvent, vous pouvez augmenter le délai avant qu\'il soit désactivé.</string>
     <string name="prefs_item_notification">Afficher notification</string>
-    <string name="prefs_item_notification_explanation">La désactivation des notifications peut avoir une incidence sur le service d'arrière-plan lorsque la mémoire est faible. Laisser activé en cas de problème.</string>
+    <string name="prefs_item_notification_explanation">La désactivation des notifications peut avoir une incidence sur le service d\'arrière-plan lorsque la mémoire est faible. Laisser activé en cas de problème.</string>
     <string name="prefs_item_boot">Démarrer automatiquement</string>
     <string name="prefs_item_boot_explanation">Démarrer automatiquement le service de gestionnaire Wi-Fi intelligent au démarrage ou les changements de Wi-Fi et de tour cellulaire.</string>
     <string name="prefs_item_towermaintenance">Gestion des lieux</string>
     <string name="prefs_item_towermaintenance_explanation">Empêchez la liste des lieux de devenir trop longue avec une maintenance astucieuse.</string>
     <string name="prefs_item_aggressive">Surveillance accrue des tours</string>
-    <string name="prefs_item_aggressive_explanation">Au réveil, vérifiez la tour actuelle, même si l'écran est éteint. Cela peut améliorer la réceptivité, mais aussi décharger la batterie un peu plus rapidement.</string>
+    <string name="prefs_item_aggressive_explanation">Au réveil, vérifiez la tour actuelle, même si l\'écran est éteint. Cela peut améliorer la réceptivité, mais aussi décharger la batterie un peu plus rapidement.</string>
 
     <string name="tab_main">Intelligent</string>
     <string name="tab_ignore">Ignorer</string>
@@ -45,7 +45,7 @@
     <string name="shutdown_time_30s">30 secondes</string>
     <string name="shutdown_time_1m">Une minute</string>
     <string name="shutdown_time_2m">Deux minutes</string>
-    <string name="time_range_desc">Forcer l'activation ou la désactivation du Wi-Fi à un moment précis en ajoutant un intervalle de temps.</string>
+    <string name="time_range_desc">Forcer l\'activation ou la désactivation du Wi-Fi à un moment précis en ajoutant un intervalle de temps.</string>
 
     <string name="nav_ignore">Réseaux ignorés</string>
     <string name="nav_bluetooth">Bluetooth</string>
@@ -56,14 +56,14 @@
     <string name="notification_title_off">Wi-Fi désactivé</string>
     <string name="notification_title_ignore">Aucune option de Wi-Fi</string>
 
-    <string name="notification_learning">Se souvenir de l'utilisation Wi-Fi ici</string>
+    <string name="notification_learning">Se souvenir de l\'utilisation Wi-Fi ici</string>
     <string name="notification_ignoring">Connecté à un réseau Wi-Fi ignoré.</string>
     <string name="notification_idle">Vous avez déjà utilisé le Wi-Fi ici. Recherche de réseau.</string>
     <string name="notification_swm_disabled">Gestionnaire de Wi-Fi intelligent désactivé</string>
     <string name="notification_wifi_neverrun">Ouvrez le gestionnaire de Wi-Fi intelligent pour commencer à contrôler votre Wi-Fi!</string>
     <string name="notification_wifi_time">Wi-Fi contrôlé par le minuteur</string>
     <string name="notification_wifi_bt">Connecté à un Bluetooth bloqué</string>
-    <string name="notification_wifi_off">Vous n'avez pas déjà utilisé un réseau ici</string>
+    <string name="notification_wifi_off">Vous n\'avez pas déjà utilisé un réseau ici</string>
     <string name="notification_airplane">Mode avion</string>
     <string name="notification_tethered">Liaison/partage de la connexion</string>
 
@@ -81,7 +81,7 @@
     <string name="learned_number">%1$d tours mémorisées</string>
 
     <string name="timerange_no_ranges">Aucun intervalle de temps configuré</string>
-    <string name="timerange_no_effect">L'intervalle de temps ne contrôle rien</string>
+    <string name="timerange_no_effect">L\'intervalle de temps ne contrôle rien</string>
     <string name="timerange_no_days">Aucune journée sélectionnée</string>
     <string name="timerange_disabled_text">Intervalle de temps désactivé</string>
     <string name="timerange_control_wifi">Wi-Fi</string>
@@ -93,7 +93,7 @@
     <string name="timerange_controlbutton_wifi">Options Wi-Fi</string>
     <string name="timerange_controlbutton_bt">Options Bluetooth</string>
 
-    <string name="timerange_dialog_delete_title">Supprimer l'intervalle de temps?</string>
+    <string name="timerange_dialog_delete_title">Supprimer l\'intervalle de temps?</string>
     <string name="timerange_dialog_delete_text">Êtes-vous certain de vouloir supprimer cet intervalle de temps?</string>
 
     <string name="dialog_button_cancel">Annuler</string>
@@ -124,13 +124,13 @@
     <string name="simple_explanation_learning">Connecté! Nous nous rappellerons que vous utilisez le Wi-Fi ici.</string>
     <string name="simple_explanation_blackssid">Connexion à un réseau que vous avez ignoré. Cet endroit ne sera pas mémorisé.</string>
     <string name="simple_explanation_idle">Vous avez déjà utilisé le Wi-Fi ici. Recherche de réseau.</string>
-    <string name="simple_explanation_off">Wi-Fi désactivé. Vous n'avez pas utilisé de réseau ici par le passé.</string>
+    <string name="simple_explanation_off">Wi-Fi désactivé. Vous n\'avez pas utilisé de réseau ici par le passé.</string>
     <string name="simple_explanation_time">Votre Wi-Fi sera %1$s de %2$d:%3$d à %4$d:%5$d.</string>
     <string name="simple_explanation_bt">Connecté à un appareil Bluetooth que vous avez choisi pour bloquer le Wi-Fi.</string>
     <string name="simple_explanation_disabled">Vous avez désactivé la gestion du Wi-Fi.</string>
     <string name="simple_explanation_airplane">Vous êtes en mode avion. Nous ne changerons pas les paramètres du Wi-Fi.</string>
     <string name="simple_explanation_neverrun">Ouvrez le gestionnaire de Wi-Fi intelligent pour commencer à contrôler votre Wi-Fi!</string>
-    <string name="simple_explanation_add">SWM est en mode pause. Nous garderons le Wi-Fi activé jusqu'à ce que vous vous connectez à un réseau.</string>
+    <string name="simple_explanation_add">SWM est en mode pause. Nous garderons le Wi-Fi activé jusqu\'à ce que vous vous connectez à un réseau.</string>
 
     <string name="main_explanation_swm_disabled">Activez le gestionnaire de Wi-Fi intelligent pour gérer automatiquement votre Wi-Fi.</string>
 
@@ -140,7 +140,7 @@
 
     <string name="main_open_text">Vous êtes connecté à un réseau sans cryptage. Les réseaux ouverts sont beaucoup plus faciles à reproduire et votre trafic pourrait être surveillé.</string>
 
-    <string name="main_alert_alwaysscan">L'Android est configuré pour analyser en arrière-plan même si le Wi-Fi est désactivé. Nous recommandons de désactiver « Toujours permettre l'analyse ».</string>
+    <string name="main_alert_alwaysscan">L\'Android est configuré pour analyser en arrière-plan même si le Wi-Fi est désactivé. Nous recommandons de désactiver « Toujours permettre l\'analyse ».</string>
     <string name="main_alert_alwaysscan_advanced">Paramètres</string>
     <string name="main_alert_alwaysscan_hide">Pas maintenant</string>
 
