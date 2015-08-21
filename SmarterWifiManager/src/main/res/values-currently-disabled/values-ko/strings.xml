@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="prefs_name">프리퍼런스</string>
+
+    <string name="action_settings">설정</string>
+    <string name="action_add_timerange">시간 범위 추가</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="prefs_item_shutdowntime">Wi-Fi 셧다운 시간</string>
+    <string name="prefs_item_shutdowntime_explanation">새 네트워크를 추가하는 동안 Wi-Fi가 비활성화되거나 너무 자주 토글되는 것을 알게 되는 경우에는 Wi-Fi를 끄기 전에 타임아웃을 증가시킬 수 있습니다.</string>
+    <string name="prefs_item_notification">알림 표시</string>
+    <string name="prefs_item_notification_explanation">알림을 끄면 배경 서비스가 저메모리 상태에서 영향을 받을 수도 있으므로, 문제를 알게 되면 알림을 켜두십시오.</string>
+    <string name="prefs_item_boot">자동 시작</string>
+    <string name="prefs_item_boot_explanation">부트 또는 Wi-Fi 및 셀 타워 변경에 대한 스마터 Wi-Fi 관리자 서비스를 자동으로 시작하십시오. </string>
+    <string name="prefs_item_towermaintenance">위치 유지 관리</string>
+    <string name="prefs_item_towermaintenance_explanation">위치를 적절히 유지 관리하여 리스트가 너무 증가하는 것을 방지하십시오.</string>
+
+    <string name="tab_main">Smarter</string>
+    <string name="tab_ignore">무시</string>
+    <string name="tab_learned">학습</string>
+    <string name="tab_bluetooth">블루투스</string>
+    <string name="tab_time">시간</string>
+
+    <string name="pref_enable">시스템_활성화</string>
+    <string name="pref_learn">학습_활성화</string>
+
+    <string name="service_desc">스마터 Wi-Fi 서비스</string>
+
+    <string name="manage_radio_switch">라디오 관리</string>
+    <string name="manage_radio_explanation">자동 학습 위치, 시간 범위 및 다른 기준에 따라 Wi-Fi와 블루투스를 조절하십시오</string>
+
+    <string name="learn_wifi_switch">자동 학습 위치</string>
+
+    <string name="manage_wifi_explanation">자동 학습 위치와 다른 기준에 따라 Wi-Fi 라디오를 조절하십시오</string>
+    <string name="autolearn_wifi_description">셀 타워 식별에 따라 Wi-Fi를 활성화할 때를 자동으로 학습하십시오.  새 위치에 대한 학습을 시작하기 전에, Wi-Fi를 정상적으로 활성화하십시오.</string>
+    <string name="ssid_blacklist_desc">무시된 SSID로 연결되는 동안 자동 위치 학습이 비활성화됩니다.  이 학습은 차단된 네트워크를 떠날 때 재활성화됩니다.</string>
+    <string name="learned_wifi_description">셀 타워 식별자는 자동 학습 모드에서 Wi-Fi 네트워크 이름으로 매핑됩니다.  네트워크가 부적절한 시기에 켜지는 경우, 엔트리를 삭제하면 그 네트워크 상태가 재설정됩니다.</string>
+    <string name="delete_dialog_title">알려진 네트워크 삭제?</string>
+    <string name="delete_learned_message">학습된 네트워크를 삭제하면 알려진 타워에 대한 모든 결합이 재설정됩니다.  자동 학습이 활성화되는 경우, 네트워크가 학습 타워를 다시 시작합니다.  어떤 네트워크에서 자동 학습을 비활성화하려면 무시(Ignore) 탭에서 네트워크를 &quot;무시&quot;로 설정하십시오</string>
+    <string name="bluetooth_blacklist_description">Wi-Fi와 자동 학습은 블랙리스트에 포함된 블루투스 장치로 연결되는 동안 비활성화됩니다.</string>
+    <string name="ignoring_dialog_network">무시된 네트워크</string>
+    <string name="ignoring_dialog_description">네트워크를 무시하면 학습 위치가 자동으로 삭제되지 않습니다.  사용자는 이러한 위치를 지금 또는 학습 탭을 통해서 삭제하거나, 또는 사용자가 알려진 위치에 근거하여 Wi-Fi를 계속 활성화하기를 원하는 경우에는 그 위치를 떠날 수 있으나, 새로운 추가 위치를 학습하기를 원하지 않습니다.</string>
+    <string name="ignoring_dialog_leave">떠나기</string>
+    <string name="ignoring_dialog_delete">삭제</string>
+    <string name="shutdown_time_30s">30초</string>
+    <string name="shutdown_time_1m">1분</string>
+    <string name="shutdown_time_2m">2분</string>
+    <string name="time_range_desc">고정된 시간 범위가 고정되면 다른 조절 방법이 무시되고 일정한 기간 내에 라디오를 활성화 또는 비활성화할 수 있습니다.</string>
+    <string name="drawer_open">네비게이션 드로어 열기</string>
+    <string name="drawer_close">네비게이션 드로어 닫기</string>
+
+    <string name="nav_ignore">무시된 네트워크</string>
+    <string name="nav_bluetooth">블루투스</string>
+    <string name="nav_time">시간 범위</string>
+    <string name="nav_learned">학습 네트워크</string>
+
+    <string name="explanation_autolearned">이전 학습 위치</string>
+    <string name="explanation_wifi_idle">Wi-Fi가 활성화되었으나 연결되지 않았음</string>
+    <string name="explanation_wifi_blocked">Wi-Fi 가 차단되었음</string>
+    <string name="explanation_wifi_enabled">Wi-Fi가 활성화되었음</string>
+    <string name="explanation_wifi_enabled_cell">자동 학습 위치에서</string>
+    <string name="explanation_wifi_disabled">Wi-Fi가 비활성화되었음</string>
+    <string name="explanation_wifi_disabled_cell">알려진 위치에서 가깝지 않음</string>
+    <string name="explanation_wifi_disabled_bluetooth">블랙리스트에 포함된 블루투스 장치로 연결되었음</string>
+    <string name="explanation_wifi_management_disabled">Wi-Fi 관리가 비활성화되었음</string>
+    <string name="explanation_wifi_management_disabled_user">관리를 껐음</string>
+    <string name="explanation_wifi_management_disabled_cell">셀 타워가 범위 내에 없음</string>
+    <string name="explanation_wifi_geofence_exclude">지오펜스에 의해 비활성화되었음</string>
+    <string name="explanation_wifi_geofence_include">지오펜스에 의해 활성화되었음</string>
+    <string name="explanation_wifi_time_include">시간 범위에 의해 활성화되었음</string>
+    <string name="explanation_wifi_time_exclude">시간 범위에 의해 비활성화되었음</string>
+    <string name="explanation_wifi_disabled_towerid">블랙리스트에 포함된 셀 타워로 연결되었음</string>
+    <string name="explanation_wifi_ignore_ssidblacklist">무시된 SSID로 연결되었음</string>
+    <string name="explanation_wifi_forced_user_enabled">Wi-Fi를 강제로 켰음</string>
+    <string name="explanation_wifi_forced_user_disabled">Wi-Fi를 강제로 껐음</string>
+    <string name="explanation_wifi_ignore_airplane">비행기 모드로</string>
+    <string name="explanation_wifi_ignore_tethered">연결 테더링/공유</string>
+    <string name="explanation_wifi_ignore_sleeppolicy">절전 정책으로 인한 무시</string>
+    <string name="explanation_wifi_idle_disable">Wi-Fi 가 알려지지 않은 위치에서 유휴 상태에 있고, 비활성화를 위해 대기 중</string>
+    <string name="explanation_wifi_neverrun">스마터 Wi-Fi 관리자를 열고 Wi-Fi를 조절하십시오!</string>
+    <string name="explanation_unknown">알려지지 않은 이유</string>
+
+    <string name="wifistate_blocked">Wi-Fi를 강제로 껐음</string>
+    <string name="wifistate_ignore">Wi-Fi를 관리하지 않음</string>
+    <string name="wifistate_on">Wi-Fi가 연결되었음</string>
+    <string name="wifistate_off">Wi-Fi가 비활성화되었음</string>
+    <string name="wifistate_idle">Wi-Fi가 활성화되었으나 네트워크가 없음</string>
+
+    <string name="title_activity_ssid_blacklist">무시된 네트워크</string>
+    <string name="title_activity_bluetooth_blacklist">블루투스</string>
+    <string name="title_activity_timerange">시간 범위</string>
+    <string name="title_activity_learned">학습 네트워크</string>
+
+    <string name="timerange_delete_text">시간 범위 삭제</string>
+    <string name="timerange_no_effect">시간 범위가 아무 것도 조절하지 않습니다</string>
+    <string name="timerange_no_days">어떤 요일에도 시간이 발생하지 않습니다</string>
+    <string name="timerange_disabled_text">시건 범위가 비활성화되었음</string>
+    <string name="timerange_control_wifi">Wi-Fi</string>
+    <string name="timerange_control_bluetooth">블루투스</string>
+    <string name="timerange_control_on">켜기</string>
+    <string name="timerange_control_off">끄기</string>
+
+    <string name="timerange_controlbutton_wifi">Wi-Fi 관리</string>
+    <string name="timerange_controlbutton_bt">블루투스 관리</string>
+
+    <string name="timerange_dialog_delete_title">시간 범위 삭제?</string>
+    <string name="timerange_dialog_delete_cancel">취소</string>
+    <string name="timerange_dialog_delete_ok">삭제</string>
+    <string name="timerange_dialog_delete_text">이 시간 범위를 삭제하기를 원하십니까?</string>
+
+    <string name="range_mon">월요일</string>
+    <string name="range_tue">화요일</string>
+    <string name="range_wed">수요일</string>
+    <string name="range_thu">목요일</string>
+    <string name="range_fri">금요일</string>
+    <string name="range_sat">토요일</string>
+    <string name="range_sun">일요일</string>
+
+    <string name="range_fail_nodays">요일을 선택하지 않았음</string>
+    <string name="range_fail_notime">시간을 설정하지 않았음</string>
+    <string name="range_fail_nocontrol">Wi-Fi 또는 블루투스에 대한 영향이 없음</string>
+    <string name="quicker_enable">스마터 Wi-Fi 관리자</string>
+    <string name="quicker_wifi">Wi-Fi</string>
+    <string name="quicker_bt">블루투스</string>
+    <string name="quicker_startswm">스마터 Wi-Fi 관리자</string>
+    <string name="quicker_settings">Android Wi-Fi 설정</string>
+    <string name="quicker_close">닫기</string>
+    <string name="quicker_explanation">스마터 Wi-Fi 관리자는 현재의 설정에 따라 라디오를 비활성화 또는 재활성화할 수도 있습니다.</string>
+    <string name="quicker_forget">현재의 위치를 잊으십시오</string>
+
+    <string name="nag_tower_maintenance">스마터 Wi-Fi 관리자는 현재 Wi-Fi 네트워크에 대한 위치 리스트를 자동으로 유지 관리하는 방법을 보유하고 있습니다.  프리퍼런스로 가서 위치 유지 관리를 켜서 활성화하십시오!</string>
+    <string name="nag_tower_maintenance_prefs">프리퍼런스로 가기</string>
+    <string name="nag_tower_maintenance_cancel">거부</string>
+    <string name="html_locale">en</string>
+    <string name="learned_number">Learned %1$d towers</string>
+    <string name="action_about">About</string>
+    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
+
+</resources>
