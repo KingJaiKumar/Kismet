@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
@@ -99,17 +98,6 @@ public class MainActivity extends SmarterActivity {
 
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_settings) {
-            startActivityForResult(new Intent(MainActivity.this, ActivityPrefs.class), PREFS_REQ);
-            return true;
-        }
-
-        return true;
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
