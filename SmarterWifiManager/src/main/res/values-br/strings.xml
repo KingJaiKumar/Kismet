@@ -16,7 +16,7 @@
     <string name="prefs_item_boot_explanation">Iniciar automaticamente o serviço de Gerenciador Smarter Wi-Fi ao reiniciar ou após alterações de Wi-Fi ou antena de celular.</string>
     <string name="prefs_item_towermaintenance">Manutenção de Localização</string>
     <string name="prefs_item_towermaintenance_explanation">Evitar que a lista de localizações fique muito grande, através de uma manutenção inteligente.</string>
-    <string name="prefs_item_aggressive">Monitoramento Intenso de Antenas<</string>
+    <string name="prefs_item_aggressive">Monitoramento Intenso de Antenas</string>
     <string name="prefs_item_aggressive_explanation">Acordar e verificar a antena atual, mesmo quando a tela estiver apagada. Isto pode melhorar a capacidade de resposta, mas pode utilizar um pouco mais de bateria.</string>
 
     <string name="tab_main">Smarter</string>
@@ -35,7 +35,7 @@
     <string name="ssid_blacklist_desc">Estas redes não serão recordadas. Você ainda pode conectar a estas redes normalmente, mas o Gerenciador SW não irá recordar onde você as utiliza.</string>
     <string name="bluetooth_blacklist_description">Enquanto estiver conectado a estes dispositivos Bluetooth, o Wi-Fi será desligado</string>
 
-    <string name="ignore_dialog_title">Ignorar rede?<</string>
+    <string name="ignore_dialog_title">Ignorar rede?</string>
     <string name="ignore_dialog_desc">Você deseja ignorar também esta rede no futuro? Redes ignoradas podem ser conectadas normalmente, mas as suas localizações não serão recordadas.</string>
     <string name="ignore_dialog_button_normal">Não, obrigado(a).</string>
 
@@ -54,7 +54,7 @@
 
     <string name="notification_title_on">Wi-Fi ativado</string>
     <string name="notification_title_off">Wi-Fi desligado</string>
-    <string name="notification_title_ignore">Wi-Fi não está sendo controlado<</string>
+    <string name="notification_title_ignore">Wi-Fi não está sendo controlado</string>
 
     <string name="notification_learning">Recordando que você usa Wi-Fi aqui</string>
     <string name="notification_ignoring">Conectado a uma rede Wi-Fi ignorada</string>
@@ -71,7 +71,7 @@
     <string name="wifistate_ignore">Wi-Fi não está sendo gerenciado</string>
     <string name="wifistate_on">Wi-Fi conectado</string>
     <string name="wifistate_off">Wi-Fi desativado</string>
-    <string name="wifistate_idle">Wi-Fi ativado, mas não há redes<</string>
+    <string name="wifistate_idle">Wi-Fi ativado, mas não há redes</string>
 
     <string name="title_activity_ssid_blacklist">Redes ignoradas</string>
     <string name="title_activity_bluetooth_blacklist">Bluetooth</string>
@@ -114,7 +114,7 @@
     <string name="quicker_wifi">Wi-Fi</string>
     <string name="quicker_bt">Bluetooth</string>
 
-    <string name="no_bluetooth">Não há dispositivos bluetooth ou o Bluetooth está desativado<</string>
+    <string name="no_bluetooth">Não há dispositivos bluetooth ou o Bluetooth está desativado</string>
 
     <string name="snackbar_delete_timerange">Intervalo de tempo eliminado</string>
     <string name="snackbar_delete_network">Rede esquecida</string>
@@ -125,7 +125,7 @@
     <string name="simple_explanation_blackssid">Conectado a uma rede que você ignorou. Não iremos recordar este lugar.</string>
     <string name="simple_explanation_idle">Você já usou Wi-Fi aqui antes. Buscando uma rede.</string>
     <string name="simple_explanation_off">Wi-Fi desligado, você nunca usou uma rede aqui antes.</string>
-    <string name="simple_explanation_time">Você configurou o Wi-Fi para ficar %1$s de %2$d:%3$d até %4$d:%5$d.<</string>
+    <string name="simple_explanation_time">Você configurou o Wi-Fi para ficar %1$s de %2$d:%3$d até %4$d:%5$d.</string>
     <string name="simple_explanation_bt">Conectado a um dispositivo bluetooth que você configurou para bloquear o Wi-Fi enquanto estiver conectado.</string>
     <string name="simple_explanation_disabled">Você desligou o gerenciamento de Wi-Fi</string>
     <string name="simple_explanation_airplane">Você está em modo avião. As configurações de wi-fi não serão alteradas.</string>
@@ -134,7 +134,7 @@
 
     <string name="main_explanation_swm_disabled">Ativar o Gerenciador Smarter Wi-Fi para gerenciar automaticamente o seu Wi-Fi</string>
 
-    <string name="main_pause_text">O Wi-Fi está desligado agora. Você pode pausar o Gerenciador Smarter Wi-Fi e adicionar uma nova rede.<</string>
+    <string name="main_pause_text">O Wi-Fi está desligado agora. Você pode pausar o Gerenciador Smarter Wi-Fi e adicionar uma nova rede.</string>
     <string name="main_pause_button">adicionar uma rede.</string>
     <string name="main_resume_button">Retomar</string>
 
