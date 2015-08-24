@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +42,6 @@ public class FragmentLearned extends SmarterFragment {
     private LearnedSsidListAdapter listAdapter;
     private ListView lv;
     private TextView emptyView;
-
-    private View forgetView, forgetSeparator;
 
     private Handler timeHandler = new Handler();
 
@@ -85,20 +84,6 @@ public class FragmentLearned extends SmarterFragment {
 
             if (ma == null)
                 return;
-
-            ma.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (controlstate == SmarterWifiService.WifiState.WIFI_ON && type == SmarterWifiService.ControlType.CONTROL_TOWER &&
-                            forgetView != null) {
-                        forgetView.setVisibility(View.VISIBLE);
-                        forgetSeparator.setVisibility(View.VISIBLE);
-                    } else {
-                        forgetView.setVisibility(View.GONE);
-                        forgetSeparator.setVisibility(View.GONE);
-                    }
-                }
-            });
         }
     };
 
@@ -116,16 +101,6 @@ public class FragmentLearned extends SmarterFragment {
         lv.setAdapter(listAdapter);
 
         serviceBinder.addCallback(serviceCallback);
-
-        forgetView = (View) mainView.findViewById(R.id.forget);
-        forgetSeparator = (View) mainView.findViewById(R.id.forgetSeparator);
-
-        forgetView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                serviceBinder.deleteCurrentTower();
-            }
-        });
 
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             @Override
@@ -183,19 +158,13 @@ public class FragmentLearned extends SmarterFragment {
                 trashImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                        builder.setTitle(R.string.delete_dialog_title);
-                        builder.setMessage(R.string.delete_learned_message);
+                        builder.setTitle(R.string.ignore_dialog_title);
+                        builder.setMessage(R.string.ignore_dialog_desc);
 
-                        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        });
-
-                        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(R.string.ignore_dialog_button_normal, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 serviceBinder.deleteSsidTowerMap(entry);
@@ -203,11 +172,28 @@ public class FragmentLearned extends SmarterFragment {
                                 lastSsidList = serviceBinder.getSsidTowerlist();
                                 listAdapter.clear();
                                 listAdapter.addAll(lastSsidList);
+                                listAdapter.notifyDataSetChanged();
+
+                                Snackbar.make(mainView, R.string.snackbar_forgotten, Snackbar.LENGTH_LONG).show();
+                            }
+                        });
+
+                        builder.setPositiveButton(R.string.dialog_button_ignore, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                serviceBinder.setSsidBlacklisted(entry, true);
+
+                                serviceBinder.deleteSsidTowerMap(entry);
+
+                                lastSsidList = serviceBinder.getSsidTowerlist();
+                                listAdapter.clear();
+                                listAdapter.addAll(lastSsidList);
+
+                                Snackbar.make(mainView, R.string.snackbar_forgotten, Snackbar.LENGTH_LONG).show();
                             }
                         });
 
                         builder.create().show();
-
                     }
                 });
 
@@ -239,9 +225,6 @@ public class FragmentLearned extends SmarterFragment {
         super.onDestroy();
 
         timeHandler.removeCallbacks(updateTowerRunnable);
-
-        if (serviceBinder != null)
-            serviceBinder.doUnbindService();
     }
 
     @Override

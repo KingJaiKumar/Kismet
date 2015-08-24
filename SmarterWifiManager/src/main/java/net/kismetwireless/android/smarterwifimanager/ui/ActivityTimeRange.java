@@ -1,14 +1,13 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import net.kismetwireless.android.smarterwifimanager.R;
 
-public class ActivityTimeRange extends ActionBarActivity {
+public class ActivityTimeRange extends SmarterActivity {
     FragmentTimeRange timeFragment;
 
     @Override
@@ -28,8 +27,9 @@ public class ActivityTimeRange extends ActionBarActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, timeFragment, "timefragment").commit();
         }
 
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -42,8 +42,6 @@ public class ActivityTimeRange extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.timerange, menu);
         return true;
     }
 

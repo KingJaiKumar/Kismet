@@ -1,24 +1,149 @@
+---- R69 ----
 
 ADDED
 
-    <string name="action_about">About</string>
+    <string name="main_alert_alwaysscan_mini">
+    <string name="main_alert_alwaysscan_mini_more">
 
-    <string name="learned_number">Learned %1$d towers</string>
-
-    <string name="no_bluetooth">No bluetooth devices or Bluetooth disabled</string>
-
-	<string name="prefs_item_aggressive">Aggressive Tower Monitoring</string>
-	<string name="prefs_item_aggressive_explanation">Wake up and check the current tower, even when the screen is off.  This can improve responsiveness, but may use slightly more battery power.</string>
+    <string name="main_alert_alwaysscan_hide">
 
 CHANGED
 
-    <!-- "Smarter W-Fi Manager" should not be translated -->
-    <string name="quicker_explanation">Smarter Wi-Fi Manager may disable or re-enable radios depending on the current configuration.</string>
+    <string name="main_alert_alwaysscan_advanced">
 
+---- R68 ----
 
-REMOVED
+CHANGED
 
-    <!-- We use app title for untranslated text -->
-    <string name="quicker_enable">Smarter Wi-Fi Manager</string>
-    <string name="quicker_startswm">Smarter Wi-Fi Manager</string>
+    <string name="timerange_controlbutton_wifi">
+    <string name="timerange_controlbutton_bt">
 
+    <string name="time_range_desc">
+
+    <string name="quicker_explanation">
+    <string name="ssid_blacklist_desc">
+    <string name="bluetooth_blacklist_description">
+
+ADDED
+    <string name="snackbar_delete_timerange">
+    <string name="snackbar_delete_network">
+    <string name="snackbar_delete_undo">
+
+    <string name="simple_explanation_learning">
+    <string name="simple_explanation_idle">
+    <string name="simple_explanation_off">
+    <string name="simple_explanation_time">
+    <string name="simple_explanation_bt">
+    <string name="simple_explanation_blackssid">
+    <string name="simple_explanation_airplane">
+    <string name="simple_explanation_add">
+
+    <string name="main_pause_text">
+    <string name="main_pause_button">
+    <string name="main_resume_button">
+
+    <string name="main_open_text">
+
+    <string name="main_forget_text">
+
+    <string name="snackbar_delete_tower">
+
+    <string name="ignore_dialog_title">
+    <string name="ignore_dialog_desc">
+    <string name="ignore_dialog_button_normal">
+
+    <string name="dialog_button_cancel">
+    <string name="dialog_button_delete">
+    <string name="dialog_button_ignore">
+
+    <string name="snackbar_ignored">
+    <string name="snackbar_forgotten">
+
+    <string name="notification_title_on">
+    <string name="notification_title_off">
+    <string name="notification_title_ignore">
+
+    <string name="notification_learning">
+    <string name="notification_idle">
+    <string name="notification_ignoring">
+    <string name="notification_swm_disabled">
+    <string name="notification_wifi_neverrun">
+    <string name="notification_wifi_time">
+    <string name="notification_wifi_bt">
+    <string name="notification_wifi_off">
+    <string name="notification_airplane">
+    <string name="notification_tethered">
+
+    <string name="main_forget_button">
+
+RENAMED
+    <string name="simple_explanation_neverrun">
+
+DELETED
+    <string name="nag_tower_maintenance">
+    <string name="nag_tower_maintenance_prefs">
+    <string name="nag_tower_maintenance_cancel">
+    <string name="learned_wifi_description">
+
+    <string name="delete_dialog_title">
+    <string name="delete_learned_message">
+
+    <string name="timerange_dialog_delete_cancel">
+    <string name="timerange_dialog_delete_ok">
+
+    <string name="ignoring_dialog_network">
+    <string name="ignoring_dialog_description">
+    <string name="ignoring_dialog_leave">
+    <string name="ignoring_dialog_delete">
+
+    <string name="explanation_autolearned">
+    <string name="explanation_wifi_idle">
+    <string name="explanation_wifi_blocked">
+    <string name="explanation_wifi_enabled">
+    <string name="explanation_wifi_enabled_cell">
+    <string name="explanation_wifi_disabled">
+    <string name="explanation_wifi_disabled_cell">
+    <string name="explanation_wifi_disabled_bluetooth">
+    <string name="explanation_wifi_management_disabled">
+    <string name="explanation_wifi_management_disabled_user">
+    <string name="explanation_wifi_management_disabled_cell">
+    <string name="explanation_wifi_geofence_exclude">
+    <string name="explanation_wifi_geofence_include">
+    <string name="explanation_wifi_time_include">
+    <string name="explanation_wifi_time_exclude">
+    <string name="explanation_wifi_disabled_towerid">
+    <string name="explanation_wifi_ignore_ssidblacklist">
+    <string name="explanation_wifi_forced_user_enabled">
+    <string name="explanation_wifi_forced_user_disabled">
+
+    <string name="explanation_wifi_ignore_airplane">
+    <string name="explanation_wifi_ignore_tethered">
+    <string name="explanation_wifi_ignore_sleeppolicy">
+    <string name="explanation_wifi_idle_disable">
+    <string name="explanation_unknown">
+
+    <string name="quicker_enable">
+    <string name="quicker_startswm">
+    <string name="quicker_settings">
+    <string name="quicker_close">
+    <string name="quicker_explanation">
+    <string name="quicker_forget">
+
+    <string name="action_about">
+
+    <string name="timerange_delete_text">
+
+    <string name="html_locale">
+
+    <string name="hello_world">
+
+    <string name="manage_radio_switch">
+    <string name="manage_radio_explanation">
+
+    <string name="manage_wifi_explanation">
+    <string name="autolearn_wifi_description">
+
+    <string name="learned_wifi_description">
+
+    <string name="drawer_open">
+    <string name="drawer_close">

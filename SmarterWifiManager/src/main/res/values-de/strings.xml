@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Smarter Wi-Fi Manager</string>
+
+    <string name="prefs_name">Bevorzugte Einstellungen</string>
+
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_add_timerange">Zeitspanne hinzufügen</string>
+
+    <string name="prefs_item_shutdowntime">WLAN-Abschaltzeit</string>
+    <string name="prefs_item_shutdowntime_explanation">Wenn Sie merken, dass WLAN beim Hinzufügen eines neuen Netzwerks deaktiviert oder zu häufig ein- und ausgeschaltet wird, können Sie ein längeres Zeitlimit zum Ausschalten einstellen.</string>
+    <string name="prefs_item_notification">Benachrichtigung zeigen</string>
+    <string name="prefs_item_notification_explanation">Das Ausschalten der Benachrichtigungen kann sich bei Speichermangel auf die Hintergrundservices auswirken. Wenn Probleme auftreten, Funktion aktiviert lassen.</string>
+    <string name="prefs_item_boot">Automatisch starten</string>
+    <string name="prefs_item_boot_explanation">Smarter Wi-Fi Manager-Service beim Systemstart oder nach dem Wechsel des WLANs und Sendemastes automatisch starten.</string>
+    <string name="prefs_item_towermaintenance">Standortverwaltung</string>
+    <string name="prefs_item_towermaintenance_explanation">Durch intelligente Verwaltung sicherstellen, dass die Standortliste nicht zu umfangreich wird.</string>
+    <string name="prefs_item_aggressive">Sendemasten kontinuierlich orten</string>
+    <string name="prefs_item_aggressive_explanation"><mrk mid="20" mtype="seg">Aufwachen und aktuellen Sendemast prüfen, auch wenn der Bildschirm aus ist.</mrk>  <mrk mid="21" mtype="seg">Dies kann die Reaktionsfähigkeit verbessern, verbraucht aber evtl. etwas mehr Akkuleistung.</mrk></string>
+
+    <string name="tab_main">Smarter</string>
+    <string name="tab_ignore">Ignorieren</string>
+    <string name="tab_learned">Gespeichert</string>
+    <string name="tab_bluetooth">Bluetooth</string>
+    <string name="tab_time">Uhrzeit</string>
+
+    <string name="pref_enable">enable_system</string>
+    <string name="pref_learn">enable_learning</string>
+
+    <string name="service_desc" translatable="false">Smarter Wi-Fi Service</string>
+
+    <string name="learn_wifi_switch">Standorte autom. lernen</string>
+
+    <string name="ssid_blacklist_desc"><mrk mid="44" mtype="seg">Diese Netzwerke werden nicht gespeichert.</mrk>  <mrk mid="45" mtype="seg">Sie können sich weiter normal mit diesen Netzwerken verbinden, aber SWM wird sich nicht daran erinnern, wo Sie sie nutzen.</mrk></string>
+    <string name="bluetooth_blacklist_description">Wenn Anschluss an diese Bluetooth-Geräte besteht, wird WLAN ausgeschaltet.</string>
+
+    <string name="ignore_dialog_title">Netzwerk ignorieren?</string>
+    <string name="ignore_dialog_desc"><mrk mid="82" mtype="seg">Möchten Sie dieses Netzwerk auch in Zukunft ignorieren?</mrk>  <mrk mid="83" mtype="seg">Es ist möglich, sich auch mit ignorierten Netzwerken zu verbinden, aber das System merkt sich ihren Standort nicht.</mrk></string>
+    <string name="ignore_dialog_button_normal">Nein danke</string>
+
+    <string name="snackbar_ignored">Netzwerk ignoriert</string>
+    <string name="snackbar_forgotten">Netzwerk vergessen</string>
+
+    <string name="shutdown_time_30s">30 Sekunden</string>
+    <string name="shutdown_time_1m">Eine Minute</string>
+    <string name="shutdown_time_2m">Zwei Minuten</string>
+    <string name="time_range_desc">WLAN durch Eingabe einer Zeitspanne zu einer bestimmten Uhrzeit zwangsweise ein- oder ausschalten.</string>
+
+    <string name="nav_ignore">Ignorierte Netzwerke</string>
+    <string name="nav_bluetooth">Bluetooth</string>
+    <string name="nav_time">Zeitspannen</string>
+    <string name="nav_learned">Gespeicherte Netzwerke</string>
+
+    <string name="notification_title_on">WLAN eingeschaltet</string>
+    <string name="notification_title_off">WLAN ausgeschaltet</string>
+    <string name="notification_title_ignore">WLAN wird nicht gesteuert</string>
+
+    <string name="notification_learning">Wir erinnern uns, dass Sie hier WLAN verwenden</string>
+    <string name="notification_ignoring">Mit einem ignorierten WLAN-Netzwerk verbunden</string>
+    <string name="notification_idle">Sie haben hier bereits WLAN verwendet. Netzwerk wird gesucht.</string>
+    <string name="notification_swm_disabled">Smarter Wi-Fi Manager ist deaktiviert</string>
+    <string name="notification_wifi_neverrun">Öffnen Sie Smarter Wi-Fi Manager, um Ihr WLAN zu steuern!</string>
+    <string name="notification_wifi_time">WLAN über Timer gesteuert</string>
+    <string name="notification_wifi_bt">Mit einem Bluetooth-Gerät verbunden, das auf der schwarzen Liste steht</string>
+    <string name="notification_wifi_off">Sie haben hier noch kein Netzwerk verwendet</string>
+    <string name="notification_airplane">Flugzeugmodus</string>
+    <string name="notification_tethered">Tethering- / Sharing-Verbindung</string>
+
+    <string name="wifistate_blocked">WLAN zwangsweise ausgeschaltet</string>
+    <string name="wifistate_ignore">WLAN wird nicht verwaltet</string>
+    <string name="wifistate_on">WLAN angeschlossen</string>
+    <string name="wifistate_off">WLAN deaktiviert</string>
+    <string name="wifistate_idle">WLAN aktiviert, aber kein Netzwerk</string>
+
+    <string name="title_activity_ssid_blacklist">Ignorierte Netzwerke</string>
+    <string name="title_activity_bluetooth_blacklist">Bluetooth</string>
+    <string name="title_activity_timerange">Zeitspannen</string>
+    <string name="title_activity_learned">Gespeicherte Netzwerke</string>
+
+    <string name="learned_number">%1$d Sendemasten gespeichert</string>
+
+    <string name="timerange_no_ranges">Keine Zeitspannen konfiguriert</string>
+    <string name="timerange_no_effect">Zeitspanne regelt nichts</string>
+    <string name="timerange_no_days">Keine Tage für Zeitangabe ausgewählt</string>
+    <string name="timerange_disabled_text">Zeitspanne deaktiviert</string>
+    <string name="timerange_control_wifi">WLAN</string>
+    <string name="timerange_control_bluetooth">Bluetooth</string>
+
+    <string name="timerange_control_on">ein</string>
+    <string name="timerange_control_off">aus</string>
+
+    <string name="timerange_controlbutton_wifi">WLAN steuern</string>
+    <string name="timerange_controlbutton_bt">Bluetooth steuern</string>
+
+    <string name="timerange_dialog_delete_title">Zeitspanne löschen?</string>
+    <string name="timerange_dialog_delete_text">Möchten Sie diese Zeitspanne wirklich löschen?</string>
+
+    <string name="dialog_button_cancel">Abbrechen</string>
+    <string name="dialog_button_delete">Löschen</string>
+    <string name="dialog_button_ignore">Ignorieren</string>
+
+    <string name="range_mon">Mo</string>
+    <string name="range_tue">Di</string>
+    <string name="range_wed">Mi</string>
+    <string name="range_thu">Do</string>
+    <string name="range_fri">Fr</string>
+    <string name="range_sat">Sa</string>
+    <string name="range_sun">So</string>
+
+    <string name="range_fail_nodays">Keine Tage ausgewählt</string>
+    <string name="range_fail_notime">Keine Zeit eingestellt</string>
+    <string name="range_fail_nocontrol">Keine Auswirkung auf WLAN oder Bluetooth</string>
+    <string name="quicker_wifi">WLAN</string>
+    <string name="quicker_bt">Bluetooth</string>
+
+    <string name="no_bluetooth">Keine Bluetooth-Geräte oder Bluetooth deaktiviert</string>
+
+    <string name="snackbar_delete_timerange">Zeitspanne gelöscht</string>
+    <string name="snackbar_delete_network">Netzwerk vergessen</string>
+    <string name="snackbar_delete_tower">Standort vergessen</string>
+    <string name="snackbar_delete_undo">Rückgängig</string>
+
+    <string name="simple_explanation_learning">Verbunden. Wir merken uns, dass Sie hier WLAN verwenden.</string>
+    <string name="simple_explanation_blackssid">Mit einem Netzwerk verbunden, das Sie ignoriert haben. Wir werden uns nicht an diesen Standort erinnern.</string>
+    <string name="simple_explanation_idle">Sie haben hier bereits WLAN verwendet. Netzwerk wird gesucht.</string>
+    <string name="simple_explanation_off">WLAN ist ausgeschaltet. Sie haben hier noch kein Netzwerk verwendet.</string>
+    <string name="simple_explanation_time">Ihr WLAN ist folgendermaßen eingestellt: %1$s von %2$d:%3$d bis %4$d:%5$d.</string>
+    <string name="simple_explanation_bt">Mit einem Bluetooth-Gerät verbunden, das die WLAN-Verbindung blockiert.</string>
+    <string name="simple_explanation_disabled">Sie haben das WLAN-Management ausgeschaltet.</string>
+    <string name="simple_explanation_airplane">Sie sind im Flugzeugmodus. Die WLAN-Einstellungen werden nicht geändert.</string>
+    <string name="simple_explanation_neverrun">Öffnen Sie Smarter Wi-Fi Manager, um Ihr WLAN zu steuern!</string>
+    <string name="simple_explanation_add">SWM ist im Pausemodus. Wir lassen WLAN aktiviert, bis Sie Verbindung mit einem Netzwerk aufnehmen.</string>
+
+    <string name="main_explanation_swm_disabled">Schalten Sie Smarter Wi-Fi Manager ein, um Ihr WLAN automatisch zu verwalten!</string>
+
+    <string name="main_pause_text"><mrk mid="102" mtype="seg">WLAN ist momentan ausgeschaltet.</mrk>  <mrk mid="103" mtype="seg">Sie können Smarter Wi-Fi Manager anhalten und ein neues Netzwerk hinzufügen.</mrk></string>
+    <string name="main_pause_button">Neues Netzwerk hinzufügen</string>
+    <string name="main_resume_button">Fortsetzen</string>
+
+    <string name="main_open_text"><mrk mid="114" mtype="seg">Sie sind mit einem Netzwerk ohne Verschlüsselung verbunden.</mrk>  <mrk mid="115" mtype="seg">Offene Netzwerke sind einfacher zu manipulieren und Ihr Datenverkehr kann überwacht werden.</mrk></string>
+
+    <string name="main_alert_alwaysscan"><mrk mid="119" mtype="seg">Android ist so konfiguriert, dass auch bei ausgeschaltetem WLAN im Hintergrund gesucht wird. </mrk>  <mrk mid="120" mtype="seg">Wir empfehlen, die Funktion \„Suche immer erlauben\“ auszuschalten.</mrk></string>
+    <string name="main_alert_alwaysscan_advanced">Einstellungen</string>
+    <string name="main_alert_alwaysscan_hide">Jetzt nicht</string>
+
+    <string name="main_alert_alwaysscan_mini">WLAN-Suche im Hintergrund ist aktiviert...</string>
+    <string name="main_alert_alwaysscan_mini_more">Mehr</string>
+
+    <string name="main_forget_text"><mrk mid="88" mtype="seg">Wir glauben, dass Sie hier bereits WLAN verwendet haben, finden aber momentan kein Netzwerk.</mrk>  <mrk mid="89" mtype="seg">Sie können diesen Standort vergessen, damit hier in der Zukunft kein WLAN mehr aktiviert wird.</mrk></string>
+    <string name="main_forget_button">Standort vergessen</string>
+
+</resources>

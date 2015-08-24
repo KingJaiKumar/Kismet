@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="@style/TextMedium"
         android:text="Medium Text"
         android:id="@+id/btListDevice"
         android:layout_gravity="center_horizontal|top"

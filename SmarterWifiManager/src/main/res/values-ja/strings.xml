@@ -3,14 +3,11 @@
 
     <string name="app_name" translatable="false">Smarter Wi-Fi Manager</string>
 
-    <string name="html_locale">en</string>
-
     <string name="prefs_name">プリファレンス</string>
 
     <string name="action_settings">設定</string>
     <string name="action_add_timerange">時間の範囲を追加</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="prefs_item_shutdowntime">Wi-Fi 停止時間</string>
     <string name="prefs_item_shutdowntime_explanation">新しいネットワークを追加するときに Wi-Fi が無効になったり、頻繁に切り替わる場合は、オフになる前のタイムアウトを増やすことができます。</string>
     <string name="prefs_item_notification">通知を表示</string>
@@ -31,61 +28,44 @@
     <string name="pref_enable">enable_system</string>
     <string name="pref_learn">enable_learning</string>
 
-    <string name="service_desc">Smarter Wi-Fi サービス</string>
-
-    <string name="manage_radio_switch">無線の管理</string>
-    <string name="manage_radio_explanation">自動学習した位置、時間の範囲、およびその他の条件に基づいて Wi-Fi と Bluetooth をコントロールします</string>
+    <string name="service_desc" translatable="false">Smarter Wi-Fi Service</string>
 
     <string name="learn_wifi_switch">位置の自動学習</string>
 
-    <string name="manage_wifi_explanation">自動学習した位置とその他の条件に基づいて Wi-Fi 無線をコントロールします</string>
-    <string name="autolearn_wifi_description">基地局 ID に基づいて Wi-Fi をいつ有効にするか自動的に学習します。 新しい位置の学習を開始するには、Wi-Fi を通常通り有効にしてください。</string>
-    <string name="ssid_blacklist_desc">無視した SSID に接続している間、自動学習は無効になります。 ブロックしたネットワークを離れた時に、再度有効になります。</string>
-    <string name="learned_wifi_description">自動学習モードでは、基地局 ID が Wi-Fi ネットワーク名にマップされます。 不適切なタイミングでネットワークがオンになる場合、そのエントリーを削除するとネットワークの状態がリセットされます。</string>
-    <string name="delete_dialog_title">既知のネットワークを削除しますか?</string>
-    <string name="delete_learned_message">学習済ネットワークを削除すると、既知の基地局への関連付けをすべて削除します。 自動学習を有効にしている場合、ネットワークは再度基地局の学習を開始します。 ネットワークの自動学習を無効にするには、無視タブで、ネットワークを "無視" にセットしてください</string>
-    <string name="bluetooth_blacklist_description">ブラックリストの Bluetooth デバイスに接続している間、Wi-Fi と自動学習は無効になります。</string>
-    <string name="ignoring_dialog_network">ネットワークを無視</string>
-    <string name="ignoring_dialog_description">ネットワークの無視は、学習済の位置を自動的に削除しません。 今すぐ、または学習タブから削除することができます。または、既知の位置に基づいて Wi-Fi を有効にしても、新しい位置を学習したくないために離れることができます。</string>
-    <string name="ignoring_dialog_leave">離れる</string>
-    <string name="ignoring_dialog_delete">削除</string>
+    <string name="ssid_blacklist_desc">これらのネットワークは記憶しません。これらのネットワークは普通に接続することはできますが、SWM は接続したことを記憶しません。</string>
+    <string name="bluetooth_blacklist_description">これらの Bluetooth デバイスに接続している間、Wi-Fi はオフになります。</string>
+
+    <string name="ignore_dialog_title">ネットワークを無視しますか?</string>
+    <string name="ignore_dialog_desc">将来もこのネットワークを無視しますか? 無視したネットワークは普通に接続することはできますが、位置を記憶しません。</string>
+    <string name="ignore_dialog_button_normal">いいえ結構です</string>
+
+    <string name="snackbar_ignored">ネットワークを無視しました</string>
+    <string name="snackbar_forgotten">ネットワークを記憶しません</string>
+
     <string name="shutdown_time_30s">30 秒</string>
     <string name="shutdown_time_1m">1 分</string>
     <string name="shutdown_time_2m">2 分</string>
-    <string name="time_range_desc">固定の時間の範囲は他のコントロール方法に優先し、期間内に無線を有効または無効にすることができます。</string>
-    <string name="drawer_open">ナビゲーションドロワーを開く</string>
-    <string name="drawer_close">ナビゲーションドロワーを閉じる</string>
+    <string name="time_range_desc">追加した時間の範囲で、強制的に Wi-Fi をオンまたはオフにします。</string>
 
-    <string name="nav_ignore">無視ネットワーク</string>
+    <string name="nav_ignore">無視するネットワーク</string>
     <string name="nav_bluetooth">Bluetooth</string>
     <string name="nav_time">時間の範囲</string>
     <string name="nav_learned">学習済ネットワーク</string>
 
-    <string name="explanation_autolearned">以前学習した位置</string>
-    <string name="explanation_wifi_idle">Wi-Fi は有効ですが接続していません</string>
-    <string name="explanation_wifi_blocked">Wi-Fi をブロックしました</string>
-    <string name="explanation_wifi_enabled">Wi-Fi は有効です</string>
-    <string name="explanation_wifi_enabled_cell">位置を自動学習しています</string>
-    <string name="explanation_wifi_disabled">Wi-Fi は無効です</string>
-    <string name="explanation_wifi_disabled_cell">近くに既知の位置はありません</string>
-    <string name="explanation_wifi_disabled_bluetooth">ブラックリストの Bluetooth デバイスに接続しました</string>
-    <string name="explanation_wifi_management_disabled">Wi-Fi 管理は無効です</string>
-    <string name="explanation_wifi_management_disabled_user">管理はオフです</string>
-    <string name="explanation_wifi_management_disabled_cell">範囲に基地局がありません</string>
-    <string name="explanation_wifi_geofence_exclude">Geofence で無効です</string>
-    <string name="explanation_wifi_geofence_include">Geofence で有効です</string>
-    <string name="explanation_wifi_time_include">時間の範囲で有効です</string>
-    <string name="explanation_wifi_time_exclude">時間の範囲で無効です</string>
-    <string name="explanation_wifi_disabled_towerid">ブラックリストの基地局に接続しました</string>
-    <string name="explanation_wifi_ignore_ssidblacklist">無視 SSID に接続しました</string>
-    <string name="explanation_wifi_forced_user_enabled">Wi-Fi は強制的にオン</string>
-    <string name="explanation_wifi_forced_user_disabled">Wi-Fi は強制的にオフ</string>
-    <string name="explanation_wifi_ignore_airplane">機内モード</string>
-    <string name="explanation_wifi_ignore_tethered">テザリング / 接続の共有</string>
-    <string name="explanation_wifi_ignore_sleeppolicy">スリープポリシーのため無視しています</string>
-    <string name="explanation_wifi_idle_disable">不明な位置で Wi-Fi はアイドル。 無効にしています</string>
-    <string name="explanation_wifi_neverrun">Smarter Wi-Fi Manager を開いて、Wi-Fi のコントロールを開始してください!</string>
-    <string name="explanation_unknown">不明な理由</string>
+    <string name="notification_title_on">Wi-Fi オンにしました</string>
+    <string name="notification_title_off">Wi-Fi オフにしました</string>
+    <string name="notification_title_ignore">Wi-Fi をコントロールしていません</string>
+
+    <string name="notification_learning">ここでの Wi-Fi 使用を記憶しています</string>
+    <string name="notification_ignoring">無視 Wi-Fi ネットワークに接続しました</string>
+    <string name="notification_idle">以前ここで Wi-Fi を使用しました。ネットワークを検索しています</string>
+    <string name="notification_swm_disabled">Smarter Wi-Fi Manager は無効です</string>
+    <string name="notification_wifi_neverrun">Smarter Wi-Fi Manager を開いて、Wi-Fi をコントロールしてください!</string>
+    <string name="notification_wifi_time">タイマーで Wi-Fi をコントロールしました</string>
+    <string name="notification_wifi_bt">ブラックリストの Bluetooth に接続しました</string>
+    <string name="notification_wifi_off">これまでここでネットワークを使用したことはありません</string>
+    <string name="notification_airplane">機内モード</string>
+    <string name="notification_tethered">テザリング / 接続の共有</string>
 
     <string name="wifistate_blocked">Wi-Fi は強制的にオフ</string>
     <string name="wifistate_ignore">管理していない Wi-Fi</string>
@@ -100,22 +80,25 @@
 
     <string name="learned_number">%1$d 基地局学習済</string>
 
-    <string name="timerange_delete_text">時間の範囲を削除</string>
+    <string name="timerange_no_ranges">時間の範囲が設定されていません</string>
     <string name="timerange_no_effect">時間の範囲でコントロールしません</string>
     <string name="timerange_no_days">時間の範囲が発生する日はありません</string>
     <string name="timerange_disabled_text">時間の範囲は無効</string>
     <string name="timerange_control_wifi">Wi-Fi</string>
     <string name="timerange_control_bluetooth">Bluetooth</string>
+
     <string name="timerange_control_on">オン</string>
     <string name="timerange_control_off">オフ</string>
 
-    <string name="timerange_controlbutton_wifi">Wi-Fi の管理</string>
-    <string name="timerange_controlbutton_bt">Bluetooth の管理</string>
+    <string name="timerange_controlbutton_wifi">Wi-Fi をコントロール</string>
+    <string name="timerange_controlbutton_bt">Bluetooth をコントロール</string>
 
     <string name="timerange_dialog_delete_title">時間の範囲を削除しますか?</string>
-    <string name="timerange_dialog_delete_cancel">キャンセル</string>
-    <string name="timerange_dialog_delete_ok">削除</string>
     <string name="timerange_dialog_delete_text">この時間の範囲を削除してもよろしいですか?</string>
+
+    <string name="dialog_button_cancel">キャンセル</string>
+    <string name="dialog_button_delete">削除</string>
+    <string name="dialog_button_ignore">無視</string>
 
     <string name="range_mon">月</string>
     <string name="range_tue">火</string>
@@ -127,22 +110,40 @@
 
     <string name="range_fail_nodays">日が選択されていません</string>
     <string name="range_fail_notime">時間がセットされていません</string>
-    <string name="range_fail_nocontrol">Wi-Fi または Bluetooth で効果なし</string>
+    <string name="range_fail_nocontrol">Wi-Fi または Bluetooth で有効になっていません</string>
     <string name="quicker_wifi">Wi-Fi</string>
     <string name="quicker_bt">Bluetooth</string>
 
-    <string name="quicker_enable">Smarter Wi-Fi Manager</string>
-    <string name="quicker_startswm">Smarter Wi-Fi Manager</string>
-
-    <string name="quicker_settings">Android Wi-Fi 設定</string>
-    <string name="quicker_close">閉じる</string>
-    <string name="quicker_explanation">Smarter Wi-Fi Manager は現在の設定にしたがって無線を有効または無効にします。</string>
-    <string name="quicker_forget">現在の位置を忘れる</string>
-
-    <string name="nag_tower_maintenance">Smarter Wi-Fi Manager が Wi-Fi ネットワークに対して自動的に位置をメンテナンスするようになりました。 有効にするには、プリファレンスに移動し、位置メンテナンスをオンにしてください!</string>
-    <string name="nag_tower_maintenance_prefs">プリファレンスへ</string>
-    <string name="nag_tower_maintenance_cancel">いいえ結構です</string>
-    <string name="action_about">アプリについて</string>
     <string name="no_bluetooth">Bluetooth デバイスがないか Bluetooth が無効になっています</string>
+
+    <string name="snackbar_delete_timerange">時間の範囲を削除しました</string>
+    <string name="snackbar_delete_network">ネットワークを記憶しません</string>
+    <string name="snackbar_delete_tower">位置を記憶しません</string>
+    <string name="snackbar_delete_undo">元に戻す</string>
+
+    <string name="simple_explanation_learning">接続しました。ここで Wi-Fi を使用したことを記憶します。</string>
+    <string name="simple_explanation_blackssid">無視したネットワークに接続しました。この場所を記憶しません。</string>
+    <string name="simple_explanation_idle">以前ここで Wi-Fi を使用しました。ネットワークを検索しています。</string>
+    <string name="simple_explanation_off">Wi-Fi をオフにしました。ここでネットワークを使用したことはありません。</string>
+    <string name="simple_explanation_time">%2$d:%3$d から %4$d:%5$d まで Wi-Fi を %1$s に設定しました。</string>
+    <string name="simple_explanation_bt">Wi-Fi をブロックするように指定した Bluetooth デバイスに接続しました。</string>
+    <string name="simple_explanation_disabled">Wi-Fi のコントロールをオフにしました。</string>
+    <string name="simple_explanation_airplane">機内モードです。Wi-Fi 設定を変更しません。</string>
+    <string name="simple_explanation_neverrun">Wi-Fi をコントロールするには Smarter Wi-Fi Manager を開いてください!</string>
+    <string name="simple_explanation_add">SWM は一時停止しました。ネットワークに接続されるまで Wi-Fi を有効にします。</string>
+
+    <string name="main_explanation_swm_disabled">Smarter Wi-Fi Manager をオンにして、Wi-Fi を自動でコントロールしてください</string>
+
+    <string name="main_pause_text">今すぐ Wi-Fi をオフにします。Smarter Wi-Fi Manager を一時停止して、新しいネットワークを追加することができます。</string>
+    <string name="main_pause_button">新しいネットワークを追加</string>
+    <string name="main_resume_button">再開</string>
+
+    <string name="main_open_text">暗号化なしにネットワークに接続します。オープンネットワークはなりすましが容易で、あなたの通信が監視されることがあります。</string>
+
+    <string name="main_alert_alwaysscan">Wi-Fi がオフでも Android はバックグラウンドでスキャンするように設定されています。 \"常にスキャンを許可\" をオフにすることを推奨します</string>
+    <string name="main_alert_alwaysscan_advanced">詳細な Wi-Fi 設定</string>
+
+    <string name="main_forget_text">以前ここで Wi-Fi を使用したようですが、ネットワークを見つけることができません。この場所を記憶しないようにして、将来ここで Wi-Fi をオフにすることができます。</string>
+    <string name="main_forget_button">場所を記憶しない</string>
 
 </resources>

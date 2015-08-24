@@ -1,7 +1,7 @@
 apply plugin: 'android'
 
-def VERSION_NUM = 65
-def VERSION_NAME = "2015.07.65"
+def VERSION_NUM = 70
+def VERSION_NAME = "2015.07.70"
 
 android {
     compileSdkVersion 21
@@ -56,7 +56,12 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:21.0.+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:appcompat-v7:22.+'
+    compile 'com.android.support:recyclerview-v7:22.+'
+    compile 'com.android.support:cardview-v7:22.+'
+    compile 'com.android.support:design:22.2.0'
 
     compile 'com.squareup.dagger:dagger:1.2.1'
     provided 'com.squareup.dagger:dagger-compiler:1.2.1'

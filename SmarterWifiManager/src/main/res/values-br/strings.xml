@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Smarter Wi-Fi Manager</string>
+
+    <string name="prefs_name">Preferências</string>
+
+    <string name="action_settings">Configurações</string>
+    <string name="action_add_timerange">Adicionar intervalo de tempo</string>
+
+    <string name="prefs_item_shutdowntime">Hora de Desligamento do Wi-Fi</string>
+    <string name="prefs_item_shutdowntime_explanation">Se você notar que o Wi-Fi se desativa ao adicionar uma nova rede, ou que liga e desliga com muita frequência, você pode aumentar o intervalo de tempo antes de que se apague.</string>
+    <string name="prefs_item_notification">Mostrar notificação</string>
+    <string name="prefs_item_notification_explanation">Desativar as notificações pode afetar o serviço em segundo plano em condições de memória reduzida. Se observar problemas, mantenha-as ativadas.</string>
+    <string name="prefs_item_boot">Iniciar automaticamente</string>
+    <string name="prefs_item_boot_explanation">Iniciar automaticamente o serviço de Gerenciador Smarter Wi-Fi ao reiniciar ou após alterações de Wi-Fi ou antena de celular.</string>
+    <string name="prefs_item_towermaintenance">Manutenção de Localização</string>
+    <string name="prefs_item_towermaintenance_explanation">Evitar que a lista de localizações fique muito grande, através de uma manutenção inteligente.</string>
+    <string name="prefs_item_aggressive">Monitoramento Intenso de Antenas</string>
+    <string name="prefs_item_aggressive_explanation">Acordar e verificar a antena atual, mesmo quando a tela estiver apagada. Isto pode melhorar a capacidade de resposta, mas pode utilizar um pouco mais de bateria.</string>
+
+    <string name="tab_main">Smarter</string>
+    <string name="tab_ignore">Ignorar</string>
+    <string name="tab_learned">Guardada(s)</string>
+    <string name="tab_bluetooth">Bluetooth</string>
+    <string name="tab_time">Tempo</string>
+
+    <string name="pref_enable">enable_system</string>
+    <string name="pref_learn">enable_learning</string>
+
+    <string name="service_desc" translatable="false">Serviço Smarter Wi-Fi</string>
+
+    <string name="learn_wifi_switch">Guardar Localizações Automaticamente</string>
+
+    <string name="ssid_blacklist_desc">Estas redes não serão recordadas. Você ainda pode conectar a estas redes normalmente, mas o Gerenciador SW não irá recordar onde você as utiliza.</string>
+    <string name="bluetooth_blacklist_description">Enquanto estiver conectado a estes dispositivos Bluetooth, o Wi-Fi será desligado</string>
+
+    <string name="ignore_dialog_title">Ignorar rede?</string>
+    <string name="ignore_dialog_desc">Você deseja ignorar também esta rede no futuro? Redes ignoradas podem ser conectadas normalmente, mas as suas localizações não serão recordadas.</string>
+    <string name="ignore_dialog_button_normal">Não, obrigado(a).</string>
+
+    <string name="snackbar_ignored">Rede ignorada</string>
+    <string name="snackbar_forgotten">Rede esquecida</string>
+
+    <string name="shutdown_time_30s">30 segundos</string>
+    <string name="shutdown_time_1m">m minuto</string>
+    <string name="shutdown_time_2m">Dois minutos</string>
+    <string name="time_range_desc">Ligar ou desligar Wi-Fi em um horário determinado, adicionando um intervalo de tempo.</string>
+
+    <string name="nav_ignore">Redes ignoradas</string>
+    <string name="nav_bluetooth">Bluetooth</string>
+    <string name="nav_time">Intervalos de Tempo</string>
+    <string name="nav_learned">Redes Guardadas</string>
+
+    <string name="notification_title_on">Wi-Fi ativado</string>
+    <string name="notification_title_off">Wi-Fi desligado</string>
+    <string name="notification_title_ignore">Wi-Fi não está sendo controlado</string>
+
+    <string name="notification_learning">Recordando que você usa Wi-Fi aqui</string>
+    <string name="notification_ignoring">Conectado a uma rede Wi-Fi ignorada</string>
+    <string name="notification_idle">Você já usou Wi-Fi aqui antes. Buscando uma rede.</string>
+    <string name="notification_swm_disabled">Smarter Wi-Fi Manager está desativado</string>
+    <string name="notification_wifi_neverrun">Abrir o Gerenciador Smarter Wi-Fi para começar a controlar o seu Wi-Fi!</string>
+    <string name="notification_wifi_time">Wi-Fi controlado por temporizador</string>
+    <string name="notification_wifi_bt">Conectado a bluetooth em lista negra</string>
+    <string name="notification_wifi_off">Você nunca usou uma rede aqui antes</string>
+    <string name="notification_airplane">Modo avião</string>
+    <string name="notification_tethered">Compartilhando conexão</string>
+
+    <string name="wifistate_blocked">Wi-Fi desligado</string>
+    <string name="wifistate_ignore">Wi-Fi não está sendo gerenciado</string>
+    <string name="wifistate_on">Wi-Fi conectado</string>
+    <string name="wifistate_off">Wi-Fi desativado</string>
+    <string name="wifistate_idle">Wi-Fi ativado, mas não há redes</string>
+
+    <string name="title_activity_ssid_blacklist">Redes ignoradas</string>
+    <string name="title_activity_bluetooth_blacklist">Bluetooth</string>
+    <string name="title_activity_timerange">Intervalos de Tempo</string>
+    <string name="title_activity_learned">Redes Guardadas</string>
+
+    <string name="learned_number">%1$d antenas guardadas</string>
+
+    <string name="timerange_no_ranges">Não há intervalos de tempo configurados</string>
+    <string name="timerange_no_effect">O intervalo de tempo não controla nada</string>
+    <string name="timerange_no_days">Este intervalo de tempo não está associado a nenhum dia</string>
+    <string name="timerange_disabled_text">Intervalo de tempo desativado</string>
+    <string name="timerange_control_wifi">Wi-Fi</string>
+    <string name="timerange_control_bluetooth">Bluetooth</string>
+
+    <string name="timerange_control_on">en</string>
+    <string name="timerange_control_off">apagado</string>
+
+    <string name="timerange_controlbutton_wifi">Controlar Wi-Fi</string>
+    <string name="timerange_controlbutton_bt">Controlar Bluetooth</string>
+
+    <string name="timerange_dialog_delete_title">Eliminar intervalo de tempo?</string>
+    <string name="timerange_dialog_delete_text">Tem certeza que deseja eliminar este intervalo de tempo?</string>
+
+    <string name="dialog_button_cancel">Cancelar</string>
+    <string name="dialog_button_delete">Eliminar</string>
+    <string name="dialog_button_ignore">Ignorar</string>
+
+    <string name="range_mon">Seg</string>
+    <string name="range_tue">Ter</string>
+    <string name="range_wed">Qua</string>
+    <string name="range_thu">Qui</string>
+    <string name="range_fri">Sex</string>
+    <string name="range_sat">Sáb</string>
+    <string name="range_sun">Dom</string>
+
+    <string name="range_fail_nodays">Nenhum dia selecionado</string>
+    <string name="range_fail_notime">Nenhuma hora especificada</string>
+    <string name="range_fail_nocontrol">Não afeta o Wi-Fi nem o Bluetooth</string>
+    <string name="quicker_wifi">Wi-Fi</string>
+    <string name="quicker_bt">Bluetooth</string>
+
+    <string name="no_bluetooth">Não há dispositivos bluetooth ou o Bluetooth está desativado</string>
+
+    <string name="snackbar_delete_timerange">Intervalo de tempo eliminado</string>
+    <string name="snackbar_delete_network">Rede esquecida</string>
+    <string name="snackbar_delete_tower">Localização esquecida</string>
+    <string name="snackbar_delete_undo">Desfazer</string>
+
+    <string name="simple_explanation_learning">Conectado. Iremos recordar que você usa Wi-Fi aqui.</string>
+    <string name="simple_explanation_blackssid">Conectado a uma rede que você ignorou. Não iremos recordar este lugar.</string>
+    <string name="simple_explanation_idle">Você já usou Wi-Fi aqui antes. Buscando uma rede.</string>
+    <string name="simple_explanation_off">Wi-Fi desligado, você nunca usou uma rede aqui antes.</string>
+    <string name="simple_explanation_time">Você configurou o Wi-Fi para ficar %1$s de %2$d:%3$d até %4$d:%5$d.</string>
+    <string name="simple_explanation_bt">Conectado a um dispositivo bluetooth que você configurou para bloquear o Wi-Fi enquanto estiver conectado.</string>
+    <string name="simple_explanation_disabled">Você desligou o gerenciamento de Wi-Fi</string>
+    <string name="simple_explanation_airplane">Você está em modo avião. As configurações de wi-fi não serão alteradas.</string>
+    <string name="simple_explanation_neverrun">Abrir o Gerenciador Smarter Wi-Fi para começar a controlar o seu Wi-Fi!</string>
+    <string name="simple_explanation_add">O Gerenciador SW está em pausa. O Wi-Fi continuará ativado até você conectar a uma rede.</string>
+
+    <string name="main_explanation_swm_disabled">Ativar o Gerenciador Smarter Wi-Fi para gerenciar automaticamente o seu Wi-Fi</string>
+
+    <string name="main_pause_text">O Wi-Fi está desligado agora. Você pode pausar o Gerenciador Smarter Wi-Fi e adicionar uma nova rede.</string>
+    <string name="main_pause_button">adicionar uma rede.</string>
+    <string name="main_resume_button">Retomar</string>
+
+    <string name="main_open_text">Você está conectado(a) a uma rede não-criptografada. As redes abertas são mais fáceis de falsificar e o seu tráfego poderá ser monitorado.</string>
+
+    <string name="main_alert_alwaysscan">O Android está configurado para rastrear em segundo plano mesmo que o Wi-Fi esteja desligado. Recomendamos desativar \"Sempre Permitir Rastreamento\"</string>
+    <string name="main_alert_alwaysscan_advanced">Configurações</string>
+    <string name="main_alert_alwaysscan_hide">Agora não</string>
+
+    <string name="main_alert_alwaysscan_mini">O rastreamento de Wi-Fi em segundo plano está ativado...</string>
+    <string name="main_alert_alwaysscan_mini_more">Mais</string>
+
+    <string name="main_forget_text">Parece que você já usou Wi-Fi aqui antes, mas não foi possível encontrar uma rede no momento. Você pode esquecer esta localização para manter o Wi-Fi desligado aqui no futuro.</string>
+    <string name="main_forget_button">Esquecer localização</string>
+
+</resources>

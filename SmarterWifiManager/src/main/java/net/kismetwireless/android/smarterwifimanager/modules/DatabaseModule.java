@@ -4,7 +4,6 @@ import android.content.Context;
 
 import net.kismetwireless.android.smarterwifimanager.models.SmarterDBSource;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterWorldState;
-import net.kismetwireless.android.smarterwifimanager.ui.ActivityQuickconfig;
 import net.kismetwireless.android.smarterwifimanager.ui.FragmentBluetoothBlacklist;
 import net.kismetwireless.android.smarterwifimanager.ui.FragmentLearned;
 import net.kismetwireless.android.smarterwifimanager.ui.FragmentMain;
@@ -26,7 +25,7 @@ import dagger.Provides;
         injects = {
                 SmarterWorldState.class,
 
-                MainActivity.class, ActivityQuickconfig.class,
+                MainActivity.class,
 
                 SmarterFragment.class, FragmentBluetoothBlacklist.class, FragmentLearned.class, FragmentMain.class, FragmentPrefs.class,
                 FragmentSsidBlacklist.class, FragmentTimeRange.class

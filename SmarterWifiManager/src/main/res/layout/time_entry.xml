@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingBottom="10dp">
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="4dp"
+    android:layout_marginBottom="9dp"
+    android:stateListAnimator="@anim/liftup">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="#272727">
+        android:layout_marginRight="5dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -26,46 +29,45 @@
                 android:layout_margin="5dp"
                 android:background="?android:attr/selectableItemBackground" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="00"
-                android:id="@+id/timeStartHours"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextLarge"
+                    android:text="00"
+                    android:id="@+id/timeStartHours"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=":"
-                android:id="@+id/textView2"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextLarge"
+                    android:text=":"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="11"
-                android:id="@+id/timeStartMinutes"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextLarge"
+                    android:text="11"
+                    android:id="@+id/timeStartMinutes"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="AM"
-                android:id="@+id/timeStart12hr"
-                android:layout_gravity="center_horizontal|top"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextSmall"
+                    android:text="AM"
+                    android:id="@+id/timeStart12hr"
+                    android:layout_gravity="center_horizontal|top"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="@style/TextLarge"
                 android:text="-"
                 android:id="@+id/textView5"
                 android:paddingLeft="15dp"
@@ -80,41 +82,40 @@
                 android:layout_margin="5dp"
                 android:background="?android:attr/selectableItemBackground" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="00"
-                android:id="@+id/timeEndHours"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextLarge"
+                    android:text="00"
+                    android:id="@+id/timeEndHours"
+                    android:textStyle="bold"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=":"
-                android:id="@+id/textView2"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextLarge"
+                    android:text=":"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="11"
-                android:id="@+id/timeEndMinutes"
-                android:layout_gravity="center_horizontal|bottom" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextLarge"
+                    android:text="11"
+                    android:id="@+id/timeEndMinutes"
+                    android:layout_gravity="center_horizontal|bottom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="AM"
-                android:id="@+id/timeEnd12hr"
-                android:layout_gravity="center_horizontal|top"
-                android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextSmall"
+                    android:text="AM"
+                    android:id="@+id/timeEnd12hr"
+                    android:layout_gravity="center_horizontal|top"
+                    android:textStyle="bold" />
 
-                </LinearLayout>
+            </LinearLayout>
 
             <Switch
                 android:layout_width="fill_parent"
@@ -122,37 +123,6 @@
                 android:id="@+id/timeRangeToggle"
                 android:checked="false" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/collapsedMainLayout"
-            android:layout_marginTop="5dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Wi-Fi disabled, Bluetooth disabled"
-                android:id="@+id/rangeSummaryText" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
-                android:id="@+id/errorView1"
-                android:background="@android:color/holo_red_dark"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -176,7 +146,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_mon"
                         android:id="@+id/dayMon"
                         android:layout_gravity="center"
@@ -188,7 +158,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_tue"
                         android:id="@+id/dayTue"
                         android:layout_gravity="center"
@@ -200,7 +170,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_wed"
                         android:id="@+id/dayWed"
                         android:layout_gravity="center"
@@ -212,7 +182,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_thu"
                         android:id="@+id/dayThu"
                         android:layout_gravity="center"
@@ -224,7 +194,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_fri"
                         android:id="@+id/dayFri"
                         android:layout_gravity="center"
@@ -236,7 +206,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_sat"
                         android:id="@+id/daySat"
                         android:layout_gravity="center"
@@ -248,7 +218,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAppearance="@style/TextMedium"
                         android:text="@string/range_sun"
                         android:id="@+id/daySun"
                         android:layout_gravity="center"
@@ -292,147 +262,19 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textAppearance="@style/TextMedium"
                 android:text="Medium Text"
                 android:id="@+id/errorView2"
-                android:background="@android:color/holo_red_dark"
+                android:background="#ffaeaf"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp" />
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp" />
         </LinearLayout>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"
-            android:id="@+id/collapseView">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/timeRangeDeleteCollapse"
-                android:src="@drawable/content_discard"
-                android:clickable="true"
-                android:background="?android:attr/selectableItemBackground"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
-
-            <View
-                android:layout_width="1px"
-                android:layout_height="fill_parent"
-                android:background="@android:color/darker_gray"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Mon, Tue, Wed, Thu, Fri, Sat, Sun"
-                android:id="@+id/daysRepeatCollapse"
-                android:layout_weight="0.5"
-                android:layout_gravity="center"
-                android:visibility="visible"
-                android:layout_marginLeft="5dp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView5"
-                android:src="@drawable/navigation_expand"
-                android:paddingRight="4dp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageView3" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/expandView">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="8dp"
-                android:id="@+id/deleteContainer"
-                android:layout_weight="2"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp">
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/timeRangeDelete"
-                    android:src="@drawable/content_discard"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:layout_marginRight="3dp"
-                    android:layout_weight="1"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
-
-                <View
-                    android:layout_width="1px"
-                    android:layout_height="fill_parent"
-                    android:background="@android:color/darker_gray"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/timeRangeUndo"
-                    android:src="@drawable/ic_action_undo"
-                    android:clickable="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:layout_weight="1"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
-
-                <View
-                    android:layout_width="1px"
-                    android:layout_height="fill_parent"
-                    android:background="@android:color/darker_gray"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp" />
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:id="@+id/timeRangeSave"
-                    android:src="@drawable/ic_action_save"
-                    android:clickable="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:layout_weight="1"
-                    android:paddingTop="2dp"
-                    android:paddingBottom="2dp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
 
     </LinearLayout>
-</LinearLayout>
+</android.support.v7.widget.CardView>

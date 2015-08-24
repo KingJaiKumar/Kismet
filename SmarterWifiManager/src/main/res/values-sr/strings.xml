@@ -3,14 +3,11 @@
 
     <string name="app_name">Паметни Wi-Fi менаџер</string>
 
-    <string name="html_locale">sr</string>
-
     <string name="prefs_name">Поставке</string>
 
     <string name="action_settings">Поставке</string>
     <string name="action_add_timerange">Додај временски распон</string>
 
-    <string name="hello_world">Здраво свете!</string>
     <string name="prefs_item_shutdowntime">Време искључења бежичног</string>
     <string name="prefs_item_shutdowntime_explanation">Ако откријете да је бежични искључен у току додавања нове мреже или се често искључује, повећајте време чекања за искључење.</string>
     <string name="prefs_item_notification">Прикажи обавештење</string>
@@ -33,59 +30,42 @@
 
     <string name="service_desc">Сервис Паметног Wi-Fi менаџера</string>
 
-    <string name="manage_radio_switch">Базне станице</string>
-    <string name="manage_radio_explanation">Контролишите бежични и блутут на основу аутоматски научених локација, временских распона и других критеријума</string>
-
     <string name="learn_wifi_switch">Аутоматски учи локације</string>
 
-    <string name="manage_wifi_explanation">Контролишите бежични на основу аутоматски научених локација и других критеријума</string>
-    <string name="autolearn_wifi_description">Аутоматски учи кад да укључи бежични на основу идентитета базних станица.  Да бисте почели учење нове локације, довољно је да укључите бежични.</string>
-    <string name="ssid_blacklist_desc">При вези са игнорисаним ССИД аутоматско учење локације је онемогућено.  Биће опет омогућено кад напустите игнорисану мрежу.</string>
-    <string name="learned_wifi_description">У режиму аутоматског учења идентификатори базних станица се мапирају на имена бежичних мрежа.  Ако се мрежа укључује у неприкладним тренуцима, уклањање њеног уноса ће поништити њено стање.</string>
-    <string name="delete_dialog_title">Обрисати познату мрежу?</string>
-    <string name="delete_learned_message">Брисање научене мреже уклања све њене асоцијације са познатим базним станицама.  Ако је аутоматско учење омогућено, мрежа ће поново учити базне станице.  Да бисте онемогућили мрежу да учи станице, ставите је на списак игнорисаних у одељку „Игнорисане мреже“</string>
-    <string name="bluetooth_blacklist_description">Бежични и аутоматско учење је онемогућено при вези са блутут уређајима са црне листе.</string>
-    <string name="ignoring_dialog_network">Игнорисање мреже</string>
-    <string name="ignoring_dialog_description">Игнорисање мреже неће обрисати научене локације.  Можете их обрисати сада или у одељку Научено, или их оставите ако желите и даље да контролишете бежични на основу локације али не желите да учи додатне нове локације.</string>
-    <string name="ignoring_dialog_leave">Напусти</string>
-    <string name="ignoring_dialog_delete">Обриши</string>
+    <string name="ssid_blacklist_desc">Ове мреже неће бити запамћене.  И даље можете да се повежете на њих ручно, али Паметни менаџер неће запамтити где сте их користили.</string>
+    <string name="bluetooth_blacklist_description">При вези са овим блутут уређајима бежични ће бити искључен.</string>
+
+    <string name="ignore_dialog_title">Игнорисати мрежу?</string>
+    <string name="ignore_dialog_desc">Желите ли такође и убудуће да игноришете ову мрежу?  На игнорисане мреже се може нормално повезати, али њихова локација неће бити запамћена.</string>
+    <string name="ignore_dialog_button_normal">Не, хвала</string>
+
+    <string name="snackbar_ignored">Мрежа игнорисана</string>
+    <string name="snackbar_forgotten">Мрежа заборављена</string>
+
     <string name="shutdown_time_30s">30 секунди</string>
-    <string name="shutdown_time_1m">1 минут</string>
+    <string name="shutdown_time_1m">1 минута</string>
     <string name="shutdown_time_2m">2 минуте</string>
-    <string name="time_range_desc">Фиксни временски распони премошћавају друге методе контроле и омогућавају укључење/искључење унутар неког временског периода.</string>
-    <string name="drawer_open">Отвори навигациону фиоку</string>
-    <string name="drawer_close">Затвори навигациону фиоку</string>
+    <string name="time_range_desc">Присиљавање искључења или укључења бежичног у одређено време додавањем временских распона.</string>
 
     <string name="nav_ignore">Игнорисане мреже</string>
     <string name="nav_bluetooth">Блутут</string>
     <string name="nav_time">Временски распони</string>
     <string name="nav_learned">Научене мреже</string>
 
-    <string name="explanation_autolearned">Претходно научене локације</string>
-    <string name="explanation_wifi_idle">Бежични укључен али није повезан</string>
-    <string name="explanation_wifi_blocked">Бежични блокиран</string>
-    <string name="explanation_wifi_enabled">Бежични укључен</string>
-    <string name="explanation_wifi_enabled_cell">На аутоматски наученој локацији</string>
-    <string name="explanation_wifi_disabled">Бежични искључен</string>
-    <string name="explanation_wifi_disabled_cell">Нисам близу познате локације</string>
-    <string name="explanation_wifi_disabled_bluetooth">Повезан на блутут уређај са црне листе</string>
-    <string name="explanation_wifi_management_disabled">Управљање бежичним онемогућено</string>
-    <string name="explanation_wifi_management_disabled_user">Управљање искључено</string>
-    <string name="explanation_wifi_management_disabled_cell">Нема базних станица у домету</string>
-    <string name="explanation_wifi_geofence_exclude">Искључен геолокацијом</string>
-    <string name="explanation_wifi_geofence_include">Укључен геолокацијом</string>
-    <string name="explanation_wifi_time_include">Укључен временским распоном</string>
-    <string name="explanation_wifi_time_exclude">Искључен временским распоном</string>
-    <string name="explanation_wifi_disabled_towerid">Повезан на базну станицу са црне листе</string>
-    <string name="explanation_wifi_ignore_ssidblacklist">Повезан на игнорисани ССИД</string>
-    <string name="explanation_wifi_forced_user_enabled">Бежични присилно укључен</string>
-    <string name="explanation_wifi_forced_user_disabled">Бежични присилно искључен</string>
-    <string name="explanation_wifi_ignore_airplane">У авионском режиму</string>
-    <string name="explanation_wifi_ignore_tethered">Тетеринг/дељење везе</string>
-    <string name="explanation_wifi_ignore_sleeppolicy">Игноришем у стању спавања</string>
-    <string name="explanation_wifi_idle_disable">Бежични у мировању на непознатој локацији, чекам искључење</string>
-    <string name="explanation_wifi_neverrun">Отворите Паметни Wi-Fi менаџер да почнете контролисати бежични на вашем уређају!</string>
-    <string name="explanation_unknown">Непознат разлог</string>
+    <string name="notification_title_on">Бежични укључен</string>
+    <string name="notification_title_off">Бежични искључен</string>
+    <string name="notification_title_ignore">Не контролишем бежични</string>
+
+    <string name="notification_learning">Памтим да сте овде користили бежични</string>
+    <string name="notification_ignoring">Повезан на игнорисану бежичну мрежу</string>
+    <string name="notification_idle">Користили сте бежични овде пре, тражим мрежу</string>
+    <string name="notification_swm_disabled">Паметни Wi-Fi менаџер је искључен</string>
+    <string name="notification_wifi_neverrun">Отворите Паметни Wi-Fi менаџер да бисте контролисали ваш бежични!</string>
+    <string name="notification_wifi_time">Бежични контролисан временским распоном</string>
+    <string name="notification_wifi_bt">Повезан са блутут уређајем са црне листе</string>
+    <string name="notification_wifi_off">Овде нисте досад користили мреже</string>
+    <string name="notification_airplane">У авионском режиму</string>
+    <string name="notification_tethered">Тетеринг/дељење везе</string>
 
     <string name="wifistate_blocked">Бежични присилно искључен</string>
     <string name="wifistate_ignore">Не управљам бежичним</string>
@@ -101,22 +81,24 @@
     <string name="learned_number">Научено %1$d базних станица</string>
 
     <string name="timerange_no_ranges">Нема постављених временских распона</string>
-    <string name="timerange_delete_text">Обриши временски распон</string>
     <string name="timerange_no_effect">Временски распон не контролише ништа</string>
     <string name="timerange_no_days">Није одређен ниједан дан</string>
     <string name="timerange_disabled_text">Временски распон онемогућен</string>
     <string name="timerange_control_wifi">Бежични</string>
     <string name="timerange_control_bluetooth">Блутут</string>
-    <string name="timerange_control_on">иск</string>
-    <string name="timerange_control_off">укљ</string>
+
+    <string name="timerange_control_on">искључен</string>
+    <string name="timerange_control_off">укључен</string>
 
     <string name="timerange_controlbutton_wifi">Контролиши бежични</string>
     <string name="timerange_controlbutton_bt">Контролиши блутут</string>
 
     <string name="timerange_dialog_delete_title">Обрисати временски распон?</string>
-    <string name="timerange_dialog_delete_cancel">Одустани</string>
-    <string name="timerange_dialog_delete_ok">Обриши</string>
     <string name="timerange_dialog_delete_text">Желите ли заиста да обришете овај временски распон?</string>
+
+    <string name="dialog_button_cancel">Одустани</string>
+    <string name="dialog_button_delete">Обриши</string>
+    <string name="dialog_button_ignore">Игнориши</string>
 
     <string name="range_mon">Пон</string>
     <string name="range_tue">Уто</string>
@@ -132,18 +114,36 @@
     <string name="quicker_wifi">Бежични</string>
     <string name="quicker_bt">Блутут</string>
 
-    <string name="quicker_enable">Паметни Wi-Fi менаџер</string>
-    <string name="quicker_startswm">Паметни Wi-Fi менаџер</string>
-
-    <string name="quicker_settings">Андроидове поставке бежичног</string>
-    <string name="quicker_close">Затвори</string>
-    <string name="quicker_explanation">Паметни менаџер може да укључи или искључи бежични интернет и блутут у зависности од тренутних поставки.</string>
-    <string name="quicker_forget">Заборави тренутну локацију</string>
-
-    <string name="nag_tower_maintenance">Паметни менаџер сада има могућност аутоматског одржавања списка локација за бежичну мрежу.  Омогућите ово у поставкама под Одржавање локација!</string>
-    <string name="nag_tower_maintenance_prefs">Иди на поставке</string>
-    <string name="nag_tower_maintenance_cancel">Нека, хвала</string>
-    <string name="action_about">О програму</string>
     <string name="no_bluetooth">Нема блутут уређаја или је блутут искључен</string>
+
+    <string name="snackbar_delete_timerange">Временски распон обрисан</string>
+    <string name="snackbar_delete_network">Мрежа заборављена</string>
+    <string name="snackbar_delete_tower">Локација заборављена</string>
+    <string name="snackbar_delete_undo">Врати</string>
+
+    <string name="simple_explanation_learning">Повезан, памтим да сте користили бежични овде.</string>
+    <string name="simple_explanation_blackssid">Повезан на игнорисану мрежу, не памтим ову локацију.</string>
+    <string name="simple_explanation_idle">Већ сте користили бежични овде, тражим мреже.</string>
+    <string name="simple_explanation_off">Бежични искључен, овде нисте користили мреже досад.</string>
+    <string name="simple_explanation_time">Одредили сте бежични буде %1$s од %2$d:%3$d до %4$d:%5$d.</string>
+    <string name="simple_explanation_bt">Повезан са блутут уређајем којег сте одредили да блокира бежични.</string>
+    <string name="simple_explanation_disabled">Искључили сте управљање бежичним.</string>
+    <string name="simple_explanation_airplane">У авионском сте режиму, нећемо мењати поставке бежичног.</string>
+    <string name="simple_explanation_neverrun">Отворите Паметни Wi-Fi менаџер да бисте контролисали бежични!</string>
+    <string name="simple_explanation_add">Паметни менаџер је паузиран, бежични је укључен док се не повежете на мрежу.</string>
+
+    <string name="main_explanation_swm_disabled">Укључите Паметни Wi-Fi менаџер да бисте аутоматски контролисали ваш бежични</string>
+
+    <string name="main_pause_text">Бежични је тренутно искључен.  Можете да паузирате Паметног менаџера и да додате нову мрежу.</string>
+    <string name="main_pause_button">Додај нову мрежу</string>
+    <string name="main_resume_button">Настави</string>
+
+    <string name="main_open_text">Повезани сте на мрежу без шифровања.  Отворене мреже је много лакше шпијунирати, а ваш саобраћај може бити праћен.</string>
+
+    <string name="main_alert_alwaysscan">Андроид је подешен за скенирање у позадини чак ако је бежични искључен.  Препоручујем да искључите опцију „Скенирање је увек доступно“</string>
+    <string name="main_alert_alwaysscan_advanced">Напредне поставке бежичног</string>
+
+    <string name="main_forget_text">Изгледа да сте овде већ користили бежични, али тренутно не могу да нађем ниједну мрежу.  Можете да заборавите ову локацију да бисте убудуће овде држали бежични искљученим.</string>
+    <string name="main_forget_button">Заборави локацију</string>
 
 </resources>

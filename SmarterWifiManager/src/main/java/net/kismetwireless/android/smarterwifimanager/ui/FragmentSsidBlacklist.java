@@ -1,10 +1,9 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,22 +17,13 @@ import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiService;
-import net.kismetwireless.android.smarterwifimanager.services.SmarterWifiServiceBinder;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 /**
  * Created by dragorn on 9/17/13.
  */
 public class FragmentSsidBlacklist extends SmarterFragment {
-    @Inject
-    Context context;
-
-    @Inject
-    SmarterWifiServiceBinder serviceBinder;
-
     private View mainView;
 
     private ArrayList<SmarterSSID> lastSsidList = new ArrayList<SmarterSSID>();
@@ -91,9 +81,7 @@ public class FragmentSsidBlacklist extends SmarterFragment {
         super.onCreateView(inflater, container, savedInstanceState);
 
         //if (mainView == null)
-            mainView = inflater.inflate(R.layout.fragment_ssidblacklist, container, false);
-
-        context = getActivity().getApplicationContext();
+        mainView = inflater.inflate(R.layout.fragment_ssidblacklist, container, false);
 
         lv = (ListView) mainView.findViewById(R.id.ssidBlacklistListview);
         emptyView = (TextView) mainView.findViewById(R.id.textViewNoWifi);
@@ -149,26 +137,9 @@ public class FragmentSsidBlacklist extends SmarterFragment {
                         listAdapter.notifyDataSetChanged();
 
                         if (entry.isBlacklisted()) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            serviceBinder.deleteSsidTowerMap(entry);
 
-                            builder.setTitle(R.string.ignoring_dialog_network);
-                            builder.setMessage(R.string.ignoring_dialog_description);
-
-                            builder.setNegativeButton(R.string.ignoring_dialog_leave, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-
-                                }
-                            });
-
-                            builder.setPositiveButton(R.string.ignoring_dialog_delete, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    serviceBinder.deleteSsidTowerMap(entry);
-                                }
-                            });
-
-                            builder.create().show();
+                            Snackbar.make(mainView, R.string.snackbar_ignored, Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -195,6 +166,8 @@ public class FragmentSsidBlacklist extends SmarterFragment {
 
         if (serviceBinder != null)
             serviceBinder.addCallback(callback);
+
+        updateSsidList();
     }
 
     @Override

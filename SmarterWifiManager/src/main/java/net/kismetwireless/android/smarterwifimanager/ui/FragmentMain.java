@@ -1,10 +1,14 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +40,22 @@ public class FragmentMain extends SmarterFragment {
     @Inject
     Bus eventBus;
 
-    View mainView;
+    private View mainView;
 
-    ImageView mainIcon;
-    TextView headlineText, smallText;
+    private ImageView mainImageView;
+    private TextView headlineText;
 
-    CompoundButton switchManageWifi, switchAutoLearn;
+    private View pauseSwmHolder, pauseSwmButton;
+    private View forgetViewHolder, forgetButton;
+    private View backgroundScanViewHolder, backgroundScanButton, backgroundScanHideButton;
+    private View opennetworkViewHolder, opennetworkButton;
+    private View backgroundScanViewMiniHolder, backgroundScanMiniButton;
 
-    SharedPreferences sharedPreferences;
+    private CompoundButton mainEnableToggle;
+
+    private SharedPreferences sharedPreferences;
+
+    private View learnedView, ignoreView, bluetoothView, timeView, settingsView;
 
     private SmarterWifiService.SmarterServiceCallback guiCallback = new SmarterWifiService.SmarterServiceCallback() {
         @Override
@@ -59,54 +71,122 @@ public class FragmentMain extends SmarterFragment {
             ma.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    int wifiIconId = R.drawable.ic_launcher_notification_ignore;
-                    int wifiTextResource = -1;
-                    int reasonTextResource = -1;
+                    boolean showSeparator = serviceBinder.getWifiAlwaysScanning();
 
-                    wifiTextResource = SmarterWifiService.wifiStateToTextResource(state);
-                    reasonTextResource = SmarterWifiService.controlTypeToTextResource(type, state);
+                    int iconResource = R.drawable.main_swm_idle;
 
                     if (state == SmarterWifiService.WifiState.WIFI_IDLE) {
-                        wifiIconId = R.drawable.ic_launcher_notification_idle;
+                        iconResource = R.drawable.main_swm_idle;
+
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
+                        // We don't have a network but we think we should, offer to forget
+                        if (type == SmarterWifiService.ControlType.CONTROL_TOWER) {
+                            forgetViewHolder.setVisibility(View.VISIBLE);
+                            showSeparator = true;
+                        } else {
+                            forgetViewHolder.setVisibility(View.GONE);
+                        }
+
+                        // If we're paused, allow unpausing
+                        if (type == SmarterWifiService.ControlType.CONTROL_PAUSED) {
+                            showSeparator = true;
+                            pauseSwmHolder.setVisibility(View.VISIBLE);
+                            ((TextView) pauseSwmButton).setText(R.string.main_resume_button);
+                            pauseSwmButton.setOnClickListener(resumeClickListener);
+                        } else {
+                            pauseSwmHolder.setVisibility(View.GONE);
+                        }
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_BLOCKED) {
-                        wifiIconId = R.drawable.ic_launcher_notification_disabled;
+                        iconResource = R.drawable.main_swm_disabled;
+
+                        forgetViewHolder.setVisibility(View.GONE);
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
+                        // If wifi is blocked off, offer the option to add a network
+                        pauseSwmHolder.setVisibility(View.VISIBLE);
+
+                        showSeparator = true;
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_IGNORE) {
-                        wifiIconId = R.drawable.ic_launcher_notification_idle;
+                        iconResource = R.drawable.main_swm_ignore;
+
+                        forgetViewHolder.setVisibility(View.GONE);
+                        pauseSwmHolder.setVisibility(View.GONE);
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_OFF) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
-                            wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
+                            iconResource = R.drawable.main_swm_bluetooth;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TIME)
-                            wifiIconId = R.drawable.ic_launcher_notification_clock;
+                            iconResource = R.drawable.main_swm_time;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TOWER)
-                            wifiIconId = R.drawable.ic_launcher_notification_cell;
+                            iconResource = R.drawable.main_swm_cell;
                         else
-                            wifiIconId = R.drawable.ic_launcher_notification_disabled;
+                            iconResource = R.drawable.main_swm_disabled;
+
+                        forgetViewHolder.setVisibility(View.GONE);
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
+                        // If wifi is off, show the option to pause and add
+                        pauseSwmHolder.setVisibility(View.VISIBLE);
+                        ((TextView) pauseSwmButton).setText(R.string.main_pause_button);
+                        pauseSwmButton.setOnClickListener(pauseClickListener);
+
+                        showSeparator = true;
+
                     } else if (state == SmarterWifiService.WifiState.WIFI_ON) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
-                            wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
+                            iconResource = R.drawable.main_swm_bluetooth;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TIME)
-                            wifiIconId = R.drawable.ic_launcher_notification_clock;
+                            iconResource = R.drawable.main_swm_time;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TOWER)
-                            wifiIconId = R.drawable.ic_launcher_notification_cell;
+                            iconResource = R.drawable.main_swm_cell;
+                        else if (type == SmarterWifiService.ControlType.CONTROL_PAUSED)
+                            iconResource = R.drawable.main_swm_add_waiting;
                         else
-                            wifiIconId = R.drawable.ic_launcher_notification_ignore;
+                            iconResource = R.drawable.main_swm_ignore;
+
+                        forgetViewHolder.setVisibility(View.GONE);
+
+                        opennetworkViewHolder.setVisibility(View.GONE);
+
+                        // We're connected to something, so we don't need the ignore
+                        pauseSwmHolder.setVisibility(View.GONE);
                     }
 
-                    mainIcon.setImageResource(wifiIconId);
+                    mainImageView.setImageResource(iconResource);
 
-                    if (wifiTextResource > 0) {
-                        headlineText.setText(wifiTextResource);
-                    } else {
-                        headlineText.setText("");
-                    }
+                    headlineText.setText(serviceBinder.currentStateToComplexText());
 
-                    if (reasonTextResource > 0) {
-                        smallText.setText(reasonTextResource);
-                    } else {
-                        smallText.setText("");
-                    }
                 }
             });
+        }
+    };
+
+    private View.OnClickListener pauseClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((TextView) v).setText(R.string.main_resume_button);
+            v.setOnClickListener(resumeClickListener);
+
+            serviceBinder.setPauseAddNewNetwork(true);
+
+            // Launch wifi settings activity to connect to a new network
+            Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(i);
+        }
+    };
+
+    private View.OnClickListener resumeClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((TextView) v).setText(R.string.main_pause_button);
+            v.setOnClickListener(pauseClickListener);
+
+            serviceBinder.setPauseAddNewNetwork(false);
         }
     };
 
@@ -120,12 +200,149 @@ public class FragmentMain extends SmarterFragment {
 
         mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        mainIcon = (ImageView) mainView.findViewById(R.id.imageWifiStatus);
-        headlineText = (TextView) mainView.findViewById(R.id.textViewMain);
-        smallText = (TextView) mainView.findViewById(R.id.textViewMinor);
+        mainImageView = (ImageView) mainView.findViewById(R.id.imageMain);
+        headlineText = (TextView) mainView.findViewById(R.id.textViewHeadline);
 
-        switchManageWifi = (CompoundButton) mainView.findViewById(R.id.switchManageWifi);
-        switchAutoLearn =  (CompoundButton) mainView.findViewById(R.id.switchAutoLearn);
+        mainEnableToggle = (CompoundButton) mainView.findViewById(R.id.switchSwmEnable);
+
+        if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
+            mainEnableToggle.setChecked(true);
+        } else {
+            mainEnableToggle.setChecked(false);
+        }
+
+        mainEnableToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                setManageWifi(b);
+            }
+        });
+
+        pauseSwmHolder = mainView.findViewById(R.id.layoutMainPauseHolder);
+        pauseSwmButton = mainView.findViewById(R.id.textViewPauseButton);
+
+        pauseSwmButton.setOnClickListener(pauseClickListener);
+
+        forgetViewHolder = mainView.findViewById(R.id.layoutMainForgetHolder);
+        forgetButton = mainView.findViewById(R.id.textViewMainForgetButton);
+
+        forgetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                serviceBinder.deleteCurrentTower();
+                serviceBinder.doWifiDisable();
+                Snackbar.make(mainView, R.string.snackbar_delete_tower, Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        backgroundScanViewHolder = mainView.findViewById(R.id.layoutMainBackgroundAlertHolder);
+        backgroundScanButton = mainView.findViewById(R.id.textViewBackgroundAlertButton);
+        backgroundScanHideButton = mainView.findViewById(R.id.textViewBackgroundIgnoreButton);
+
+        backgroundScanViewMiniHolder = mainView.findViewById(R.id.layoutMainSmallBackgroundHolder);
+        backgroundScanMiniButton = mainView.findViewById(R.id.textButtonBackgroundMore);
+
+        opennetworkViewHolder= mainView.findViewById(R.id.layoutMainOpenHolder);
+        opennetworkButton = mainView.findViewById(R.id.textViewOpenAlertButton);
+
+
+        // Open the advanced settings
+        backgroundScanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                // Try to run the default advanced
+                try {
+                    intent.setClassName("com.android.settings", "com.android.settings.Settings$AdvancedWifiSettingsActivity");
+                    startActivity(intent);
+                    return;
+                } catch (ActivityNotFoundException e) {
+                    ;
+                }
+
+                // Try LG's BS alternate
+                try {
+                    intent.setClassName("com.lge.wifisettings", "com.lge.wifisettings.activity.AdvancedWifiSettingsActivity");
+                    startActivity(intent);
+                    return;
+                } catch (ActivityNotFoundException e) {
+                    ;
+                }
+
+                // Go to the standard wifi settings and the user has to get to advanced themselves, sorry
+                Intent i = new Intent(Settings.ACTION_WIFI_SETTINGS);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(i);
+            }
+        });
+
+        backgroundScanHideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putBoolean("MAIN_HIDE_BG_SCAN", true);
+                e.commit();
+
+                backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
+                backgroundScanViewHolder.setVisibility(View.GONE);
+            }
+        });
+
+        backgroundScanMiniButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putBoolean("MAIN_HIDE_BG_SCAN", false);
+                e.commit();
+
+                backgroundScanViewMiniHolder.setVisibility(View.GONE);
+                backgroundScanViewHolder.setVisibility(View.VISIBLE);
+            }
+        });
+
+        learnedView = mainView.findViewById(R.id.layoutMainNavLearned);
+        ignoreView = mainView.findViewById(R.id.layoutMainNavIgnored);
+        bluetoothView = mainView.findViewById(R.id.layoutMainNavBluetooth);
+        timeView = mainView.findViewById(R.id.layoutMainNavTime);
+        settingsView = mainView.findViewById(R.id.layoutMainNavSettings);
+
+        learnedView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivitySsidLearned.class));
+            }
+        });
+
+        ignoreView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivitySsidBlacklist.class));
+            }
+        });
+
+        bluetoothView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivityBluetoothBlacklist.class));
+
+            }
+        });
+
+        timeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivityTimeRange.class));
+            }
+        });
+
+        settingsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ActivityPrefs.class));
+            }
+        });
 
         // Defer main setup until we've bound
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
@@ -134,37 +351,23 @@ public class FragmentMain extends SmarterFragment {
                 if (!isAdded())
                     return;
 
-                switchManageWifi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        switchAutoLearn.setEnabled(b);
-                        setManageWifi(b);
-                    }
-                });
-
                 serviceBinder.addCallback(guiCallback);
 
-                switchAutoLearn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        setLearnWifi(b);
+                if (serviceBinder.getWifiAlwaysScanning()) {
+                    if (sharedPreferences.getBoolean("MAIN_HIDE_BG_SCAN", false)) {
+                        backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
+                        backgroundScanViewHolder.setVisibility(View.GONE);
+                    } else {
+                        backgroundScanViewHolder.setVisibility(View.VISIBLE);
+                        backgroundScanViewMiniHolder.setVisibility(View.GONE);
                     }
-                });
-
-                if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
-                    switchManageWifi.setChecked(true);
                 } else {
-                    switchManageWifi.setChecked(false);
+                    backgroundScanViewHolder.setVisibility(View.GONE);
+                    backgroundScanViewMiniHolder.setVisibility(View.GONE);
                 }
-
-                if (sharedPreferences.getBoolean(getString(R.string.pref_learn), true)) {
-                    switchAutoLearn.setChecked(true);
-                } else {
-                    switchAutoLearn.setChecked(false);
-                }
-
             }
         });
+
 
         return mainView;
     }
@@ -181,8 +384,28 @@ public class FragmentMain extends SmarterFragment {
     public void onResume() {
         super.onResume();
 
-        if (serviceBinder != null)
+        if (serviceBinder != null) {
             serviceBinder.addCallback(guiCallback);
+
+            if (backgroundScanViewHolder != null) {
+                if (serviceBinder.getWifiAlwaysScanning()) {
+                    if (sharedPreferences.getBoolean("MAIN_HIDE_BG_SCAN", false)) {
+                        backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
+                    } else {
+                        backgroundScanViewHolder.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    backgroundScanViewHolder.setVisibility(View.GONE);
+                    backgroundScanViewMiniHolder.setVisibility(View.GONE);
+                }
+            }
+        }
+
+        if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
+            mainEnableToggle.setChecked(true);
+        } else {
+            mainEnableToggle.setChecked(false);
+        }
     }
 
     @Override
@@ -205,17 +428,6 @@ public class FragmentMain extends SmarterFragment {
         return true;
     }
 
-    private boolean setLearnWifi(boolean b) {
-        if (serviceBinder == null)
-            return false;
-
-        SharedPreferences.Editor e = sharedPreferences.edit();
-        e.putBoolean(getString(R.string.pref_learn), b);
-        e.commit();
-
-        return true;
-    }
-
     @Override
     public int getTitle() {
         return R.string.tab_main;
@@ -223,7 +435,7 @@ public class FragmentMain extends SmarterFragment {
 
     @Subscribe
     public void onEvent(EventPreferencesChanged evt) {
-        if (sharedPreferences == null || switchManageWifi == null || switchAutoLearn == null)
+        if (sharedPreferences == null)
             return;
 
         Activity ma = getActivity();
@@ -235,15 +447,9 @@ public class FragmentMain extends SmarterFragment {
             @Override
             public void run() {
                 if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
-                    switchManageWifi.setChecked(true);
+                    mainEnableToggle.setChecked(true);
                 } else {
-                    switchManageWifi.setChecked(false);
-                }
-
-                if (sharedPreferences.getBoolean(getString(R.string.pref_learn), true)) {
-                    switchAutoLearn.setChecked(true);
-                } else {
-                    switchAutoLearn.setChecked(false);
+                    mainEnableToggle.setChecked(false);
                 }
             }
         });

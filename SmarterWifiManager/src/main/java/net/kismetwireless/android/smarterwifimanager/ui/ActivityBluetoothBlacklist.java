@@ -1,13 +1,12 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
 import net.kismetwireless.android.smarterwifimanager.R;
 
-public class ActivityBluetoothBlacklist extends ActionBarActivity {
+public class ActivityBluetoothBlacklist extends SmarterActivity {
     FragmentBluetoothBlacklist bluetoothFragment;
 
     @Override
@@ -15,8 +14,9 @@ public class ActivityBluetoothBlacklist extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singlefragment);
 
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
+        Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState != null) {
             bluetoothFragment = (FragmentBluetoothBlacklist) getSupportFragmentManager().findFragmentByTag("btfragment");

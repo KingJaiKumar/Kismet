@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterBluetooth;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterTimeRange;
@@ -44,6 +45,7 @@ public class SmarterWifiServiceBinder {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
+            LogAlias.d("smarter", "binder serviceConnection onserviceconnected");
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             SmarterWifiService.ServiceBinder binder = (SmarterWifiService.ServiceBinder) service;
             smarterService = binder.getService();
@@ -73,6 +75,7 @@ public class SmarterWifiServiceBinder {
     };
 
     public SmarterWifiServiceBinder(Context c) {
+        LogAlias.d("smarter", "service binder new()");
         context = c;
     }
 
@@ -96,8 +99,13 @@ public class SmarterWifiServiceBinder {
 
     // Call a cb as soon as we finish binding
     public void doCallAndBindService(BinderCallback cb) {
-        if (isBound)
+        LogAlias.d("smarter", "service binder call and bind, isbound=" + isBound);
+
+        if (isBound) {
+            LogAlias.d("smarter", "service binder already bound, not rebinding");
             cb.run(this);
+            return;
+        }
 
         onBindCb = cb;
 
@@ -319,6 +327,51 @@ public class SmarterWifiServiceBinder {
 
         smarterService.handleWifiP2PState(state);
 
+    }
+
+    public String currentStateToComplexText() {
+        if (smarterService == null) {
+            Log.e("smarter", "currentStateToComplexText while service null");
+            return "Can't get state, service is null in binder";
+        }
+
+        return smarterService.currentStateToComplexText();
+    }
+
+    public boolean getWifiAlwaysScanning() {
+        if (smarterService == null) {
+            Log.e("smarter", "getWifiAlwaysScanning while service null");
+            return false;
+        }
+
+        return smarterService.getWifiAlwaysScanning();
+    }
+
+    public void setPauseAddNewNetwork(boolean v) {
+        if (smarterService == null) {
+            Log.e("smarter", "setPauseAddNewNetwork while service null");
+            return;
+        }
+
+        smarterService.setPauseAddNewNetwork(v);
+    }
+
+    public boolean getPauseAddNewNetwork() {
+        if (smarterService == null) {
+            Log.e("smarter", "getPauseAddNewNetwork while service null");
+            return false;
+        }
+
+        return smarterService.getPauseAddNewNetwork();
+    }
+
+    public void doWifiDisable() {
+        if (smarterService == null) {
+            Log.e("smarter", "doWifiDisabled while service null");
+            return;
+        }
+
+        smarterService.doWifiDisable();
     }
 
 }
