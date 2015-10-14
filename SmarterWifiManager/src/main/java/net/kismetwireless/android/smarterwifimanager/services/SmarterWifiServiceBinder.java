@@ -20,7 +20,8 @@ public class SmarterWifiServiceBinder {
     private SmarterWifiService smarterService;
     private boolean isBound;
     Context context;
-    BinderCallback onBindCb;
+
+    ArrayList<BinderCallback> binderList = new ArrayList<>();
 
     ArrayList<SmarterWifiService.SmarterServiceCallback> pendingList = new ArrayList<SmarterWifiService.SmarterServiceCallback>();
     ArrayList<SmarterWifiService.SmarterServiceCallback> registeredList = new ArrayList<SmarterWifiService.SmarterServiceCallback>();
@@ -52,8 +53,13 @@ public class SmarterWifiServiceBinder {
 
             isBound = true;
 
-            if (onBindCb != null)
-                onBindCb.run(SmarterWifiServiceBinder.this);
+            synchronized (this) {
+                if (binderList.size() > 0) {
+                    for (BinderCallback b : binderList) {
+                        b.run(SmarterWifiServiceBinder.this);
+                    }
+                }
+            }
 
             synchronized (this) {
                 if (pendingList.size() > 0) {
@@ -99,15 +105,19 @@ public class SmarterWifiServiceBinder {
 
     // Call a cb as soon as we finish binding
     public void doCallAndBindService(BinderCallback cb) {
-        LogAlias.d("smarter", "service binder call and bind, isbound=" + isBound);
+        Log.d("smarter", "service binder call and bind, isbound=" + isBound);
 
         if (isBound) {
-            LogAlias.d("smarter", "service binder already bound, not rebinding");
+            Log.d("smarter", "service binder already bound, not rebinding");
             cb.run(this);
             return;
         }
 
-        onBindCb = cb;
+        if (cb != null) {
+            synchronized (this) {
+                binderList.add(cb);
+            }
+        }
 
         doBindService();
     }
@@ -372,6 +382,15 @@ public class SmarterWifiServiceBinder {
         }
 
         smarterService.doWifiDisable();
+    }
+
+    public boolean getRunningAsSecondaryUser() {
+        if (smarterService == null) {
+            Log.e("smarter", "getRunningAsSecondaryUser while service null");
+            return false;
+        }
+
+        return smarterService.getRunningAsSecondaryUser();
     }
 
 }

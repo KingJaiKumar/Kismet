@@ -5,8 +5,14 @@ ADDED
     <string name="prefs_item_smartroam">
     <string name="prefs_item_smartroam_explanation">
 
+    <string name="simple_explanation_multiuser">
+
     <string name="bluetooth_blacklist_description_alt">
     <string name="bluetooth_blacklist_description_checked">
+
+    <string name="main_multiuser_text">
+
+    <string name="notification_multiuser">
 
 DELETED
 

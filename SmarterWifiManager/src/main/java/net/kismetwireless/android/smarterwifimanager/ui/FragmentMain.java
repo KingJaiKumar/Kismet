@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class FragmentMain extends SmarterFragment {
     private View backgroundScanViewHolder, backgroundScanButton, backgroundScanHideButton;
     private View opennetworkViewHolder, opennetworkButton;
     private View backgroundScanViewMiniHolder, backgroundScanMiniButton;
+    private View multiuserHolder;
 
     private CompoundButton mainEnableToggle;
 
@@ -205,6 +207,36 @@ public class FragmentMain extends SmarterFragment {
 
         mainEnableToggle = (CompoundButton) mainView.findViewById(R.id.switchSwmEnable);
 
+        Log.d("smarter", "about to callandbind");
+        // Shut down if we're running as anyone but the device owner
+        serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
+            @Override
+            public void run(SmarterWifiServiceBinder b) {
+                Log.d("smarter", "bound service");
+                Log.d("smarter", "service thinks we're a secondary user? " + b.getRunningAsSecondaryUser());
+                if (b.getRunningAsSecondaryUser()) {
+                    Activity ma = getActivity();
+
+                    if (ma == null)
+                        return;
+
+                    ma.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainEnableToggle.setOnCheckedChangeListener(null);
+                            mainEnableToggle.setChecked(false);
+                            mainEnableToggle.setClickable(false);
+                            mainEnableToggle.setEnabled(false);
+                            mainEnableToggle.setAlpha(0.5f);
+
+                            multiuserHolder = mainView.findViewById(R.id.layoutMainUserAlertHolder);
+                            multiuserHolder.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }
+        });
+
         if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
             mainEnableToggle.setChecked(true);
         } else {
@@ -229,8 +261,8 @@ public class FragmentMain extends SmarterFragment {
         forgetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                serviceBinder.deleteCurrentTower();
                 serviceBinder.doWifiDisable();
+                serviceBinder.deleteCurrentTower();
                 Snackbar.make(mainView, R.string.snackbar_delete_tower, Snackbar.LENGTH_LONG).show();
             }
         });

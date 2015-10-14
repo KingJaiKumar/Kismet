@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.UserHandle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -81,7 +82,6 @@ public class SmarterWifiService extends Service {
     }
 
     private boolean everBeenRun = false;
-
     private boolean shutdown = false;
 
     private SharedPreferences preferences;
@@ -270,7 +270,13 @@ public class SmarterWifiService extends Service {
                 int wifiTextResource = -1;
                 int reasonTextResource = -1;
 
-                if (state == WifiState.WIFI_IDLE) {
+                if (getRunningAsSecondaryUser()) {
+                    wifiIconId = R.drawable.ic_launcher_notification_idle;
+
+                    wifiTextResource = R.string.notification_title_ignore;
+                    reasonTextResource = R.string.notification_multiuser;
+
+                } else if (state == WifiState.WIFI_IDLE) {
                     wifiIconId = R.drawable.ic_launcher_notification_idle;
 
                     wifiTextResource = R.string.notification_title_on;
@@ -467,7 +473,13 @@ public class SmarterWifiService extends Service {
         everBeenRun = preferences.getBoolean("everbeenrun", false);
 
         learnWifi = preferences.getBoolean(getString(R.string.pref_learn), true);
-        proctorWifi = preferences.getBoolean(getString(R.string.pref_enable), true);
+
+        if (getRunningAsSecondaryUser()) {
+            Log.d("smarter", "We're running as a secondary user, disabling");
+            proctorWifi = false;
+        } else {
+            proctorWifi = preferences.getBoolean(getString(R.string.pref_enable), true);
+        }
 
         disableWaitSeconds = Integer.parseInt(preferences.getString(getString(R.string.prefs_item_shutdowntime), "60"));
 
@@ -867,13 +879,12 @@ public class SmarterWifiService extends Service {
 
         currentCellLocation = curloc;
 
-
         if (curloc.getTowerId() < 0)
             currentTowerType = TowerType.TOWER_INVALID;
         else
             currentTowerType = TowerType.TOWER_UNKNOWN;
 
-        if (curloc.getTowerId() > 0 && learnWifi) {
+        if (curloc.getTowerId() > 0 && learnWifi && targetState == WifiState.WIFI_ON) {
             SmarterSSID ssid = getCurrentSsid();
 
             // If we know this tower already, set type to enable
@@ -1340,6 +1351,10 @@ public class SmarterWifiService extends Service {
 
     // Convert the current state to text, with fill-ins on formatting, etc
     public String currentStateToComplexText() {
+        if (getRunningAsSecondaryUser()) {
+            return getString(R.string.simple_explanation_multiuser);
+        }
+
         if (curState == WifiState.WIFI_BLOCKED) {
             if (lastControlReason == ControlType.CONTROL_BLUETOOTH) {
                 return getString(R.string.simple_explanation_bt);
@@ -1484,14 +1499,21 @@ public class SmarterWifiService extends Service {
     }
 
     public void deleteCurrentTower() {
-        if (currentCellLocation == null)
+        if (currentCellLocation == null) {
+            LogAlias.d("smarter", "tried to delete tower, but current location is null");
             return;
+        }
 
-        if (currentCellLocation.getTowerId() < 0)
+        if (currentCellLocation.getTowerId() < 0) {
+            LogAlias.d("smarter", "tried to delete tower, but current location towerid is < 0: " + currentCellLocation.getTowerId());
             return;
+        }
 
+        LogAlias.d("smarter", "trying to delete tower " + currentCellLocation.getTowerId());
         dbSource.deleteSsidTowerInstance(currentCellLocation.getTowerId());
 
+        // We don't want to have wifi on until we figure out what's going on
+        targetState = WifiState.WIFI_OFF;
         handleCellLocation(null);
         configureWifiState();
     }
@@ -1520,6 +1542,33 @@ public class SmarterWifiService extends Service {
 
         // LogAlias.d("smarter", "tethering: " + ret);
         return ret;
+    }
+
+    public boolean getRunningAsSecondaryUser() {
+        int ret = 0;
+
+        UserHandle uh = android.os.Process.myUserHandle();
+
+        Method[] uhMethods = uh.getClass().getDeclaredMethods();
+        for (Method method : uhMethods) {
+            if (method.getName().equals("myUserId")) {
+                try {
+                    ret = (Integer) method.invoke(uh);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (ret == 0) {
+            return false;
+        }
+
+        return true;
     }
 
     public boolean getWifiAlwaysScanning() {

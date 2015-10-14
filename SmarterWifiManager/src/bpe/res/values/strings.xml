@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="main_multiuser_text">Smarter Wi-Fi Manager is disabled because this is not the Owner Space. Manage your wireless preferences from the Owner Space."</string>
+    <string name="notification_multiuser">Not in the Owner Space</string>
+
+</resources>

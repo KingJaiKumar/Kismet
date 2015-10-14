@@ -446,11 +446,14 @@ public class SmarterDBSource {
     public void deleteSsidTowerInstance(long towerid) {
         long tid = getTowerDbId(towerid);
 
+        LogAlias.d("smarter", "delete tower instance towerid " + towerid + " tid " + tid);
+
         String compare = SmarterWifiDBHelper.COL_SCMAP_CELLID + "=?";
         String[] args = {Long.toString(tid)};
 
         dataBase.beginTransaction();
-        dataBase.delete(SmarterWifiDBHelper.TABLE_SSID_CELL_MAP, compare, args);
+        int r = dataBase.delete(SmarterWifiDBHelper.TABLE_SSID_CELL_MAP, compare, args);
+        LogAlias.d("smarter", "result " + r + " for deleting towerid " + towerid);
         dataBase.setTransactionSuccessful();
         dataBase.endTransaction();
     }

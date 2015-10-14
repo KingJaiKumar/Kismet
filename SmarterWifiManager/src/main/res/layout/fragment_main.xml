@@ -138,6 +138,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
+                android:id="@+id/layoutMainUserAlertHolder"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="#ffaeaf"
+                android:visibility="gone"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageViewUserAlert"
+                    android:src="@drawable/ic_highlight_off"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:tint="@color/red" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_multiuser_text"
+                    android:id="@+id/textViewUserAlert"
+                    style="@style/TextMedium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/imageViewUserAlert"
+                    android:layout_toEndOf="@+id/imageViewUserAlert"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
                 android:id="@+id/layoutMainPauseHolder"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
