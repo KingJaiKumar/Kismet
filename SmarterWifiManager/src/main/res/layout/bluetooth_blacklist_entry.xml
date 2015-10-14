@@ -9,6 +9,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/btListCheck"
         android:layout_gravity="center_horizontal|top"
+        android:button="@drawable/abc_btn_check_material"
+        android:buttonTint="@color/colorAccent"
         android:checked="false"
         android:layout_alignParentTop="false"
         android:layout_alignParentRight="true"
