@@ -18,6 +18,8 @@
     <string name="prefs_item_towermaintenance_explanation">Keep the list of locations from growing too large by clever maintenance.</string>
     <string name="prefs_item_aggressive">Aggressive Tower Monitoring</string>
     <string name="prefs_item_aggressive_explanation">Wake up and check the current tower, even when the screen is off.  This can improve responsiveness, but may use slightly more battery power.</string>
+    <string name="prefs_item_smartroam">Smarter Wi-Fi Roaming</string>
+    <string name="prefs_item_smartroam_explanation">Roam to stronger networks you\'ve used before when your Wi-Fi signal is weak</string>
 
     <string name="tab_main">Smarter</string>
     <string name="tab_ignore">Ignore</string>
@@ -33,7 +35,9 @@
     <string name="learn_wifi_switch">Auto-Learn Locations</string>
 
     <string name="ssid_blacklist_desc">These networks will not be remembered.  You can still connect to these networks normally, but SWM won\'t remember where you use them.</string>
-    <string name="bluetooth_blacklist_description">When connected to these Bluetooth devices, Wi-Fi will be turned off.</string>
+
+    <string name="bluetooth_blacklist_description_alt">Select Bluetooth devices (such as your car stereo) where you never use Wi-Fi.  Wi-Fi will be turned off while you are connected to checked devices.</string>
+    <string name="bluetooth_blacklist_description_checked">Wi-Fi will be turned off while you are connected to these checked Bluetooth devices.  To use Wi-Fi normally while connected to one of these devices, un-check it from the list.</string>
 
     <string name="ignore_dialog_title">Ignore network?</string>
     <string name="ignore_dialog_desc">Would you like to also ignore this network in the future?  Ignored networks can be connected to normally, but their location will not be remembered.</string>

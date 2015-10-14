@@ -11,13 +11,12 @@
             android:entryValues="@array/prefsTimeSeconds"
             android:key="@string/prefs_item_shutdowntime"
             android:title="@string/prefs_item_shutdowntime" />
-
         <!--
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="@string/prefs_item_towermaintenance"
-            android:title="@string/prefs_item_towermaintenance"
-            android:summary="@string/prefs_item_towermaintenance_explanation"/>
+            android:key="smart_roam"
+            android:title="@string/prefs_item_smartroam"
+            android:summary="@string/prefs_item_smartroam_explanation"/>
             -->
         <CheckBoxPreference
             android:defaultValue="true"

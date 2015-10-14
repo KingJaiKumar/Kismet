@@ -37,6 +37,7 @@ public class FragmentBluetoothBlacklist extends SmarterFragment {
 
     private BluetoothListAdapter listAdapter;
     private ListView lv;
+    private TextView descriptionView;
     private TextView emptyView;
 
     public void updateBluetoothList() {
@@ -51,9 +52,24 @@ public class FragmentBluetoothBlacklist extends SmarterFragment {
             if (lastBtList.size() == 0) {
                 lv.setVisibility(View.GONE);
                 emptyView.setVisibility(View.VISIBLE);
+                descriptionView.setText(R.string.bluetooth_blacklist_description_alt);
             } else {
                 lv.setVisibility(View.VISIBLE);
                 emptyView.setVisibility(View.GONE);
+
+                boolean anychecked = false;
+                for (SmarterBluetooth be : bt) {
+                    if (be.isBlacklisted()) {
+                        anychecked = true;
+                        break;
+                    }
+                }
+
+                if (anychecked) {
+                    descriptionView.setText(R.string.bluetooth_blacklist_description_checked);
+                } else {
+                    descriptionView.setText(R.string.bluetooth_blacklist_description_alt);
+                }
             }
         }
     }
@@ -85,6 +101,7 @@ public class FragmentBluetoothBlacklist extends SmarterFragment {
 
         lv = (ListView) mainView.findViewById(R.id.bluetoothListView);
         emptyView = (TextView) mainView.findViewById(R.id.textViewNoBluetooth);
+        descriptionView = (TextView) mainView.findViewById(R.id.textView);
 
         listAdapter = new BluetoothListAdapter(context, R.layout.bluetooth_blacklist_entry, lastBtList);
         lv.setAdapter(listAdapter);
@@ -134,6 +151,15 @@ public class FragmentBluetoothBlacklist extends SmarterFragment {
                         Log.d("smarter", "listadapter setting " + entry.getBtName() + " to " + entry.isBlacklisted());
 
                         serviceBinder.setBluetoothBlacklisted(entry, entry.isBlacklisted(), false);
+
+                        descriptionView.setText(R.string.bluetooth_blacklist_description_alt);
+                        for (SmarterBluetooth bte : lastBtList) {
+                            if (bte.isBlacklisted()) {
+                                descriptionView.setText(R.string.bluetooth_blacklist_description_checked);
+                                break;
+                            }
+                        }
+
                         listAdapter.notifyDataSetChanged();
                     }
                 });

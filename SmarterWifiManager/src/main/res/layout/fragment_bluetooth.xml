@@ -8,7 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/bluetooth_blacklist_description"
+        android:text="@string/bluetooth_blacklist_description_alt"
         android:id="@+id/textView"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"

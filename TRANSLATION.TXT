@@ -1,3 +1,18 @@
+---- RXX ----
+
+ADDED
+
+    <string name="prefs_item_smartroam">
+    <string name="prefs_item_smartroam_explanation">
+
+    <string name="bluetooth_blacklist_description_alt">
+    <string name="bluetooth_blacklist_description_checked">
+
+DELETED
+
+    <string name="bluetooth_blacklist_description_alt">
+
+
 ---- R69 ----
 
 ADDED
