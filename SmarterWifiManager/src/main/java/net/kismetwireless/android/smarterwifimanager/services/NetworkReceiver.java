@@ -20,7 +20,6 @@ import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiConnected;
 import net.kismetwireless.android.smarterwifimanager.events.EventWifiDisconnected;
-import net.kismetwireless.android.smarterwifimanager.events.EventWifiState;
 
 import javax.inject.Inject;
 
@@ -53,32 +52,7 @@ public class NetworkReceiver extends BroadcastReceiver {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Smarter Wi-Fi network lock");
 
-            // Collapse upping/up and downing/down status into single events
-            if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
-                LogAlias.d("smarter", "rx: Wifi_state_changed");
-
-                int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-                int oldWifiState = intent.getIntExtra(WifiManager.EXTRA_PREVIOUS_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
-
-                LogAlias.d("smarter", "wifi_state_changed old: " + oldWifiState + " new: " + wifiState);
-
-                if ((oldWifiState != WifiManager.WIFI_STATE_ENABLED && oldWifiState != WifiManager.WIFI_STATE_ENABLING) &&
-                        (wifiState == WifiManager.WIFI_STATE_ENABLING || wifiState == WifiManager.WIFI_STATE_ENABLED)) {
-                    LogAlias.d("smarter", "Generating event: Wifi enabled");
-
-                    wl.acquire();
-                    eventBus.post(new EventWifiState(true));
-                    wl.release();
-
-                } else if ((oldWifiState != WifiManager.WIFI_STATE_DISABLING && oldWifiState != WifiManager.WIFI_STATE_DISABLED) &&
-                        (wifiState == WifiManager.WIFI_STATE_DISABLED || wifiState == WifiManager.WIFI_STATE_DISABLING)) {
-                    LogAlias.d("smarter", "Generating event: Wifi disabled");
-
-                    wl.acquire();
-                    eventBus.post(new EventWifiState(false));
-                    wl.release();
-                }
-            } else if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+            if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                 LogAlias.d("smarter", "rx: Network state changed");
 
                 NetworkInfo ni = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
@@ -108,29 +82,6 @@ public class NetworkReceiver extends BroadcastReceiver {
             }
 
             // TODO - remove this once we finish converting to eventbus
-            /*
-            if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)) {
-                serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
-                    public void run(SmarterWifiServiceBinder b) {
-                        b.configureWifiState();
-                    }
-                });
-            }
-
-            if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
-                final NetworkInfo ni = (NetworkInfo) intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-
-                if (ni.getType() != ConnectivityManager.TYPE_WIFI)
-                    return;
-
-                serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
-                    public void run(SmarterWifiServiceBinder b) {
-                        b.configureWifiState();
-                    }
-                });
-
-            }
-            */
 
             if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                 serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {

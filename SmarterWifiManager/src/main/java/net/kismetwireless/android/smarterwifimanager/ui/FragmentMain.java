@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.R;
 import net.kismetwireless.android.smarterwifimanager.events.EventPreferencesChanged;
 import net.kismetwireless.android.smarterwifimanager.models.SmarterSSID;
@@ -73,6 +74,7 @@ public class FragmentMain extends SmarterFragment {
             ma.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    LogAlias.d("smarter", "main activity, stage changed, " + state + " target " + controlstate);
                     boolean showSeparator = serviceBinder.getWifiAlwaysScanning();
 
                     int iconResource = R.drawable.main_swm_idle;

@@ -18,6 +18,7 @@ public class CellLocationCommon {
         TOWER_UNKNOWN, // Unknown tower, nothing to do
         TOWER_BLOCK, // Known block tower, currently unimplemented
         TOWER_ENABLE, // Known enable tower, we want to turn on wifi
+        TOWER_INVALID, // Bad tower
     };
 
     public enum LocationType {
@@ -35,6 +36,12 @@ public class CellLocationCommon {
 
     // "halfbad" towers look weird but we do what we can with them
     private boolean halfbad = false;
+
+    public CellLocationCommon() {
+        valid = false;
+        towerId = -1;
+        seenTime = System.currentTimeMillis();
+    }
 
     public CellLocationCommon(CellLocation l) {
         if (l == null) {

@@ -42,7 +42,8 @@ public class SmarterWorldState {
         WIFI_IGNORE // Ignoring wifi state
     }
 
-    private CellLocationCommon cellLocation = null;
+    private CellLocationCommon cellLocation = new CellLocationCommon();
+    private CellLocationCommon.TowerType cellTowerType = CellLocationCommon.TowerType.TOWER_UNKNOWN;
     private WifiInfo wifiInfo = null;
 
     private CellLocationCommon previousCellLocation = null;
@@ -163,5 +164,13 @@ public class SmarterWorldState {
 
     public void setTargetState(WifiState targetState) {
         this.targetState = targetState;
+    }
+
+    public CellLocationCommon.TowerType getCellTowerType() {
+        return cellTowerType;
+    }
+
+    public void setCellTowerType(CellLocationCommon.TowerType cellTowerType) {
+        this.cellTowerType = cellTowerType;
     }
 }
