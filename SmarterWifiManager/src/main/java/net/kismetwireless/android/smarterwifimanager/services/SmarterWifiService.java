@@ -309,7 +309,10 @@ public class SmarterWifiService extends Service {
                 } else if (state == WifiState.WIFI_OFF) {
                     wifiTextResource = R.string.notification_title_off;
 
-                    if (type == ControlType.CONTROL_BLUETOOTH) {
+                    if (controlState == WifiState.WIFI_ON) {
+                        wifiIconId = R.drawable.ic_launcher_notification_cell;
+                        reasonTextResource = R.string.notification_bringup;
+                    } else if (type == ControlType.CONTROL_BLUETOOTH) {
                         wifiIconId = R.drawable.ic_launcher_notification_bluetooth;
                         reasonTextResource = R.string.notification_wifi_bt;
                     } else if (type == ControlType.CONTROL_TIME) {
@@ -800,10 +803,7 @@ public class SmarterWifiService extends Service {
             location = new CellLocationCommon(telephonyManager.getCellLocation());
         }
 
-        LogAlias.d("smarter", "Handling cell location, going to kick curtower and wifistate");
         setCurrentTower(location);
-
-        // configureWifiState();
     }
 
     @Subscribe
@@ -913,10 +913,12 @@ public class SmarterWifiService extends Service {
             worldState.setCellLocation(new CellLocationCommon());
         }
 
+        /*
         if (curloc.equals(worldState.getCellLocation())) {
             LogAlias.d("smarter", "Ignoring cell location event, identical to current position");
             return;
         }
+        */
 
         worldState.setCellLocation(curloc);
 
@@ -935,13 +937,14 @@ public class SmarterWifiService extends Service {
 
                 // If the SSID makes sense, update our tower records
                 if (ssid != null && !ssid.isBlacklisted()) {
+                    LogAlias.d("smarter", "Updating known tower " + curloc.getTowerId() + " for ssid " + ssid.getSsid());
                     dbSource.mapTower(ssid, curloc.getTowerId());
                 }
             } else {
-                if (ssid != null && !ssid.isBlacklisted() && curState == WifiState.WIFI_ON &&
+                if ((ssid != null && !ssid.isBlacklisted()) && getWifiState() == WifiState.WIFI_ON &&
                         targetState == WifiState.WIFI_ON && !getWifiTethered()) {
                     // We're connected, we want to stay turned on, learn this tower.  Don't map while we're tethered.
-                    LogAlias.d("smarter", "New tower " + curloc.getTowerId() + ", Wi-Fi connected, learning tower");
+                    LogAlias.d("smarter", "New tower " + curloc.getTowerId() + ", Wi-Fi connected ssid " + ssid.getSsid() + ", learning tower");
                     dbSource.mapTower(ssid, curloc.getTowerId());
                     lastTowerMap = System.currentTimeMillis();
                     worldState.setCellTowerType(CellLocationCommon.TowerType.TOWER_ENABLE);
@@ -966,7 +969,7 @@ public class SmarterWifiService extends Service {
 
             // Call our CBs immediately for setup
             cb.towerStateChanged(worldState.getCellLocation().getTowerId(), worldState.getCellTowerType());
-            cb.wifiStateChanged(getCurrentSsid(), getWifiState(), getShouldWifiBeEnabled(), lastControlReason);
+            cb.wifiStateChanged(getCurrentSsid(), curState, targetState, lastControlReason);
             cb.bluetoothStateChanged(getBluetoothState());
         } catch (NullPointerException npe) {
             Log.e("smarter", "Got NPE in addcallback, caught, but not sure what happened");
@@ -1016,19 +1019,15 @@ public class SmarterWifiService extends Service {
         targetState = getShouldWifiBeEnabled();
 
         LogAlias.d("smarter", "World state: " + worldState.toString());
-
         LogAlias.d("smarter", "configureWifiState previous " + previousState + " current " + curState + " target " + targetState);
 
+        // If we're ignoring wifi we do nothing
         if (curState == WifiState.WIFI_IGNORE) {
             triggerCallbackWifiChanged();
             return;
         }
 
         if (curState == WifiState.WIFI_ON || curState == WifiState.WIFI_IDLE) {
-            // If we're on or idle then we only need to turn off
-
-            LogAlias.d("smarter", "configureWifiState " + curState);
-
             if (targetState == WifiState.WIFI_BLOCKED) {
                 LogAlias.d("smarter", "Target state: Blocked, shutting down wifi now, " + lastControlReason);
 
@@ -1224,7 +1223,7 @@ public class SmarterWifiService extends Service {
             return WifiState.WIFI_ON;
         }
 
-        // If the user wants spefically to turn it on or off via the SWM UI, do so
+        // If the user wants specifically to turn it on or off via the SWM UI, do so
         if (userOverrideState == WifiState.WIFI_OFF) {
             LogAlias.d("smarter", "User-controled wifi, user wants wifi off");
             lastControlReason = ControlType.CONTROL_USER;
@@ -1288,13 +1287,13 @@ public class SmarterWifiService extends Service {
         }
 
         if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_BLOCK) {
-            LogAlias.d("smarter", "Connected to blocked tower " + worldState.getCellLocation().getTowerId() + ", turning off wifi");
+            LogAlias.d("smarter", "Connected to blocked tower " + worldState.getCellLocation().getTowerId() + ", wifi should be off");
             lastControlReason = ControlType.CONTROL_TOWERID;
             return WifiState.WIFI_BLOCKED;
         }
 
         if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_ENABLE) {
-            LogAlias.d("smarter", "Connected to enable tower " + worldState.getCellLocation().getTowerId() + ", turning on wifi");
+            LogAlias.d("smarter", "Connected to enable tower " + worldState.getCellLocation().getTowerId() + ", wifi should be on");
             lastControlReason = ControlType.CONTROL_TOWER;
             return WifiState.WIFI_ON;
         }
@@ -1344,7 +1343,7 @@ public class SmarterWifiService extends Service {
 
         boolean rawnetenabled = false;
 
-        if (rawni != null && rawni.isConnected())
+        if (rawni != null && rawni.isConnectedOrConnecting())
             rawnetenabled = true;
 
         // LogAlias.d("smarter", "getwifistate wifi radio enable: " + rawwifienabled + " isConnected " + rawnetenabled);
@@ -1435,6 +1434,11 @@ public class SmarterWifiService extends Service {
             }
 
         } else if (curState == WifiState.WIFI_OFF) {
+            // We're trying to get back up
+            if (targetState == WifiState.WIFI_ON) {
+                return getString(R.string.simple_explanation_bringup);
+            }
+
             if (lastControlReason == ControlType.CONTROL_AIRPLANE) {
                 return getString(R.string.simple_explanation_airplane);
 

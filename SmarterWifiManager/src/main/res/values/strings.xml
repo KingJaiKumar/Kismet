@@ -71,6 +71,7 @@
     <string name="notification_airplane">Airplane mode</string>
     <string name="notification_tethered">Tethering / sharing connection</string>
     <string name="notification_multiuser">Not the device owner</string>
+    <string name="notification_bringup">You\'ve used Wi-Fi here before, turning on Wi-Fi</string>
 
     <string name="wifistate_blocked">Wi-Fi forced off</string>
     <string name="wifistate_ignore">Not managing Wi-Fi</string>
@@ -137,6 +138,7 @@
     <string name="simple_explanation_neverrun">Open Smarter Wi-Fi Manager to start controlling your Wi-Fi!</string>
     <string name="simple_explanation_add">SWM is paused, we\'ll keep Wi-Fi enabled until you connect to a network.</string>
     <string name="simple_explanation_multiuser">Wi-Fi management turned off, we\'re not the device owner.</string>
+    <string name="simple_explanation_bringup">You\'ve used Wi-Fi here before. Turning on Wi-Fi.</string>
 
     <string name="main_explanation_swm_disabled">Turn Smarter Wi-Fi Manager on to automatically manage your Wi-Fi</string>
 

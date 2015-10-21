@@ -133,12 +133,16 @@ public class FragmentMain extends SmarterFragment {
                         forgetViewHolder.setVisibility(View.GONE);
                         opennetworkViewHolder.setVisibility(View.GONE);
 
-                        // If wifi is off, show the option to pause and add
-                        pauseSwmHolder.setVisibility(View.VISIBLE);
-                        ((TextView) pauseSwmButton).setText(R.string.main_pause_button);
-                        pauseSwmButton.setOnClickListener(pauseClickListener);
+                        // If wifi is off, show the option to pause and add, unless we're trying to turn it on
+                        if (controlState != SmarterWifiService.WifiState.WIFI_ON) {
+                            pauseSwmHolder.setVisibility(View.VISIBLE);
+                            ((TextView) pauseSwmButton).setText(R.string.main_pause_button);
+                            pauseSwmButton.setOnClickListener(pauseClickListener);
 
-                        showSeparator = true;
+                            showSeparator = true;
+                        } else {
+                            pauseSwmHolder.setVisibility(View.GONE);
+                        }
 
                     } else if (state == SmarterWifiService.WifiState.WIFI_ON) {
                         if (type == SmarterWifiService.ControlType.CONTROL_BLUETOOTH)
