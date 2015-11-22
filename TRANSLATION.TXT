@@ -16,6 +16,16 @@ ADDED
     <string name="notification_multiuser">
     <string name="notification_bringup">
 
+    <string name="simple_explanation_permissions">
+
+    <string name="permission_dialog_title">
+    <string name="permission_dialog_location">
+    <string name="dialog_button_permission">
+    <string name="dialog_button_permission_skip">
+
+    <string name="main_permission_text">
+    <string name="main_permission_button">
+
 DELETED
 
     <string name="bluetooth_blacklist_description_alt">

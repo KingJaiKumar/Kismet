@@ -178,6 +178,75 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="false"
+                android:id="@+id/layoutPermissionAlertHolder"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="#ffaeaf"
+                android:visibility="visible"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageViewPermissionAlert"
+                    android:src="@drawable/ic_highlight_off"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:tint="@color/red" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_permission_text"
+                    android:id="@+id/textViewPermissionAlert"
+                    style="@style/TextMedium"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/imageViewPermissionAlert"
+                    android:layout_toEndOf="@+id/imageViewPermissionAlert"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp" />
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#ff3d41"
+                    android:layout_below="@+id/textViewPermissionAlert"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="10dp"
+                    android:elevation="2dp"
+                    android:id="@+id/frameLayoutPermissionButton">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/main_permission_button"
+                        android:id="@+id/textViewPermissionButton"
+                        android:layout_gravity="right|bottom"
+                        android:theme="@style/TextMedium"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp"
+                        android:textColor="@color/colorPrimaryLight" />
+                </FrameLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
                 android:id="@+id/layoutMainPauseHolder"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"

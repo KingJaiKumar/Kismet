@@ -1,15 +1,21 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +39,8 @@ import javax.inject.Inject;
  * Created by dragorn on 9/17/13.
  */
 public class FragmentMain extends SmarterFragment {
+    public final static int REQUEST_LOCATION_PERMISSION = 1;
+
     @Inject
     Context context;
 
@@ -53,12 +61,16 @@ public class FragmentMain extends SmarterFragment {
     private View opennetworkViewHolder, opennetworkButton;
     private View backgroundScanViewMiniHolder, backgroundScanMiniButton;
     private View multiuserHolder;
+    private View permissionViewHolder, permissonButton;
 
     private CompoundButton mainEnableToggle;
 
     private SharedPreferences sharedPreferences;
 
     private View learnedView, ignoreView, bluetoothView, timeView, settingsView;
+
+    // Are we fully suppressed because we're a secondary user
+    private boolean suppressedMultiuser = false;
 
     private SmarterWifiService.SmarterServiceCallback guiCallback = new SmarterWifiService.SmarterServiceCallback() {
         @Override
@@ -213,14 +225,25 @@ public class FragmentMain extends SmarterFragment {
 
         mainEnableToggle = (CompoundButton) mainView.findViewById(R.id.switchSwmEnable);
 
-        Log.d("smarter", "about to callandbind");
-        // Shut down if we're running as anyone but the device owner
+        multiuserHolder = mainView.findViewById(R.id.layoutMainUserAlertHolder);
+
+        permissionViewHolder = mainView.findViewById(R.id.layoutPermissionAlertHolder);
+        permissonButton = mainView.findViewById(R.id.textViewPermissionButton);
+
+        permissonButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermissionUi();
+            }
+        });
+
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             @Override
             public void run(SmarterWifiServiceBinder b) {
-                Log.d("smarter", "bound service");
-                Log.d("smarter", "service thinks we're a secondary user? " + b.getRunningAsSecondaryUser());
+                // Shut down entirely if we're a secondary user
                 if (b.getRunningAsSecondaryUser()) {
+                    suppressedMultiuser = true;
+
                     Activity ma = getActivity();
 
                     if (ma == null)
@@ -229,16 +252,30 @@ public class FragmentMain extends SmarterFragment {
                     ma.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mainEnableToggle.setOnCheckedChangeListener(null);
                             mainEnableToggle.setChecked(false);
                             mainEnableToggle.setClickable(false);
                             mainEnableToggle.setEnabled(false);
                             mainEnableToggle.setAlpha(0.5f);
 
-                            multiuserHolder = mainView.findViewById(R.id.layoutMainUserAlertHolder);
+                            mainEnableToggle.setOnCheckedChangeListener(null);
                             multiuserHolder.setVisibility(View.VISIBLE);
                         }
                     });
+                } else {
+                    // If we need permissions, try to prompt right away
+                    if (!b.getSufficientPermissions()) {
+                        Activity ma = getActivity();
+
+                        if (ma == null)
+                            return;
+
+                        ma.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                requestPermissionUi();
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -283,7 +320,6 @@ public class FragmentMain extends SmarterFragment {
         opennetworkViewHolder= mainView.findViewById(R.id.layoutMainOpenHolder);
         opennetworkButton = mainView.findViewById(R.id.textViewOpenAlertButton);
 
-
         // Open the advanced settings
         backgroundScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,13 +327,23 @@ public class FragmentMain extends SmarterFragment {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                // Try to run the default advanced
-                try {
-                    intent.setClassName("com.android.settings", "com.android.settings.Settings$AdvancedWifiSettingsActivity");
-                    startActivity(intent);
-                    return;
-                } catch (ActivityNotFoundException e) {
-                    ;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        intent.setClassName("com.android.settings", "com.android.settings.Settings$LocationSettingsActivity");
+                        startActivity(intent);
+                        return;
+                    } catch (ActivityNotFoundException e) {
+                        ;
+                    }
+                } else {
+                    // Try to run the default advanced
+                    try {
+                        intent.setClassName("com.android.settings", "com.android.settings.Settings$AdvancedWifiSettingsActivity");
+                        startActivity(intent);
+                        return;
+                    } catch (ActivityNotFoundException e) {
+                        ;
+                    }
                 }
 
                 // Try LG's BS alternate
@@ -403,6 +449,8 @@ public class FragmentMain extends SmarterFragment {
                     backgroundScanViewHolder.setVisibility(View.GONE);
                     backgroundScanViewMiniHolder.setVisibility(View.GONE);
                 }
+
+                updatePermissionUi();
             }
         });
 
@@ -422,6 +470,10 @@ public class FragmentMain extends SmarterFragment {
     public void onResume() {
         super.onResume();
 
+        // Do nothing if we're suppressed
+        if (suppressedMultiuser)
+            return;
+
         if (serviceBinder != null) {
             serviceBinder.addCallback(guiCallback);
 
@@ -437,6 +489,8 @@ public class FragmentMain extends SmarterFragment {
                     backgroundScanViewMiniHolder.setVisibility(View.GONE);
                 }
             }
+
+            updatePermissionUi();
         }
 
         if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
@@ -453,6 +507,84 @@ public class FragmentMain extends SmarterFragment {
         eventBus.unregister(this);
     }
 
+    private void updatePermissionUi() {
+        // Do nothing if we're secondary user
+        if (suppressedMultiuser)
+            return;
+
+        // Do nothing if we can't reach the service, we'll get picked up when the bind completes
+        if (serviceBinder == null)
+            return;
+
+        if (!serviceBinder.getSufficientPermissions()) {
+            LogAlias.d("smarter", "fragmentmain, insufficient permissions, disabling toggle");
+
+            Activity ma = getActivity();
+
+            if (ma == null)
+                return;
+
+            mainEnableToggle.setClickable(false);
+            mainEnableToggle.setEnabled(false);
+            mainEnableToggle.setAlpha(0.5f);
+
+            permissionViewHolder.setVisibility(View.VISIBLE);
+        } else {
+            // Restore functionality if we get permission while we're gone
+            LogAlias.d("smarter", "fragmentmain, sufficient permissions now");
+            mainEnableToggle.setClickable(true);
+            mainEnableToggle.setEnabled(true);
+            mainEnableToggle.setAlpha(1.0f);
+            permissionViewHolder.setVisibility(View.GONE);
+
+            if (sharedPreferences.getBoolean(getString(R.string.pref_enable), true)) {
+                mainEnableToggle.setChecked(true);
+            } else {
+                mainEnableToggle.setChecked(false);
+            }
+        }
+    }
+
+    private void requestPermissionUi() {
+        Activity activity = getActivity();
+
+        if (ContextCompat.checkSelfPermission(activity,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                builder.setTitle(R.string.permission_dialog_title);
+                builder.setMessage(R.string.permission_dialog_location);
+
+                builder.setNegativeButton(R.string.dialog_button_permission_skip,
+                        new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Do nothing
+                    }
+                });
+
+                builder.setPositiveButton(R.string.dialog_button_permission, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // prompt again... is this right?
+                        requestPermissionUi();
+                    }
+                });
+
+                builder.create().show();
+            } else {
+                ActivityCompat.requestPermissions(activity,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        REQUEST_LOCATION_PERMISSION);
+            }
+        }
+    }
+
     private boolean setManageWifi(boolean b) {
         if (serviceBinder == null)
             return false;
@@ -464,6 +596,30 @@ public class FragmentMain extends SmarterFragment {
         eventBus.post(new EventPreferencesChanged());
 
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_LOCATION_PERMISSION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (serviceBinder != null) {
+                        serviceBinder.getSufficientPermissions();
+                        serviceBinder.configureWifiState();
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                updatePermissionUi();
+                            }
+                        });
+                    }
+                } else {
+                    // Do nothing, we still don't have permissions.
+                }
+                return;
+            }
+        }
     }
 
     @Override

@@ -393,4 +393,12 @@ public class SmarterWifiServiceBinder {
         return smarterService.getRunningAsSecondaryUser();
     }
 
+    public boolean getSufficientPermissions() {
+        if (smarterService == null) {
+            Log.e("smarter", "getSufficientPermissions while service null");
+            return false;
+        }
+
+        return smarterService.checkForPermissions();
+    }
 }

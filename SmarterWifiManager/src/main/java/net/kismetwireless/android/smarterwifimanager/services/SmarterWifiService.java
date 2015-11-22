@@ -1,5 +1,6 @@
 package net.kismetwireless.android.smarterwifimanager.services;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.SupplicantState;
@@ -27,6 +29,7 @@ import android.os.UserHandle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -67,7 +70,7 @@ public class SmarterWifiService extends Service {
     public enum ControlType {
         CONTROL_DISABLED, CONTROL_USER, CONTROL_TOWER, CONTROL_TOWERID, CONTROL_GEOFENCE,
         CONTROL_BLUETOOTH, CONTROL_TIME, CONTROL_SSIDBLACKLIST, CONTROL_AIRPLANE, CONTROL_TETHER,
-        CONTROL_SLEEPPOLICY, CONTROL_PAUSED, CONTROL_NEVERRUN
+        CONTROL_SLEEPPOLICY, CONTROL_PAUSED, CONTROL_NEVERRUN, CONTROL_PERMISSIONS
     }
 
     public enum WifiState {
@@ -79,6 +82,7 @@ public class SmarterWifiService extends Service {
         BLUETOOTH_BLOCKED, BLUETOOTH_ON, BLUETOOTH_OFF, BLUETOOTH_IDLE, BLUETOOTH_IGNORE
     }
 
+    private boolean sufficientPermissions = false;
     private boolean everBeenRun = false;
     private boolean shutdown = false;
 
@@ -212,6 +216,11 @@ public class SmarterWifiService extends Service {
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationBuilder = new NotificationCompat.Builder(context);
 
+        // Check permissions
+        if (checkForPermissions()) {
+            configurePermissionListeners();
+        }
+
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         alarmReceiver = new AlarmReceiver();
@@ -237,8 +246,6 @@ public class SmarterWifiService extends Service {
 
         onEvent(new EventPreferencesChanged());
 
-        telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CELL_INFO | PhoneStateListener.LISTEN_CELL_LOCATION);
-
         // Register the event bus
         eventBus.register(this);
 
@@ -247,7 +254,6 @@ public class SmarterWifiService extends Service {
 
         if (showNotification)
             notificationManager.notify(0, notificationBuilder.build());
-
 
         addCallback(new SmarterServiceCallback() {
             WifiState lastState = WifiState.WIFI_IDLE;
@@ -370,6 +376,14 @@ public class SmarterWifiService extends Service {
         // Force a receiver, doesn't seem to work from manifest
         LogAlias.d("smarter", "rxservice registering receiver");
         registerReceiver(WifiStateChangedReceiver, new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
+    }
+
+    private void configurePermissionListeners() {
+        telephonyManager.listen(phoneListener, PhoneStateListener.LISTEN_CELL_INFO | PhoneStateListener.LISTEN_CELL_LOCATION);
+    }
+
+    private void removePermissionListeners() {
+        telephonyManager.listen(phoneListener, 0);
     }
 
     private BroadcastReceiver WifiStateChangedReceiver = new BroadcastReceiver(){
@@ -799,6 +813,9 @@ public class SmarterWifiService extends Service {
 
     // Set current tower or fetch current tower
     private void handleCellLocation(CellLocationCommon location) {
+        if (!sufficientPermissions)
+            return;
+
         if (location == null) {
             location = new CellLocationCommon(telephonyManager.getCellLocation());
         }
@@ -814,8 +831,12 @@ public class SmarterWifiService extends Service {
 
     @Produce
     public EventCellTower produceCellLocation() {
-        LogAlias.d("smarter", "service produceCellLocation triggered");
-        return new EventCellTower(telephonyManager.getCellLocation());
+        if (sufficientPermissions) {
+            LogAlias.d("smarter", "service produceCellLocation triggered");
+            return new EventCellTower(telephonyManager.getCellLocation());
+        } else {
+            return null;
+        }
     }
 
     @Subscribe
@@ -902,6 +923,9 @@ public class SmarterWifiService extends Service {
 
     // Set the current tower and figure out what our tower state is
     private void setCurrentTower(CellLocationCommon curloc) {
+        if (!sufficientPermissions)
+            return;
+
         if (curloc == null) {
             curloc = new CellLocationCommon(telephonyManager.getCellLocation());
         }
@@ -1195,6 +1219,12 @@ public class SmarterWifiService extends Service {
         if (everBeenRun == false) {
             lastControlReason = ControlType.CONTROL_NEVERRUN;
             return WifiState.WIFI_IGNORE;
+        }
+
+        // We don't have permissions
+        if (sufficientPermissions == false) {
+            lastControlReason = ControlType.CONTROL_PERMISSIONS;
+            return WifiState.WIFI_IDLE;
         }
 
         // We're not looking at all
@@ -1683,4 +1713,26 @@ public class SmarterWifiService extends Service {
         }
     };
 
+    public boolean checkForPermissions() {
+        boolean newPermission = false;
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            newPermission = false;
+        } else {
+            newPermission = true;
+        }
+
+        // Toggle listeners if we need to because we've gained/lost permissions
+        if (newPermission && !sufficientPermissions) {
+            sufficientPermissions = true;
+            configurePermissionListeners();
+        }
+
+        if (!newPermission && sufficientPermissions) {
+            sufficientPermissions = false;
+            removePermissionListeners();
+        }
+
+        return sufficientPermissions;
+    }
 }
