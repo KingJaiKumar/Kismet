@@ -36,7 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Smarter Wi-Fi alarm");
-        wl.acquire();
+
 
         final boolean triggerShutdown;
         final boolean triggerBringup;
@@ -66,6 +66,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         // Make sure we exist before we run
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             public void run(SmarterWifiServiceBinder b) {
+                try {
+                    wl.acquire();
+                } catch (RuntimeException re) {
+                    LogAlias.d("smarter", "tried to lock wl, got runtime exception " + re);
+                }
+
                 if (triggerShutdown) {
                     b.getService().doWifiDisable();
                 } else if (triggerBringup) {
@@ -76,7 +82,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     b.configureTimerangeState();
                 }
 
-                wl.release();
+                try {
+                    wl.release();
+                } catch (RuntimeException re) {
+                    LogAlias.d("smarter", "tried to unlock wakelock, got runtime exception: " + re);
+                }
             }
         });
 
