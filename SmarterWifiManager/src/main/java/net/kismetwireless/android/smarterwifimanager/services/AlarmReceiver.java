@@ -69,7 +69,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 try {
                     wl.acquire();
                 } catch (RuntimeException re) {
-                    LogAlias.d("smarter", "tried to lock wl, got runtime exception " + re);
+                    LogAlias.d("smarter-alarmrx", "tried to lock wl, got runtime exception " + re);
                 }
 
                 if (triggerShutdown) {
@@ -85,7 +85,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 try {
                     wl.release();
                 } catch (RuntimeException re) {
-                    LogAlias.d("smarter", "tried to unlock wakelock, got runtime exception: " + re);
+                    LogAlias.d("smarter-rx", "tried to unlock wakelock, got runtime exception: " + re);
                 }
             }
         });
