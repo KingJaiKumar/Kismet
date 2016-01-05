@@ -525,6 +525,7 @@ public class FragmentMain extends SmarterFragment {
                 return;
 
             mainEnableToggle.setClickable(false);
+
             mainEnableToggle.setEnabled(false);
             mainEnableToggle.setAlpha(0.5f);
 
@@ -546,7 +547,7 @@ public class FragmentMain extends SmarterFragment {
     }
 
     private void requestPermissionUi() {
-        Activity activity = getActivity();
+        final Activity activity = getActivity();
 
         if (ContextCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -571,8 +572,9 @@ public class FragmentMain extends SmarterFragment {
                 builder.setPositiveButton(R.string.dialog_button_permission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // prompt again... is this right?
-                        requestPermissionUi();
+                        ActivityCompat.requestPermissions(activity,
+                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                REQUEST_LOCATION_PERMISSION);
                     }
                 });
 
