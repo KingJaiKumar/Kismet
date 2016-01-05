@@ -813,6 +813,8 @@ public class SmarterWifiService extends Service {
 
     // Set current tower or fetch current tower
     private void handleCellLocation(CellLocationCommon location) {
+        checkForPermissions();
+
         if (!sufficientPermissions)
             return;
 
@@ -831,6 +833,8 @@ public class SmarterWifiService extends Service {
 
     @Produce
     public EventCellTower produceCellLocation() {
+        checkForPermissions();
+
         if (sufficientPermissions) {
             LogAlias.d("smarter", "service produceCellLocation triggered");
             return new EventCellTower(telephonyManager.getCellLocation());
@@ -923,6 +927,8 @@ public class SmarterWifiService extends Service {
 
     // Set the current tower and figure out what our tower state is
     private void setCurrentTower(CellLocationCommon curloc) {
+        checkForPermissions();
+
         if (!sufficientPermissions)
             return;
 
@@ -1211,6 +1217,8 @@ public class SmarterWifiService extends Service {
     // WIFI_BLOCKED - Kill it immediately
     // WIFI_IDLE - Do nothing
     public WifiState getShouldWifiBeEnabled() {
+        checkForPermissions();
+
         WifiState curstate = getWifiState();
         SmarterSSID ssid = getCurrentSsid();
         boolean tethered = getWifiTethered();
@@ -1625,6 +1633,11 @@ public class SmarterWifiService extends Service {
 
     public boolean getRunningAsSecondaryUser() {
         int ret = 0;
+
+        // Prior to 4.3 we didn't have multiuser at all
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return false;
+        }
 
         UserHandle uh = android.os.Process.myUserHandle();
 
