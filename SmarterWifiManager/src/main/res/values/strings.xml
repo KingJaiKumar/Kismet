@@ -34,10 +34,10 @@
 
     <string name="learn_wifi_switch">Auto-Learn Locations</string>
 
-    <string name="ssid_blacklist_desc">These networks will not be remembered.  You can still connect to these networks normally, but SWM won\'t remember where you use them.</string>
+    <string name="ssid_blacklist_desc">These networks will not be tracked.  You can still connect to these networks normally, but SWM won\'t learn where you use them or turn on Wi-Fi automatically.</string>
 
-    <string name="bluetooth_blacklist_description_alt">Select Bluetooth devices (such as your car stereo) where you never use Wi-Fi.  Wi-Fi will be turned off while you are connected to checked devices.</string>
-    <string name="bluetooth_blacklist_description_checked">Wi-Fi will be turned off while you are connected to these checked Bluetooth devices.  To use Wi-Fi normally while connected to one of these devices, un-check it from the list.</string>
+    <string name="bluetooth_blacklist_description_alt">Select Bluetooth devices (such as your car stereo) where you never use Wi-Fi.  Wi-Fi will be always be turned off while you are connected to checked devices, even somewhere you normally use Wi-Fi.</string>
+    <string name="bluetooth_blacklist_description_checked">Wi-Fi will be turned off while you are connected to these checked Bluetooth devices, even somewhere you normally use Wi-Fi.  To use Wi-Fi normally while connected to one of these devices, un-check it from the list.</string>
 
     <string name="ignore_dialog_title">Ignore network?</string>
     <string name="ignore_dialog_desc">Would you like to also ignore this network in the future?  Ignored networks can be connected to normally, but their location will not be remembered.</string>

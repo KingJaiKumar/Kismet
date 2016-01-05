@@ -1,9 +1,9 @@
 package net.kismetwireless.android.smarterwifimanager.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +62,7 @@ public class FragmentSsidBlacklist extends SmarterFragment {
                                      final SmarterWifiService.WifiState controlstate, final SmarterWifiService.ControlType type) {
             super.wifiStateChanged(ssid, state, controlstate, type);
 
-            Activity ma = getActivity();
+            FragmentActivity ma = getActivity();
 
             if (ma != null) {
                 ma.runOnUiThread(new Runnable() {

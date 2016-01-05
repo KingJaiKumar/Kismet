@@ -30,6 +30,11 @@ DELETED
 
     <string name="bluetooth_blacklist_description_alt">
 
+CHANGED
+
+    <string name="bluetooth_blacklist_description_alt">
+    <string name="bluetooth_blacklist_description_checked">
+    <string name="ssid_blacklist_desc">
 
 ---- R69 ----
 
