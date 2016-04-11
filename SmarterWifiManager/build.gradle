@@ -1,4 +1,4 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 def VERSION_NUM = 77
 def VERSION_NAME = "2015.12.77"
