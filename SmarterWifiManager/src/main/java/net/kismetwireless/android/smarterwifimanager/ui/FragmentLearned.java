@@ -46,7 +46,7 @@ public class FragmentLearned extends SmarterFragment {
     private Handler timeHandler = new Handler();
 
     private void updateTowerList() {
-        ArrayList<SmarterSSID> ssids = serviceBinder.getSsidTowerlist();
+        ArrayList<SmarterSSID> ssids = serviceBinder.getSsidLearnedlist();
 
         if (ssids != null) {
             // Log.d("smarter", "ssid list size" + ssids.size());
@@ -153,7 +153,7 @@ public class FragmentLearned extends SmarterFragment {
                 ImageView trashImage = (ImageView) v.findViewById(R.id.ssidListDelete);
 
                 ssidView.setText(entry.getDisplaySsid());
-                towerView.setText(String.format(getString(R.string.learned_number), entry.getNumTowers()));
+                towerView.setText(String.format(getString(R.string.learned_number), entry.getNumTowers(), entry.getNumBssids()));
 
                 trashImage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -169,7 +169,7 @@ public class FragmentLearned extends SmarterFragment {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 serviceBinder.deleteSsidTowerMap(entry);
 
-                                lastSsidList = serviceBinder.getSsidTowerlist();
+                                lastSsidList = serviceBinder.getSsidLearnedlist();
                                 listAdapter.clear();
                                 listAdapter.addAll(lastSsidList);
                                 listAdapter.notifyDataSetChanged();
@@ -185,7 +185,7 @@ public class FragmentLearned extends SmarterFragment {
 
                                 serviceBinder.deleteSsidTowerMap(entry);
 
-                                lastSsidList = serviceBinder.getSsidTowerlist();
+                                lastSsidList = serviceBinder.getSsidLearnedlist();
                                 listAdapter.clear();
                                 listAdapter.addAll(lastSsidList);
 

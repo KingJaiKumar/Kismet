@@ -78,7 +78,7 @@
     <string name="title_activity_timerange">時間の範囲</string>
     <string name="title_activity_learned">学習済ネットワーク</string>
 
-    <string name="learned_number">%1$d 基地局学習済</string>
+    <string name="learned_number">Learned %1$d towers, %2$d access points</string>
 
     <string name="timerange_no_ranges">時間の範囲が設定されていません</string>
     <string name="timerange_no_effect">時間の範囲でコントロールしません</string>

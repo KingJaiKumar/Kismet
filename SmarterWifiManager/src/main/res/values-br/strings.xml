@@ -78,8 +78,6 @@
     <string name="title_activity_timerange">Intervalos de Tempo</string>
     <string name="title_activity_learned">Redes Guardadas</string>
 
-    <string name="learned_number">%1$d antenas guardadas</string>
-
     <string name="timerange_no_ranges">Não há intervalos de tempo configurados</string>
     <string name="timerange_no_effect">O intervalo de tempo não controla nada</string>
     <string name="timerange_no_days">Este intervalo de tempo não está associado a nenhum dia</string>
@@ -149,5 +147,6 @@
 
     <string name="main_forget_text">Parece que você já usou Wi-Fi aqui antes, mas não foi possível encontrar uma rede no momento. Você pode esquecer esta localização para manter o Wi-Fi desligado aqui no futuro.</string>
     <string name="main_forget_button">Esquecer localização</string>
+    <string name="learned_number">Learned %1$d towers, %2$d access points</string>
 
 </resources>

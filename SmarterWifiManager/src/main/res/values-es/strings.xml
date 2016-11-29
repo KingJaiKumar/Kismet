@@ -78,7 +78,7 @@
     <string name="title_activity_timerange">Rangos horarios</string>
     <string name="title_activity_learned">Redes guardadas</string>
 
-    <string name="learned_number">%1$d torres guardadas</string>
+    <string name="learned_number">Learned %1$d towers, %2$d access points</string>
 
     <string name="timerange_no_ranges">No se configuraron rangos horarios.</string>
     <string name="timerange_no_effect">El rango horario no controla nada</string>

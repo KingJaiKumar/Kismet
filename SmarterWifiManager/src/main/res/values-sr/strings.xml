@@ -78,7 +78,7 @@
     <string name="title_activity_timerange">Временски распони</string>
     <string name="title_activity_learned">Научене мреже</string>
 
-    <string name="learned_number">Научено %1$d базних станица</string>
+    <string name="learned_number">Learned %1$d towers, %2$d access points</string>
 
     <string name="timerange_no_ranges">Нема постављених временских распона</string>
     <string name="timerange_no_effect">Временски распон не контролише ништа</string>

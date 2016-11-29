@@ -78,7 +78,7 @@
     <string name="title_activity_timerange">Zeitspannen</string>
     <string name="title_activity_learned">Gespeicherte Netzwerke</string>
 
-    <string name="learned_number">%1$d Sendemasten gespeichert</string>
+    <string name="learned_number">Learned %1$d towers, %2$d access points</string>
 
     <string name="timerange_no_ranges">Keine Zeitspannen konfiguriert</string>
     <string name="timerange_no_effect">Zeitspanne regelt nichts</string>

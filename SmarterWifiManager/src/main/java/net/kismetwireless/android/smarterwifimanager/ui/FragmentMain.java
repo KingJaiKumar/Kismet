@@ -2,13 +2,11 @@ package net.kismetwireless.android.smarterwifimanager.ui;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -57,9 +55,11 @@ public class FragmentMain extends SmarterFragment {
 
     private View pauseSwmHolder, pauseSwmButton;
     private View forgetViewHolder, forgetButton;
-    private View backgroundScanViewHolder, backgroundScanButton, backgroundScanHideButton;
+    // private View backgroundScanViewHolder, backgroundScanButton, backgroundScanHideButton;
     private View opennetworkViewHolder, opennetworkButton;
-    private View backgroundScanViewMiniHolder, backgroundScanMiniButton;
+    private TextView opennetworkText;
+
+    // private View backgroundScanViewMiniHolder, backgroundScanMiniButton;
     private View multiuserHolder;
     private View permissionViewHolder, permissonButton;
 
@@ -137,7 +137,7 @@ public class FragmentMain extends SmarterFragment {
                             iconResource = R.drawable.main_swm_bluetooth;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TIME)
                             iconResource = R.drawable.main_swm_time;
-                        else if (type == SmarterWifiService.ControlType.CONTROL_TOWER)
+                        else if (type == SmarterWifiService.ControlType.CONTROL_TOWER || type == SmarterWifiService.ControlType.CONTROL_BGSCAN)
                             iconResource = R.drawable.main_swm_cell;
                         else
                             iconResource = R.drawable.main_swm_disabled;
@@ -161,7 +161,7 @@ public class FragmentMain extends SmarterFragment {
                             iconResource = R.drawable.main_swm_bluetooth;
                         else if (type == SmarterWifiService.ControlType.CONTROL_TIME)
                             iconResource = R.drawable.main_swm_time;
-                        else if (type == SmarterWifiService.ControlType.CONTROL_TOWER)
+                        else if (type == SmarterWifiService.ControlType.CONTROL_TOWER || type == SmarterWifiService.ControlType.CONTROL_BGSCAN)
                             iconResource = R.drawable.main_swm_cell;
                         else if (type == SmarterWifiService.ControlType.CONTROL_PAUSED)
                             iconResource = R.drawable.main_swm_add_waiting;
@@ -310,17 +310,25 @@ public class FragmentMain extends SmarterFragment {
             }
         });
 
+        /*
         backgroundScanViewHolder = mainView.findViewById(R.id.layoutMainBackgroundAlertHolder);
         backgroundScanButton = mainView.findViewById(R.id.textViewBackgroundAlertButton);
         backgroundScanHideButton = mainView.findViewById(R.id.textViewBackgroundIgnoreButton);
 
         backgroundScanViewMiniHolder = mainView.findViewById(R.id.layoutMainSmallBackgroundHolder);
         backgroundScanMiniButton = mainView.findViewById(R.id.textButtonBackgroundMore);
+        */
 
         opennetworkViewHolder= mainView.findViewById(R.id.layoutMainOpenHolder);
         opennetworkButton = mainView.findViewById(R.id.textViewOpenAlertButton);
+        opennetworkText = (TextView) mainView.findViewById(R.id.textViewOpenAlert);
+
+        if (sharedPreferences.getBoolean(getString(R.string.prefs_item_ignore_open), false)) {
+            opennetworkText.setText(R.string.main_open_nontracking_text);
+        }
 
         // Open the advanced settings
+        /*
         backgroundScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -385,6 +393,7 @@ public class FragmentMain extends SmarterFragment {
                 backgroundScanViewHolder.setVisibility(View.VISIBLE);
             }
         });
+        */
 
         learnedView = mainView.findViewById(R.id.layoutMainNavLearned);
         ignoreView = mainView.findViewById(R.id.layoutMainNavIgnored);
@@ -437,6 +446,7 @@ public class FragmentMain extends SmarterFragment {
 
                 serviceBinder.addCallback(guiCallback);
 
+                /*
                 if (serviceBinder.getWifiAlwaysScanning()) {
                     if (sharedPreferences.getBoolean("MAIN_HIDE_BG_SCAN", false)) {
                         backgroundScanViewMiniHolder.setVisibility(View.VISIBLE);
@@ -449,6 +459,7 @@ public class FragmentMain extends SmarterFragment {
                     backgroundScanViewHolder.setVisibility(View.GONE);
                     backgroundScanViewMiniHolder.setVisibility(View.GONE);
                 }
+                */
 
                 updatePermissionUi();
             }
@@ -477,6 +488,7 @@ public class FragmentMain extends SmarterFragment {
         if (serviceBinder != null) {
             serviceBinder.addCallback(guiCallback);
 
+            /*
             if (backgroundScanViewHolder != null) {
                 if (serviceBinder.getWifiAlwaysScanning()) {
                     if (sharedPreferences.getBoolean("MAIN_HIDE_BG_SCAN", false)) {
@@ -488,6 +500,11 @@ public class FragmentMain extends SmarterFragment {
                     backgroundScanViewHolder.setVisibility(View.GONE);
                     backgroundScanViewMiniHolder.setVisibility(View.GONE);
                 }
+            }
+            */
+
+            if (sharedPreferences.getBoolean(getString(R.string.prefs_item_ignore_open), false)) {
+                opennetworkText.setText(R.string.main_open_nontracking_text);
             }
 
             updatePermissionUi();
@@ -646,6 +663,12 @@ public class FragmentMain extends SmarterFragment {
                     mainEnableToggle.setChecked(true);
                 } else {
                     mainEnableToggle.setChecked(false);
+                }
+
+                if (sharedPreferences.getBoolean(getString(R.string.prefs_item_ignore_open), false)) {
+                    opennetworkText.setText(R.string.main_open_nontracking_text);
+                } else {
+                    opennetworkText.setText(R.string.main_open_text);
                 }
             }
         });

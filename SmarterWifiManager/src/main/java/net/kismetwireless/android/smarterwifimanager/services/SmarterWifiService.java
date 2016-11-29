@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.SupplicantState;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -68,9 +69,9 @@ public class SmarterWifiService extends Service {
     // WIFISTATE IGNORE + CONTROL RANGE - no valid towers no other conditions
 
     public enum ControlType {
-        CONTROL_DISABLED, CONTROL_USER, CONTROL_TOWER, CONTROL_TOWERID, CONTROL_GEOFENCE,
+        CONTROL_DISABLED, CONTROL_USER, CONTROL_TOWER, CONTROL_TOWERID, CONTROL_BGSCAN, CONTROL_GEOFENCE,
         CONTROL_BLUETOOTH, CONTROL_TIME, CONTROL_SSIDBLACKLIST, CONTROL_AIRPLANE, CONTROL_TETHER,
-        CONTROL_SLEEPPOLICY, CONTROL_PAUSED, CONTROL_NEVERRUN, CONTROL_PERMISSIONS
+        CONTROL_SLEEPPOLICY, CONTROL_PAUSED, CONTROL_NEVERRUN, CONTROL_PERMISSIONS, CONTROL_OPEN,
     }
 
     public enum WifiState {
@@ -105,6 +106,9 @@ public class SmarterWifiService extends Service {
     private boolean performTowerPurges = false;
     private boolean aggressiveTowerCheck = false;
     private int purgeTowerHours = 168;
+    private boolean trackOpenNetworks = true;
+    private boolean useWifiScan = false;
+    private boolean aggressiveWifiScan = false;
 
     private WifiState userOverrideState = WifiState.WIFI_IGNORE;
     private WifiState curState = WifiState.WIFI_IGNORE;
@@ -252,6 +256,18 @@ public class SmarterWifiService extends Service {
         // Update the time range database which also fires BT and Wifi configurations
         configureTimerangeState();
 
+        // Set the initial wifi info
+        SmarterSSID ssid = getCurrentSsid();
+        if (ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || trackOpenNetworks)) {
+            LogAlias.d("smarter", "Logging startup BSSID " + ssid.getBssid() + " for " + ssid.getSsid());
+            dbSource.mapBssid(ssid);
+        }
+
+        if (getWifiBgScanCapable()) {
+            LogAlias.d("smarter", "Starting initial background scan");
+            wifiManager.startScan();
+        }
+
         if (showNotification)
             notificationManager.notify(0, notificationBuilder.build());
 
@@ -310,6 +326,10 @@ public class SmarterWifiService extends Service {
                         reasonTextResource = R.string.notification_swm_disabled;
                     } else if (type == ControlType.CONTROL_NEVERRUN) {
                         reasonTextResource = R.string.notification_wifi_neverrun;
+                    } else if (type == ControlType.CONTROL_OPEN) {
+                        reasonTextResource = R.string.notification_openwifi;
+                    } else if (type == ControlType.CONTROL_TETHER) {
+                        reasonTextResource = R.string.notification_tethered;
                     }
 
                 } else if (state == WifiState.WIFI_OFF) {
@@ -340,7 +360,8 @@ public class SmarterWifiService extends Service {
                     } else if (type == ControlType.CONTROL_TIME) {
                         wifiIconId = R.drawable.ic_launcher_notification_clock;
                         reasonTextResource = R.string.notification_wifi_time;
-                    } else if (type == ControlType.CONTROL_TOWER) {
+                    } else if (type == ControlType.CONTROL_TOWER || type == ControlType.CONTROL_BGSCAN) {
+                        // TODO make its own icon
                         wifiIconId = R.drawable.ic_launcher_notification_cell;
                         reasonTextResource = R.string.notification_learning;
                     } else {
@@ -526,6 +547,8 @@ public class SmarterWifiService extends Service {
     public void onEvent(EventPreferencesChanged ev) {
         everBeenRun = preferences.getBoolean("everbeenrun", false);
 
+        trackOpenNetworks = preferences.getBoolean(getString(R.string.prefs_item_ignore_open), false);
+
         learnWifi = preferences.getBoolean(getString(R.string.pref_learn), true);
 
         if (getRunningAsSecondaryUser()) {
@@ -546,6 +569,10 @@ public class SmarterWifiService extends Service {
             notificationManager.cancel(0);
         else
             notificationManager.notify(0, notificationBuilder.build());
+
+        // Get wifi config
+        useWifiScan = preferences.getBoolean(getString(R.string.prefs_item_use_background), false);
+        aggressiveWifiScan = preferences.getBoolean(getString(R.string.prefs_item_aggressive_wifi_background), false);
 
         // Always perform tower purging / location management
         // performTowerPurges = preferences.getBoolean(getString(R.string.prefs_item_towermaintenance), true);
@@ -854,6 +881,16 @@ public class SmarterWifiService extends Service {
 
         worldState.setWifiInfo(e.getWifiInfo());
 
+        // Get the SSID and encryption
+        SmarterSSID ssid = getCurrentSsid();
+
+        // Log the BSSID if we're able to
+        if (ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || trackOpenNetworks)) {
+            LogAlias.d("smarter", "Logging BSSID " + ssid.getBssid() + " for " + ssid.getSsid());
+            dbSource.mapBssid(ssid);
+        }
+
+
         configureWifiState();
     }
 
@@ -1057,6 +1094,8 @@ public class SmarterWifiService extends Service {
             return;
         }
 
+        // If we're on/idle, allow it to be shut down unless blocked.  If we're
+        // *connected*, don't let it shut us down
         if (curState == WifiState.WIFI_ON || curState == WifiState.WIFI_IDLE) {
             if (targetState == WifiState.WIFI_BLOCKED) {
                 LogAlias.d("smarter", "Target state: Blocked, shutting down wifi now, " + lastControlReason);
@@ -1217,23 +1256,23 @@ public class SmarterWifiService extends Service {
     // WIFI_BLOCKED - Kill it immediately
     // WIFI_IDLE - Do nothing
     public WifiState getShouldWifiBeEnabled() {
-        checkForPermissions();
-
-        WifiState curstate = getWifiState();
-        SmarterSSID ssid = getCurrentSsid();
-        boolean tethered = getWifiTethered();
-
         // We've never been run
         if (everBeenRun == false) {
             lastControlReason = ControlType.CONTROL_NEVERRUN;
             return WifiState.WIFI_IGNORE;
         }
 
+        checkForPermissions();
+
         // We don't have permissions
         if (sufficientPermissions == false) {
             lastControlReason = ControlType.CONTROL_PERMISSIONS;
             return WifiState.WIFI_IDLE;
         }
+
+        WifiState curstate = getWifiState();
+        SmarterSSID ssid = getCurrentSsid();
+        boolean tethered = getWifiTethered();
 
         // We're not looking at all
         if (proctorWifi == false) {
@@ -1312,43 +1351,69 @@ public class SmarterWifiService extends Service {
             return WifiState.WIFI_BLOCKED;
         }
 
+        // If we're ignoring this SSID
         if (curstate == WifiState.WIFI_ON && (ssid != null && ssid.isBlacklisted())) {
             LogAlias.d("smarter", "Connected to blacklisted SSID, ignoring wifi");
             lastControlReason = ControlType.CONTROL_SSIDBLACKLIST;
             return WifiState.WIFI_IGNORE;
         }
 
-        if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_INVALID) {
-            LogAlias.d("smarter", "Connected to invalid tower, ignoring wifi state");
-            lastControlReason = ControlType.CONTROL_TOWER;
+        // If we're ignoring unencrypted SSIDs
+        if (curstate == WifiState.WIFI_ON && (ssid != null && ssid.isOpen() && !trackOpenNetworks)) {
+            LogAlias.d("smarter", "Connected to open SSID, ignoring wifi");
+            lastControlReason = ControlType.CONTROL_OPEN;
             return WifiState.WIFI_IGNORE;
         }
 
-        if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_BLOCK) {
-            LogAlias.d("smarter", "Connected to blocked tower " + worldState.getCellLocation().getTowerId() + ", wifi should be off");
-            lastControlReason = ControlType.CONTROL_TOWERID;
-            return WifiState.WIFI_BLOCKED;
-        }
+        // If we use wifi scan mode...
+        if (useWifiScan) {
+            // If we're in wifi mode look at the bgscan
+            if (worldState.getEnableViaScan()) {
+                LogAlias.d("smarter", "in range of bssid we've used before, wifi should be on.");
+                lastControlReason = ControlType.CONTROL_BGSCAN;
+                return WifiState.WIFI_ON;
+            } else {
+                LogAlias.d("smarter", "Shouldwifibeenabled - Not in range of any BSSIDs we've used before.");
+                List<ScanResult> sr = worldState.getScan_results();
+                LogAlias.d("smarter", "We knew about " + sr.size() + " BSSIDs");
+            }
 
-        if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_ENABLE) {
-            LogAlias.d("smarter", "Connected to enable tower " + worldState.getCellLocation().getTowerId() + ", wifi should be on");
+            lastControlReason = ControlType.CONTROL_BGSCAN;
+        } else {
+            if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_INVALID) {
+                LogAlias.d("smarter", "Connected to invalid tower, ignoring wifi state");
+                lastControlReason = ControlType.CONTROL_TOWER;
+                return WifiState.WIFI_IGNORE;
+            }
+
+            if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_BLOCK) {
+                LogAlias.d("smarter", "Connected to blocked tower " + worldState.getCellLocation().getTowerId() + ", wifi should be off");
+                lastControlReason = ControlType.CONTROL_TOWERID;
+                return WifiState.WIFI_BLOCKED;
+            }
+
+            // If we're in tower mode look at the towers
+            if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_ENABLE) {
+                LogAlias.d("smarter", "Connected to enable tower " + worldState.getCellLocation().getTowerId() + ", wifi should be on");
+                lastControlReason = ControlType.CONTROL_TOWER;
+                return WifiState.WIFI_ON;
+            }
+
+            if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_UNKNOWN && curstate == WifiState.WIFI_ON) {
+                LogAlias.d("smarter", "Connected to unknown tower " + worldState.getCellLocation().getTowerId() + ", wifi is enabled, keep wifi on");
+                lastControlReason = ControlType.CONTROL_TOWER;
+                return WifiState.WIFI_ON;
+            }
+
+            if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_UNKNOWN && curstate == WifiState.WIFI_IDLE) {
+                LogAlias.d("smarter", "Connected to unknown tower " + worldState.getCellLocation().getTowerId() + ", wifi is idle, we should turn it off.");
+                lastControlReason = ControlType.CONTROL_TOWER;
+                return WifiState.WIFI_OFF;
+            }
+
             lastControlReason = ControlType.CONTROL_TOWER;
-            return WifiState.WIFI_ON;
         }
 
-        if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_UNKNOWN && curstate == WifiState.WIFI_ON) {
-            LogAlias.d("smarter", "Connected to unknown tower " + worldState.getCellLocation().getTowerId() + ", wifi is enabled, keep wifi on");
-            lastControlReason = ControlType.CONTROL_TOWER;
-            return WifiState.WIFI_ON;
-        }
-
-        if (worldState.getCellTowerType() == CellLocationCommon.TowerType.TOWER_UNKNOWN && curstate == WifiState.WIFI_IDLE) {
-            LogAlias.d("smarter", "Connected to unknown tower " + worldState.getCellLocation().getTowerId() + ", wifi is idle, we should turn it off.");
-            lastControlReason = ControlType.CONTROL_TOWER;
-            return WifiState.WIFI_OFF;
-        }
-
-        lastControlReason = ControlType.CONTROL_TOWER;
         return WifiState.WIFI_OFF;
     }
 
@@ -1400,8 +1465,15 @@ public class SmarterWifiService extends Service {
     public SmarterSSID getCurrentSsid() {
         SmarterSSID curssid = null;
 
+        // Populate an intelligently filled in SSID
+        if (getWifiState() == WifiState.WIFI_ON) {
+            curssid = new SmarterSSID(wifiManager, dbSource);
+        }
+
+        /*
         if (getWifiState() == WifiState.WIFI_ON)
             curssid = dbSource.getSsidBlacklisted(wifiManager.getConnectionInfo().getSSID());
+            */
 
         return curssid;
     }
@@ -1446,12 +1518,16 @@ public class SmarterWifiService extends Service {
         } else if (curState == WifiState.WIFI_IGNORE) {
             if (lastControlReason == ControlType.CONTROL_AIRPLANE) {
                 return getString(R.string.simple_explanation_airplane);
+            } else if (lastControlReason == ControlType.CONTROL_TETHER) {
+                return getString(R.string.simple_explanation_tether);
             } else if (lastControlReason == ControlType.CONTROL_SSIDBLACKLIST) {
                 return getString(R.string.simple_explanation_blackssid);
             } else if (lastControlReason == ControlType.CONTROL_DISABLED) {
                 return getString(R.string.simple_explanation_disabled);
             } else if (lastControlReason == ControlType.CONTROL_NEVERRUN) {
                 return getString(R.string.simple_explanation_neverrun);
+            } else if (lastControlReason == ControlType.CONTROL_OPEN) {
+                return getString(R.string.simple_explanation_openssid);
             }
         } else if (curState == WifiState.WIFI_ON) {
             if (lastControlReason == ControlType.CONTROL_TIME) {
@@ -1492,6 +1568,8 @@ public class SmarterWifiService extends Service {
                         currentTimeRange.getEndMinute());
             } else if (lastControlReason == ControlType.CONTROL_TOWER) {
                 return getString(R.string.simple_explanation_off);
+            } else if (lastControlReason == ControlType.CONTROL_BGSCAN) {
+                return getString(R.string.simple_explanation_bgscan);
             }
         } else if (curState == WifiState.WIFI_IDLE) {
             return getString(R.string.simple_explanation_idle);
@@ -1569,7 +1647,7 @@ public class SmarterWifiService extends Service {
         configureWifiState();
     }
 
-    public ArrayList<SmarterSSID> getSsidTowerlist() {
+    public ArrayList<SmarterSSID> getSsidLearnedlist() {
         return dbSource.getMappedSSIDList();
     }
 
@@ -1663,6 +1741,15 @@ public class SmarterWifiService extends Service {
         return true;
     }
 
+    // Is this version of android capable of background scanning at all?
+    public boolean getWifiBgScanCapable() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            return false;
+        }
+
+        return true;
+    }
+
     public boolean getWifiAlwaysScanning() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             LogAlias.d("smarter", "getwifiscanning: " + wifiManager.isScanAlwaysAvailable());
@@ -1747,5 +1834,11 @@ public class SmarterWifiService extends Service {
         }
 
         return sufficientPermissions;
+    }
+
+    public void handleWifiScan() {
+        LogAlias.d("smarter", "got wifi scan event");
+        List<ScanResult> sr = wifiManager.getScanResults();
+        worldState.setScanResults(sr);
     }
 }

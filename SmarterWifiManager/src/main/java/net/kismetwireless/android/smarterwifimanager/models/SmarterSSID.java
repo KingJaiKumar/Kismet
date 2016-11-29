@@ -1,5 +1,11 @@
 package net.kismetwireless.android.smarterwifimanager.models;
 
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+
+import java.util.List;
+
 /**
  * Created by dragorn on 9/18/13.
  *
@@ -10,11 +16,19 @@ package net.kismetwireless.android.smarterwifimanager.models;
  *
  */
 public class SmarterSSID {
+    public static int CRYPT_UNKNOWN = 0;
+    public static int CRYPT_OPEN = 1;
+    public static int CRYPT_WEP = 2;
+    public static int CRYPT_GOOD = 3;
+
     private String ssid;
     private boolean blacklisted;
     private long bldbid;
     private int numtowers;
+    private int numbssids;
     private long mapdbid;
+    private int crypt;
+    private String bssid;
 
     public SmarterSSID() {
         mapdbid = -1;
@@ -29,6 +43,38 @@ public class SmarterSSID {
         mapdbid = -1;
     }
 
+    // Create using the current SSID
+    public SmarterSSID(WifiManager m, SmarterDBSource dbSource) {
+        WifiInfo wi = m.getConnectionInfo();
+        int ni = wi.getNetworkId();
+        List<WifiConfiguration> wcl = m.getConfiguredNetworks();
+
+        setBssid(wi.getBSSID());
+        setSsid((wi.getSSID()));
+
+        for (WifiConfiguration c : wcl) {
+            if (c.networkId == ni) {
+                if (c.allowedKeyManagement.equals(WifiConfiguration.KeyMgmt.NONE)) {
+                    crypt = CRYPT_OPEN;
+                }
+
+                if (c.allowedGroupCiphers.get(WifiConfiguration.GroupCipher.WEP40) ||
+                        c.allowedGroupCiphers.get(WifiConfiguration.GroupCipher.WEP104)) {
+                    crypt = CRYPT_WEP;
+                }
+
+                if (c.allowedGroupCiphers.get(WifiConfiguration.GroupCipher.CCMP) ||
+                        c.allowedGroupCiphers.get(WifiConfiguration.GroupCipher.TKIP)) {
+                    crypt = CRYPT_GOOD;
+                }
+
+                break;
+            }
+        }
+
+        dbSource.fillSsidBlacklisted(this);
+    }
+
     public SmarterSSID(String ssid, int numtowers, long mapdbid) {
         this.ssid = ssid;
         this.numtowers = numtowers;
@@ -37,10 +83,21 @@ public class SmarterSSID {
         bldbid = -1;
     }
 
+    public SmarterSSID(String ssid, int numbssids) {
+        this.ssid = ssid;
+        this.numbssids = numbssids;
+        this.mapdbid = -1;
+        this.bldbid = -1;
+    }
+
+    public void setCrypt(int c) { crypt = c; }
+    public int getCrypt() { return crypt; }
+    public boolean isEncrypted() { return crypt == CRYPT_GOOD; }
+    public boolean isOpen() { return crypt != CRYPT_GOOD; }
+
     public void setSsid(String s) {
         ssid = s;
     }
-
     public String getSsid() {
         return ssid;
     }
@@ -54,9 +111,14 @@ public class SmarterSSID {
         return ssid;
     }
 
+    public void setBssid(String b) { bssid = b; }
+    public String getBssid() { return bssid; }
+
     public void setNumTowers(int nt) {
         numtowers = nt;
     }
+
+    public void setNumBssids(int nb) { numbssids = nb; }
 
     public void setMapDbId(long id) {
         mapdbid = id;
@@ -65,6 +127,8 @@ public class SmarterSSID {
     public int getNumTowers() {
         return numtowers;
     }
+
+    public int getNumBssids() { return numbssids; }
 
     public long getMapDbId() {
         return mapdbid;

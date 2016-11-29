@@ -55,6 +55,13 @@ public class SmarterWifiDBHelper extends SQLiteOpenHelper {
     public static final String COL_TIMERANGE_CONTROL_BT = "controlbt";
     public static final String COL_TIMERANGE_ENABLE_BT = "enablebt";
 
+    public static final String TABLE_SSID_WIFI_MAP = "ssidwifimap";
+    public static final String COL_WIFIMAP_ID = "_id";
+    public static final String COL_WIFIMAP_SSIDID = "ssidid";
+    public static final String COL_WIFIMAP_BSSID = "bssid";
+    public static final String COL_WIFIMAP_TIME_S = "timesec";
+    public static final String COL_WIFIMAP_TIME_LAST_S = "lasttimesec";
+
     public static final String CREATE_SSID_TABLE =
             "CREATE TABLE " + TABLE_SSID + " (" +
                     COL_SSID_ID + " integer primary key autoincrement, " +
@@ -110,8 +117,17 @@ public class SmarterWifiDBHelper extends SQLiteOpenHelper {
                     COL_TIMERANGE_ENABLE_BT + " int" +
                     ");";
 
+    public static final String CREATE_SSID_WIFI_MAP_TABLE =
+            "CREATE TABLE " + TABLE_SSID_WIFI_MAP + " (" +
+                    COL_WIFIMAP_ID + " integer primary key autoincrement, " +
+                    COL_WIFIMAP_SSIDID + " int, " +
+                    COL_WIFIMAP_BSSID + " text, " +
+                    COL_WIFIMAP_TIME_S + " int," +
+                    COL_WIFIMAP_TIME_LAST_S + " int" +
+                    ");";
+
     public static final String DATABASE_NAME = "smartermap.db";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 12;
 
     public SmarterWifiDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -125,6 +141,7 @@ public class SmarterWifiDBHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_SSID_BLACKLIST_TABLE);
         database.execSQL(CREATE_BLUETOOTH_BLACKLIST_TABLE);
         database.execSQL(CREATE_TIMERANGE_TABLE);
+        database.execSQL(CREATE_SSID_WIFI_MAP_TABLE);
     }
 
     @Override
@@ -159,6 +176,11 @@ public class SmarterWifiDBHelper extends SQLiteOpenHelper {
             LogAlias.d("smarter", "adding last timesec column");
             db.execSQL("ALTER TABLE " + TABLE_CELL + " ADD COLUMN " + COL_CELL_TIME_LAST_S + " int;");
             db.execSQL("ALTER TABLE " + TABLE_SSID_CELL_MAP + " ADD COLUMN " + COL_SCMAP_TIME_LAST_S + " int;");
+        }
+
+        if (oldVersion < 12) {
+            LogAlias.d("smarter", "adding wifi bgscan table");
+            db.execSQL(CREATE_SSID_WIFI_MAP_TABLE);
         }
 
     }

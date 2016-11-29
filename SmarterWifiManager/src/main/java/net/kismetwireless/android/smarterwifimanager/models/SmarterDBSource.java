@@ -185,6 +185,38 @@ public class SmarterDBSource {
         return id;
     }
 
+    public long getBssidMapId(long sid, String bssid) {
+        long id = -1;
+
+        final String[] idcol = { SmarterWifiDBHelper.COL_WIFIMAP_ID };
+
+        String compare = SmarterWifiDBHelper.COL_WIFIMAP_SSIDID + "=? AND " + SmarterWifiDBHelper.COL_WIFIMAP_BSSID + "=?";
+        String[] args = { Long.toString(sid), bssid };
+
+        Cursor c = dataBase.query(SmarterWifiDBHelper.TABLE_SSID_WIFI_MAP, idcol, compare, args, null, null, null);
+
+        c.moveToFirst();
+
+        if (c.getCount() <= 0) {
+            c.close();
+            return -1;
+        }
+
+        id = c.getLong(0);
+
+        c.close();
+
+        return id;
+    }
+
+    // Fill in blacklisted info about a SSID
+    public void fillSsidBlacklisted(SmarterSSID ssid) {
+        SmarterSSID s = getSsidBlacklisted(ssid.getSsid());
+
+        ssid.setBlacklisted(s.isBlacklisted());
+        ssid.setBlacklistDatabaseId(s.getBlacklistDatabaseId());
+    }
+
     public SmarterSSID getSsidBlacklisted(String ssid) {
         boolean bl = false;
         long id = -1;
@@ -303,6 +335,41 @@ public class SmarterDBSource {
         e.setEnabled(enable);
     }
 
+    public void mapBssid(SmarterSSID ssid) {
+        if (ssid == null)
+            return;
+
+        long sid = getSsidDbId(ssid.getSsid());
+
+        long mid = getBssidMapId(sid, ssid.getBssid());
+
+        LogAlias.d("smarter", "Mapping BSSID from " + ssid.toString() + " sid " + sid + " mid " + mid);
+
+        ContentValues cv = new ContentValues();
+
+        if (mid < 0) {
+            cv.put(SmarterWifiDBHelper.COL_WIFIMAP_SSIDID, sid);
+            cv.put(SmarterWifiDBHelper.COL_WIFIMAP_BSSID, ssid.getBssid());
+        }
+
+        cv.put(SmarterWifiDBHelper.COL_WIFIMAP_TIME_LAST_S, System.currentTimeMillis() / 1000);
+
+        String compare = SmarterWifiDBHelper.COL_WIFIMAP_SSIDID + "=? AND " + SmarterWifiDBHelper.COL_WIFIMAP_BSSID + "=?";
+        String[] args = {Long.toString(sid), ssid.getBssid()};
+
+        dataBase.beginTransaction();
+        if (mid < 0) {
+            LogAlias.d("smarter", "Mapping new bssid " + ssid.toString());
+            cv.put(SmarterWifiDBHelper.COL_WIFIMAP_TIME_S, System.currentTimeMillis() / 1000);
+            dataBase.insert(SmarterWifiDBHelper.TABLE_SSID_WIFI_MAP, null, cv);
+        } else {
+            LogAlias.d("smarter", "Updating bssid " + ssid.toString());
+            dataBase.update(SmarterWifiDBHelper.TABLE_SSID_WIFI_MAP, cv, compare, args);
+        }
+        dataBase.setTransactionSuccessful();
+        dataBase.endTransaction();
+    }
+
     public void mapTower(SmarterSSID ssid, long towerid) {
         if (ssid == null)
             return;
@@ -383,6 +450,40 @@ public class SmarterDBSource {
         return rc;
     }
 
+    public int getNumBssidsInSsid(long ssidid) {
+        String[] cols = {SmarterWifiDBHelper.COL_WIFIMAP_BSSID};
+
+        String compare = SmarterWifiDBHelper.COL_WIFIMAP_SSIDID + "=?";
+        String[] args= {Long.toString(ssidid)};
+
+        Cursor c = dataBase.query(SmarterWifiDBHelper.TABLE_SSID_WIFI_MAP, cols, compare, args, null, null, null);
+
+        c.moveToFirst();
+
+        int rc = c.getCount();
+
+        c.close();
+
+        return rc;
+    }
+
+    // Find out if we should enable wifi b/c we know about this bssid
+    public boolean getScanBssidEnable(String bssid) {
+        final String[] idcol = {SmarterWifiDBHelper.COL_WIFIMAP_BSSID};
+
+        String compare = SmarterWifiDBHelper.COL_WIFIMAP_BSSID + "=?";
+        String[] args = {bssid};
+
+        Cursor c = dataBase.query(SmarterWifiDBHelper.TABLE_SSID_WIFI_MAP, idcol, compare, args, null, null, null);
+
+        c.moveToFirst();
+
+        boolean r = (c.getCount() > 0);
+        c.close();
+
+        return r;
+    }
+
     public ArrayList<SmarterSSID> getMappedSSIDList() {
         ArrayList<SmarterSSID> retlist = new ArrayList<SmarterSSID>();
 
@@ -405,10 +506,11 @@ public class SmarterDBSource {
             s.setSsid(ssidc.getString(1));
 
             s.setNumTowers(getNumTowersInSsid(s.getMapDbId()));
+            s.setNumBssids(getNumBssidsInSsid(s.getMapDbId()));
 
             // LogAlias.d("smarter", "returning tower " + ssidc.getLong(0) + " " + ssidc.getLong(1) + " num " + s.getNumTowers());
 
-            if (s.getNumTowers() > 0)
+            if (s.getNumTowers() > 0 || s.getNumBssids() > 0)
                 retlist.add(s);
 
             ssidc.moveToNext();

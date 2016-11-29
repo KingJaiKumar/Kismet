@@ -14,12 +14,26 @@
     <string name="prefs_item_notification_explanation">Turning off notifications may impact the background service in low memory conditions, if you notice problems, leave it on.</string>
     <string name="prefs_item_boot">Automatically start</string>
     <string name="prefs_item_boot_explanation">Automatically start Smarter Wi-Fi Manager service on boot or Wi-Fi and cell tower changes.</string>
+
     <string name="prefs_item_towermaintenance">Location Maintenance</string>
     <string name="prefs_item_towermaintenance_explanation">Keep the list of locations from growing too large by clever maintenance.</string>
+
     <string name="prefs_item_aggressive">Aggressive Tower Monitoring</string>
     <string name="prefs_item_aggressive_explanation">Wake up and check the current tower, even when the screen is off.  This can improve responsiveness, but may use slightly more battery power.</string>
+
     <string name="prefs_item_smartroam">Smarter Wi-Fi Roaming</string>
     <string name="prefs_item_smartroam_explanation">Roam to stronger networks you\'ve used before when your Wi-Fi signal is weak</string>
+
+    <string name="prefs_item_ignore_open">Ignore Open Networks</string>
+    <string name="prefs_item_ignore_open_explanation">Don\'t remember the location of open networks</string>
+
+    <string name="prefs_item_use_background">Use Background Wi-Fi Scan</string>
+    <string name="prefs_item_use_background_explanation">Use background Wi-Fi scanning instead of cell towers to identify when a network is in range, which can have much higher precision than cell tower based tracking.</string>
+    <string name="prefs_item_use_background_off">Background scanning is turned off - to use background Wi-Fi scanning to control networks, turn on background scanning in Settings->Wi-Fi->Advanced.</string>
+    <string name="prefs_item_use_background_unavailable">Background scanning of Wi-Fi is not available on your version of Android, sorry!</string>
+
+    <string name="prefs_item_aggressive_wifi_background">Aggressive Background Wi-Fi Scan</string>
+    <string name="prefs_item_aggressive_wifi_background_explanation">Initiate a background Wi-Fi scan regularly instead of counting on the system scan rate.</string>
 
     <string name="tab_main">Smarter</string>
     <string name="tab_ignore">Ignore</string>
@@ -72,6 +86,7 @@
     <string name="notification_tethered">Tethering / sharing connection</string>
     <string name="notification_multiuser">Not the device owner</string>
     <string name="notification_bringup">You\'ve used Wi-Fi here before, turning on Wi-Fi</string>
+    <string name="notification_openwifi">Connected to an uncencrypted network</string>
 
     <string name="wifistate_blocked">Wi-Fi forced off</string>
     <string name="wifistate_ignore">Not managing Wi-Fi</string>
@@ -84,7 +99,7 @@
     <string name="title_activity_timerange">Time Ranges</string>
     <string name="title_activity_learned">Learned Networks</string>
 
-    <string name="learned_number">Learned %1$d towers</string>
+    <string name="learned_number">Learned %1$d towers, %2$d access points</string>
 
     <string name="timerange_no_ranges">No time ranges configured</string>
     <string name="timerange_no_effect">Time range doesn\'t control anything</string>
@@ -129,17 +144,20 @@
 
     <string name="simple_explanation_learning">Connected, we\'ll remember you use Wi-Fi here.</string>
     <string name="simple_explanation_blackssid">Connected to a network you\'ve ignored, we won\'t remember this spot.</string>
+    <string name="simple_explanation_openssid">Connected to an unencrypted network, we won\'t remember this spot.</string>
     <string name="simple_explanation_idle">You\'ve used Wi-Fi here before, looking for a network.</string>
     <string name="simple_explanation_off">Wi-Fi turned off, you haven\'t used a network here before.</string>
     <string name="simple_explanation_time">You set Wi-Fi to be turned %1$s from %2$d:%3$d to %4$d:%5$d.</string>
     <string name="simple_explanation_bt">Connected to a bluetooth device you picked to block Wi-Fi.</string>
     <string name="simple_explanation_disabled">You\'ve turned off Wi-Fi management.</string>
-    <string name="simple_explanation_airplane">You\'re in airplane mode, we won\'t change the wi-fi settings.</string>
+    <string name="simple_explanation_airplane">You\'re in airplane mode, we won\'t change the Wi-Fi settings.</string>
+    <string name="simple_explanation_tether">You\'re tethering or sharing your connection, we won\'t change the Wi-Fi settings.</string>
     <string name="simple_explanation_neverrun">Open Smarter Wi-Fi Manager to start controlling your Wi-Fi!</string>
     <string name="simple_explanation_add">SWM is paused, we\'ll keep Wi-Fi enabled until you connect to a network.</string>
     <string name="simple_explanation_multiuser">Wi-Fi management turned off, we\'re not the device owner.</string>
     <string name="simple_explanation_bringup">You\'ve used Wi-Fi here before. Turning on Wi-Fi.</string>
     <string name="simple_explanation_permissions">Smarter Wi-Fi Manager needs permissions enabled to function.</string>
+    <string name="simple_explanation_bgscan">Wi-Fi turned off, you haven\'t used a network here before.</string>
 
     <string name="main_explanation_swm_disabled">Turn Smarter Wi-Fi Manager on to automatically manage your Wi-Fi</string>
 
@@ -147,7 +165,8 @@
     <string name="main_pause_button">Add new network</string>
     <string name="main_resume_button">Resume</string>
 
-    <string name="main_open_text">You\'re connected to a network with no encryption.  Open networks are much easier to spoof, and your traffic may be monitored.</string>
+    <string name="main_open_text">You\'re connected to a network with no encryption.  Open networks are much easier to spoof, and your traffic may be monitored.  We recommend turning off automatic tracking of open networks.</string>
+    <string name="main_open_nontracking_text">You\'re connected to a network with no encryption.  We won\'t remember this location.</string>
 
     <string name="main_alert_alwaysscan">Android is configured to scan in the background even if Wi-Fi is turned off.  We recommend turning off \"Always Allow Scanning\"</string>
     <string name="main_alert_alwaysscan_advanced">Settings</string>

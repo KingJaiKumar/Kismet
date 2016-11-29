@@ -11,19 +11,30 @@
             android:entryValues="@array/prefsTimeSeconds"
             android:key="@string/prefs_item_shutdowntime"
             android:title="@string/prefs_item_shutdowntime" />
-        <!--
+
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="smart_roam"
-            android:title="@string/prefs_item_smartroam"
-            android:summary="@string/prefs_item_smartroam_explanation"/>
-            -->
+            android:defaultValue="false"
+            android:key="@string/prefs_item_use_background"
+            android:title="@string/prefs_item_use_background"
+            android:summary="@string/prefs_item_use_background_explanation" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/prefs_item_aggressive_wifi_background"
+            android:title="@string/prefs_item_aggressive_wifi_background"
+            android:summary="@string/prefs_item_aggressive_wifi_background_explanation" />
+
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefs_item_aggressive"
             android:title="@string/prefs_item_aggressive"
             android:summary="@string/prefs_item_aggressive_explanation" />
 
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/prefs_item_ignore_open"
+            android:title="@string/prefs_item_ignore_open"
+            android:summary="@string/prefs_item_ignore_open_explanation"
+            />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="@string/prefs_item_notification"

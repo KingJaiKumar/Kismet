@@ -218,13 +218,13 @@ public class SmarterWifiServiceBinder {
         smarterService.setSsidBlacklist(e, b);
     }
 
-    public ArrayList<SmarterSSID> getSsidTowerlist() {
+    public ArrayList<SmarterSSID> getSsidLearnedlist() {
         if (smarterService == null) {
             Log.e("smarter", "service null getting towerlist");
             return null;
         }
 
-        return smarterService.getSsidTowerlist();
+        return smarterService.getSsidLearnedlist();
     }
 
     public void deleteSsidTowerMap(SmarterSSID ssid) {
@@ -346,6 +346,22 @@ public class SmarterWifiServiceBinder {
         }
 
         return smarterService.currentStateToComplexText();
+    }
+
+    public void handleWifiScan() {
+        if (smarterService == null) {
+            return;
+        }
+
+        smarterService.handleWifiScan();
+    }
+
+    public boolean getWifiBgScanCapable() {
+        if (smarterService == null) {
+            return false;
+        }
+
+        return smarterService.getWifiBgScanCapable();
     }
 
     public boolean getWifiAlwaysScanning() {

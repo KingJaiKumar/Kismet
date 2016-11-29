@@ -1,9 +1,14 @@
 package net.kismetwireless.android.smarterwifimanager.models;
 
 import android.content.Context;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 
+import net.kismetwireless.android.smarterwifimanager.LogAlias;
 import net.kismetwireless.android.smarterwifimanager.SmarterApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,6 +46,10 @@ public class SmarterWorldState {
         WIFI_IDLE, // Wifi is on but not connected
         WIFI_IGNORE // Ignoring wifi state
     }
+
+    // Scan results and what we learned from them
+    private List<ScanResult> scan_results = new ArrayList<>();
+    private boolean enableViaScan = false;
 
     private CellLocationCommon cellLocation = new CellLocationCommon();
     private CellLocationCommon.TowerType cellTowerType = CellLocationCommon.TowerType.TOWER_UNKNOWN;
@@ -83,6 +92,30 @@ public class SmarterWorldState {
         }
 
         return sb.toString();
+    }
+
+    public List<ScanResult> getScan_results() { return scan_results; }
+
+    public void setScanResults(List<ScanResult> l) {
+        LogAlias.d("smarter", "Got " + l.size() + " scan results");
+        if (l.size() > 0) {
+            scan_results = new ArrayList<ScanResult>(l);
+        }
+
+        enableViaScan = false;
+
+        // Match until at least one BSSID is something we know & want to use
+        for (ScanResult r : scan_results) {
+            if (dbSource.getScanBssidEnable(r.BSSID)) {
+                LogAlias.d("smarter", "bssid " + r.BSSID + " in db, enable via scan");
+                enableViaScan = true;
+                return;
+            }
+        }
+    }
+
+    public boolean getEnableViaScan() {
+        return enableViaScan;
     }
 
     public CellLocationCommon getCellLocation() {

@@ -78,7 +78,7 @@
     <string name="title_activity_timerange">Intervalles de temps</string>
     <string name="title_activity_learned">Réseaux mémorisés</string>
 
-    <string name="learned_number">%1$d tours mémorisées</string>
+    <string name="learned_number">Learned %1$d towers, %2$d access points</string>
 
     <string name="timerange_no_ranges">Aucun intervalle de temps configuré</string>
     <string name="timerange_no_effect">L\'intervalle de temps ne contrôle rien</string>

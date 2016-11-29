@@ -83,6 +83,14 @@ public class NetworkReceiver extends BroadcastReceiver {
 
             // TODO - remove this once we finish converting to eventbus
 
+            if (intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+                serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
+                    public void run(SmarterWifiServiceBinder b) {
+                        b.handleWifiScan();
+                    }
+                });
+            }
+
             if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
                 serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
                     public void run(SmarterWifiServiceBinder b) {
