@@ -14,6 +14,18 @@
 
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="@string/prefs_item_use_tower"
+            android:title="@string/prefs_item_use_tower"
+            android:summary="@string/prefs_item_use_tower_explanation" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="@string/prefs_item_aggressive"
+            android:title="@string/prefs_item_aggressive"
+            android:summary="@string/prefs_item_aggressive_explanation" />
+
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/prefs_item_use_background"
             android:title="@string/prefs_item_use_background"
             android:summary="@string/prefs_item_use_background_explanation" />
@@ -22,12 +34,6 @@
             android:key="@string/prefs_item_aggressive_wifi_background"
             android:title="@string/prefs_item_aggressive_wifi_background"
             android:summary="@string/prefs_item_aggressive_wifi_background_explanation" />
-
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/prefs_item_aggressive"
-            android:title="@string/prefs_item_aggressive"
-            android:summary="@string/prefs_item_aggressive_explanation" />
 
         <CheckBoxPreference
             android:defaultValue="false"

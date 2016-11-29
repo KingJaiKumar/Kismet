@@ -20,6 +20,9 @@
     <string name="prefs_item_towermaintenance">Location Maintenance</string>
     <string name="prefs_item_towermaintenance_explanation">Keep the list of locations from growing too large by clever maintenance.</string>
 
+    <string name="prefs_item_use_tower">Use Tower-based Location</string>
+    <string name="prefs_item_use_tower_explanation">Use tower-based location to determine when Wi-Fi should be enabled.  This is the default mechanism SWM uses, but may lead to Wi-Fi being enabled over a larger area, depending on the density of cellular towers in your area.</string>
+
     <string name="prefs_item_aggressive">Aggressive Tower Monitoring</string>
     <string name="prefs_item_aggressive_explanation">Wake up and check the current tower, even when the screen is off.  This can improve responsiveness, but may use slightly more battery power.</string>
 
@@ -30,7 +33,7 @@
     <string name="prefs_item_ignore_open_explanation">Don\'t remember the location of open networks</string>
 
     <string name="prefs_item_use_background">Use Background Wi-Fi Scan</string>
-    <string name="prefs_item_use_background_explanation">Use background Wi-Fi scanning instead of cell towers to identify when a network is in range, which can have much higher precision than cell tower based tracking.</string>
+    <string name="prefs_item_use_background_explanation">Use background Wi-Fi scanning instead of cell towers to identify when a network is in range, which can have much higher precision than cell tower based tracking but may take longer to activate Wi-Fi. In this mode, tower-based activation is disabled.</string>
     <string name="prefs_item_use_background_off">Background scanning is turned off - to use background Wi-Fi scanning to control networks, turn on background scanning in Settings->Wi-Fi->Advanced.</string>
     <string name="prefs_item_use_background_unavailable">Background scanning of Wi-Fi is not available on your version of Android, sorry!</string>
 

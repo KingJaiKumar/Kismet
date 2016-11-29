@@ -33,14 +33,14 @@ public class FragmentPrefs extends PreferenceFragment implements SharedPreferenc
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-        setPrefsSummary();
+        setPrefsSummary("");
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        setPrefsSummary();
+        setPrefsSummary("");
 
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
@@ -56,12 +56,13 @@ public class FragmentPrefs extends PreferenceFragment implements SharedPreferenc
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
-        setPrefsSummary();
+        setPrefsSummary(key);
     }
 
-    private void setPrefsSummary() {
+    private void setPrefsSummary(String key) {
         CheckBoxPreference wifiAggressivePref = (CheckBoxPreference) getPreferenceScreen().findPreference(getString(R.string.prefs_item_aggressive_wifi_background));
         CheckBoxPreference wifiBgPref = (CheckBoxPreference) getPreferenceScreen().findPreference(getString(R.string.prefs_item_use_background));
+        CheckBoxPreference towerPref = (CheckBoxPreference) getPreferenceScreen().findPreference(getString(R.string.prefs_item_use_tower));
         CheckBoxPreference aggressiveTowerPref = (CheckBoxPreference) getPreferenceScreen().findPreference(getString(R.string.prefs_item_aggressive));
 
         if (!serviceBinder.getWifiBgScanCapable()) {
@@ -90,13 +91,51 @@ public class FragmentPrefs extends PreferenceFragment implements SharedPreferenc
                 wifiBgPref.setSummary(getString(R.string.prefs_item_use_background_explanation));
                 wifiAggressivePref.setSummary(getString(R.string.prefs_item_aggressive_wifi_background_explanation));
 
-                if (wifiBgPref.isChecked()) {
-                    aggressiveTowerPref.setEnabled(false);
-                    wifiAggressivePref.setEnabled(true);
-                } else {
-                    aggressiveTowerPref.setEnabled(true);
-                    wifiAggressivePref.setEnabled(false);
+                if (key == getString(R.string.prefs_item_use_tower)) {
+                    if (towerPref.isChecked()) {
+                        aggressiveTowerPref.setEnabled(true);
+                        wifiAggressivePref.setEnabled(false);
+                        if (wifiBgPref.isChecked())
+                            wifiBgPref.setChecked(false);
+                    } else {
+                        aggressiveTowerPref.setEnabled(false);
+                        wifiAggressivePref.setEnabled(true);
+                        wifiBgPref.setChecked(true);
+                        if (!wifiBgPref.isChecked())
+                            wifiBgPref.setChecked(true);
+                    }
                 }
+
+                if (key == getString(R.string.prefs_item_use_background)) {
+                    if (wifiBgPref.isChecked()) {
+                        aggressiveTowerPref.setEnabled(false);
+                        wifiAggressivePref.setEnabled(true);
+                        if (towerPref.isChecked())
+                            towerPref.setChecked(false);
+                    } else {
+                        aggressiveTowerPref.setEnabled(true);
+                        wifiAggressivePref.setEnabled(false);
+                        if (!towerPref.isChecked())
+                            towerPref.setChecked(true);
+                    }
+
+                }
+
+                if (key == "") {
+                    if (towerPref.isChecked()) {
+                        aggressiveTowerPref.setEnabled(true);
+                        wifiAggressivePref.setEnabled(false);
+                        if (wifiBgPref.isChecked())
+                            wifiBgPref.setChecked(false);
+                    } else {
+                        aggressiveTowerPref.setEnabled(false);
+                        wifiAggressivePref.setEnabled(true);
+                        wifiBgPref.setChecked(true);
+                        if (!wifiBgPref.isChecked())
+                            wifiBgPref.setChecked(true);
+                    }
+                }
+
             }
         }
 
