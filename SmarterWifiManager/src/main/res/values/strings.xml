@@ -193,4 +193,10 @@
     <string name="dialog_button_permission">Permissions</string>
     <string name="dialog_button_permission_skip">Not now</string>
 
+    <string name="modepick_first_dialog_title">Location Management Type</string>
+    <string name="modepick_first_dialog">Smarter Wi-Fi Manager can map location by cellular tower (which is fast but may cover a large area) or by Wi-Fi background scanning (which may be slower but will only activate Wi-Fi when you are in range of a specific network).  Which would you like to use?</string>
+    <string name="modepick_button_settings">Settings</string>
+    <string name="modepick_button_cell">Towers</string>
+    <string name="modepick_button_wifi">Wi-Fi</string>
+
 </resources>

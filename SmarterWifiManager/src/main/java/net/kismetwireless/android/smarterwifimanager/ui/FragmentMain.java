@@ -262,9 +262,10 @@ public class FragmentMain extends SmarterFragment {
                         }
                     });
                 } else {
+                    Activity ma = getActivity();
+
                     // If we need permissions, try to prompt right away
                     if (!b.getSufficientPermissions()) {
-                        Activity ma = getActivity();
 
                         if (ma == null)
                             return;
@@ -276,6 +277,18 @@ public class FragmentMain extends SmarterFragment {
                             }
                         });
                     }
+
+                    // Spam about what type of connection we use
+                    if (ma == null)
+                        return;
+
+                    ma.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tellAboutWifi();
+                        }
+                    });
+
                 }
             }
         });
@@ -561,6 +574,54 @@ public class FragmentMain extends SmarterFragment {
                 mainEnableToggle.setChecked(false);
             }
         }
+    }
+
+    private void tellAboutWifi() {
+        final Activity activity = getActivity();
+
+        if (!serviceBinder.getWifiBgScanCapable())
+            return;
+
+        if (sharedPreferences.getBoolean("TOLD_ABOUT_WIFI", false))
+            return;
+
+        SharedPreferences.Editor e = sharedPreferences.edit();
+        e.putBoolean("TOLD_ABOUT_WIFI", true);
+        e.commit();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.modepick_first_dialog_title);
+        builder.setMessage(R.string.modepick_first_dialog);
+
+        builder.setPositiveButton(R.string.modepick_button_wifi, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putBoolean(getString(R.string.prefs_item_use_background), true);
+                e.putBoolean(getString(R.string.prefs_item_use_tower), false);
+                e.commit();
+            }
+        });
+
+        builder.setNegativeButton(R.string.modepick_button_cell, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putBoolean(getString(R.string.prefs_item_use_background), false);
+                e.putBoolean(getString(R.string.prefs_item_use_tower), true);
+                e.commit();
+            }
+        });
+
+        builder.setNeutralButton(R.string.modepick_button_settings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(getActivity(), ActivityPrefs.class));
+            }
+        });
+
+        builder.create().show();
+
     }
 
     private void requestPermissionUi() {

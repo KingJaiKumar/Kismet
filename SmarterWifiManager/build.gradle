@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
-def VERSION_NUM = 80
-def VERSION_NAME = "2016.11.80"
+def VERSION_NUM = 81
+def VERSION_NAME = "2016.11.81"
 
 android {
     compileSdkVersion 23
