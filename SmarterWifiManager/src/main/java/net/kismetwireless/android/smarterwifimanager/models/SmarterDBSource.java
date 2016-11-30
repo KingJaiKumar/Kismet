@@ -340,8 +340,9 @@ public class SmarterDBSource {
             return;
 
         long sid = getSsidDbId(ssid.getSsid());
-
         long mid = getBssidMapId(sid, ssid.getBssid());
+
+        sid = updateSsid(ssid.getSsid(), sid);
 
         LogAlias.d("smarter", "Mapping BSSID from " + ssid.toString() + " sid " + sid + " mid " + mid);
 
