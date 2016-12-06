@@ -26,6 +26,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.os.UserHandle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -344,7 +345,7 @@ public class SmarterWifiService extends Service {
                     } else if (type == ControlType.CONTROL_TIME) {
                         wifiIconId = R.drawable.ic_launcher_notification_clock;
                         reasonTextResource = R.string.notification_wifi_time;
-                    } else if (type == ControlType.CONTROL_TOWER) {
+                    } else if (type == ControlType.CONTROL_TOWER || type == ControlType.CONTROL_BGSCAN) {
                         wifiIconId = R.drawable.ic_launcher_notification_cell;
                         reasonTextResource = R.string.notification_wifi_off;
                     } else {
@@ -383,9 +384,6 @@ public class SmarterWifiService extends Service {
                 } else {
                     notificationBuilder.setContentText("");
                 }
-
-                // notificationBuilder.setContentTitle(wifiText);
-                // notificationBuilder.setContentText(reasonText);
 
                 if (showNotification)
                     notificationManager.notify(0, notificationBuilder.build());
@@ -572,7 +570,6 @@ public class SmarterWifiService extends Service {
 
         // Get wifi config
         useWifiScan = preferences.getBoolean(getString(R.string.prefs_item_use_background), false);
-        aggressiveWifiScan = preferences.getBoolean(getString(R.string.prefs_item_aggressive_wifi_background), false);
 
         // Always perform tower purging / location management
         // performTowerPurges = preferences.getBoolean(getString(R.string.prefs_item_towermaintenance), true);
@@ -588,6 +585,16 @@ public class SmarterWifiService extends Service {
             aggressiveTowerCheck = true;
         } else {
             aggressiveTowerCheck = false;
+        }
+
+        if (preferences.getBoolean(getString(R.string.prefs_item_aggressive_wifi_background), false)) {
+            if (!aggressiveWifiScan) {
+                setAggressiveWifiAlarm();
+            }
+
+            aggressiveWifiScan = true;
+        } else {
+            aggressiveWifiScan = false;
         }
 
         configureWifiState();
@@ -670,10 +677,13 @@ public class SmarterWifiService extends Service {
             i.putExtra(AlarmReceiver.EXTRA_WIFIUP, enableWaitSeconds);
             wifiUpIntent = PendingIntent.getBroadcast(context, 1000, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (enableWaitSeconds * 1000), wifiUpIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // use the M wakeup even in idle mode, if we can
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (enableWaitSeconds * 1000), wifiUpIntent);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (enableWaitSeconds * 1000), wifiUpIntent);
             } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (enableWaitSeconds * 1000), wifiUpIntent);
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (enableWaitSeconds * 1000), wifiUpIntent);
             }
 
             LogAlias.d("smarter", "Starting countdown of " + enableWaitSeconds + " to enable wifi");
@@ -686,6 +696,9 @@ public class SmarterWifiService extends Service {
         LogAlias.d("smarter", "startWifiShutdown()");
 
         cancelWifiUpAlarm();
+
+        /* no longer shut off immediately when the screen is off, it might turn off wifi
+         * really aggressively in bssid mode
 
         // If we're asked to turn off wifi and the screen is off, just do it.
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -703,6 +716,7 @@ public class SmarterWifiService extends Service {
             wifiManager.setWifiEnabled(false);
             return;
         }
+        */
 
         if (wifiDownIntent != null) {
             LogAlias.d("smarter", "Already trying to bring down wifi, not scheduling another bringdown");
@@ -712,13 +726,15 @@ public class SmarterWifiService extends Service {
             i.putExtra(AlarmReceiver.EXTRA_WIFIDOWN, disableWaitSeconds);
             wifiDownIntent = PendingIntent.getBroadcast(context, 1001, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * disableWaitSeconds), wifiDownIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // use the M wakeup even in idle mode, if we can
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * disableWaitSeconds), wifiDownIntent);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                // Use exact timing if we have it
+                alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * disableWaitSeconds), wifiDownIntent);
             } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * disableWaitSeconds), wifiDownIntent);
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * disableWaitSeconds), wifiDownIntent);
             }
-
-            LogAlias.d("smarter", "Starting countdown of " + enableWaitSeconds + " to enable wifi");
 
             pendingWifiShutdown = true;
 
@@ -812,6 +828,36 @@ public class SmarterWifiService extends Service {
         }
     };
 
+    private void setAggressiveWifiAlarm() {
+        LogAlias.d("smarter", "Setting timer to wake up and check wifi");
+
+        Intent i = new Intent(context, AlarmReceiver.class);
+
+        i.putExtra(AlarmReceiver.EXTRA_WIFI_AGGRESSIVE, 60);
+
+        PendingIntent wupi = PendingIntent.getBroadcast(context, 1001, i, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // use the M wakeup even in idle mode, if we can
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * 60), wupi);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * 60), wupi);
+        } else {
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * 60), wupi);
+        }
+    }
+
+    public void doAggressiveWifiCheck() {
+        if (wifiManager != null) {
+            wifiManager.startScan();
+        }
+
+        // Set the alarm to look again
+        if (aggressiveWifiScan) {
+            setAggressiveAlarm();
+        }
+    }
+
     private void setAggressiveAlarm() {
         LogAlias.d("smarter", "Setting timer to wake up and check towers");
 
@@ -821,10 +867,13 @@ public class SmarterWifiService extends Service {
 
         PendingIntent wupi = PendingIntent.getBroadcast(context, 1001, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60), wupi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // use the M wakeup even in idle mode, if we can
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * 60), wupi);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * 60), wupi);
         } else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (1000 * 60), wupi);
+            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + (1000 * 60), wupi);
         }
     }
 
@@ -1439,9 +1488,15 @@ public class SmarterWifiService extends Service {
 
         boolean rawwifienabled = false;
 
-        if (rawstate == WifiManager.WIFI_STATE_ENABLED || rawstate == WifiManager.WIFI_STATE_ENABLING)
+        // If we're turned on or in the process of turning on
+        if (rawstate == WifiManager.WIFI_STATE_ENABLED || rawstate == WifiManager.WIFI_STATE_ENABLING) {
             rawwifienabled = true;
+        } else {
+            // Otherwise we're just off, stop looking
+            return WifiState.WIFI_OFF;
+        }
 
+        // Ask connectivitymanager what we're doing
         NetworkInfo rawni = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
         boolean rawnetenabled = false;
@@ -1451,11 +1506,13 @@ public class SmarterWifiService extends Service {
 
         // LogAlias.d("smarter", "getwifistate wifi radio enable: " + rawwifienabled + " isConnected " + rawnetenabled);
 
-        if (rawwifienabled && rawnetenabled) {
+        // Connectivity manager says we're connected (or in the process of connecting) so we're fully 'on'
+        if (rawnetenabled) {
             return WifiState.WIFI_ON;
         }
 
-        if (rawwifienabled && !rawnetenabled) {
+        // Wifi interface is turned on, but we're not connected
+        if (rawwifienabled) {
             return WifiState.WIFI_IDLE;
         }
 

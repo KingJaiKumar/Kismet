@@ -20,6 +20,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public final static String EXTRA_WIFIDOWN = "EXTRA_SWM_WIFI_DOWN";
     public final static String EXTRA_WIFIUP = "EXTRA_SWM_WIFI_UP";
     public final static String EXTRA_AGGRESSIVE = "EXTRA_AGGRESSIVE";
+    public final static String EXTRA_WIFI_AGGRESSIVE = "EXTRA_WIFI_AGGRESSIVE";
 
     @Inject
     SmarterWifiServiceBinder serviceBinder;
@@ -41,6 +42,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         final boolean triggerShutdown;
         final boolean triggerBringup;
         final boolean triggerAggressive;
+        final boolean triggerAggressiveWifi;
 
         if (intent.hasExtra(EXTRA_WIFIDOWN)) {
             LogAlias.d("smarter-alarmrx", "Got down alarm");
@@ -63,6 +65,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             triggerAggressive = false;
         }
 
+        if (intent.hasExtra(EXTRA_WIFI_AGGRESSIVE)) {
+            LogAlias.d("smarter-alarmrx", "Got aggressive wifi alarm");
+            triggerAggressiveWifi = true;
+        } else {
+            triggerAggressiveWifi = false;
+        }
+
         // Make sure we exist before we run
         serviceBinder.doCallAndBindService(new SmarterWifiServiceBinder.BinderCallback() {
             public void run(SmarterWifiServiceBinder b) {
@@ -78,6 +87,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                     b.getService().doWifiEnable();
                 } else if (triggerAggressive) {
                     b.getService().doAggressiveCheck();
+                } else if (triggerAggressiveWifi) {
+                    b.getService().doAggressiveWifiCheck();
                 } else {
                     b.configureTimerangeState();
                 }
@@ -99,7 +110,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // use the M wakeup even in idle mode, if we can
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, atTime, pi);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             am.setExact(AlarmManager.RTC_WAKEUP, atTime, pi);
         } else {
             am.set(AlarmManager.RTC_WAKEUP, atTime, pi);
