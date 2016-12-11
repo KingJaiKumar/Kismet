@@ -168,6 +168,7 @@ public class FragmentLearned extends SmarterFragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 serviceBinder.deleteSsidTowerMap(entry);
+                                serviceBinder.deleteBssidMap(entry);
 
                                 lastSsidList = serviceBinder.getSsidLearnedlist();
                                 listAdapter.clear();
@@ -184,6 +185,7 @@ public class FragmentLearned extends SmarterFragment {
                                 serviceBinder.setSsidBlacklisted(entry, true);
 
                                 serviceBinder.deleteSsidTowerMap(entry);
+                                serviceBinder.deleteBssidMap(entry);
 
                                 lastSsidList = serviceBinder.getSsidLearnedlist();
                                 listAdapter.clear();

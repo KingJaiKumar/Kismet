@@ -546,6 +546,30 @@ public class SmarterDBSource {
         dataBase.endTransaction();
     }
 
+    public void deleteSsidBssidMap(SmarterSSID ssid) {
+        if (ssid == null)
+            return;
+
+        if (ssid.getMapDbId() < 0) {
+            if (!ssid.getDisplaySsid().isEmpty()) {
+                ssid = getMappedSsidFromBlacklist(ssid);
+
+                if (ssid == null) {
+                    LogAlias.d("smarter", "deleteSsidTowerMap got a null from getmappedSsidFromBlacklist");
+                    return;
+                }
+            }
+        }
+
+        String compare = SmarterWifiDBHelper.COL_WIFIMAP_SSIDID + "=?";
+        String[] args = {Long.toString(ssid.getMapDbId())};
+
+        dataBase.beginTransaction();
+        dataBase.delete(SmarterWifiDBHelper.TABLE_SSID_WIFI_MAP, compare, args);
+        dataBase.setTransactionSuccessful();
+        dataBase.endTransaction();
+    }
+
     public void deleteSsidTowerInstance(long towerid) {
         long tid = getTowerDbId(towerid);
 

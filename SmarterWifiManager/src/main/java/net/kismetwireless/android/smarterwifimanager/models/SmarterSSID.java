@@ -31,11 +31,13 @@ public class SmarterSSID {
     private String bssid;
 
     public SmarterSSID() {
+        crypt = CRYPT_UNKNOWN;
         mapdbid = -1;
         bldbid = -1;
     }
 
     public SmarterSSID(String ssid, boolean blacklisted, long bldb) {
+        crypt = CRYPT_UNKNOWN;
         this.ssid = ssid;
         this.blacklisted = blacklisted;
         bldbid = bldb;
@@ -45,6 +47,8 @@ public class SmarterSSID {
 
     // Create using the current SSID
     public SmarterSSID(WifiManager m, SmarterDBSource dbSource) {
+        crypt = CRYPT_UNKNOWN;
+
         WifiInfo wi = m.getConnectionInfo();
         int ni = wi.getNetworkId();
         List<WifiConfiguration> wcl = m.getConfiguredNetworks();
@@ -76,6 +80,7 @@ public class SmarterSSID {
     }
 
     public SmarterSSID(String ssid, int numtowers, long mapdbid) {
+        crypt = CRYPT_UNKNOWN;
         this.ssid = ssid;
         this.numtowers = numtowers;
         this.mapdbid = mapdbid;
@@ -84,6 +89,7 @@ public class SmarterSSID {
     }
 
     public SmarterSSID(String ssid, int numbssids) {
+        crypt = CRYPT_UNKNOWN;
         this.ssid = ssid;
         this.numbssids = numbssids;
         this.mapdbid = -1;

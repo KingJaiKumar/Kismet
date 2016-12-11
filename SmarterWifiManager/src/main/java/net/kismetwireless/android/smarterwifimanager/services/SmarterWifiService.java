@@ -107,7 +107,7 @@ public class SmarterWifiService extends Service {
     private boolean performTowerPurges = false;
     private boolean aggressiveTowerCheck = false;
     private int purgeTowerHours = 168;
-    private boolean trackOpenNetworks = true;
+    private boolean ignoreOpenNetworks = false;
     private boolean useWifiScan = false;
     private boolean aggressiveWifiScan = false;
 
@@ -259,7 +259,7 @@ public class SmarterWifiService extends Service {
 
         // Set the initial wifi info
         SmarterSSID ssid = getCurrentSsid();
-        if (ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || trackOpenNetworks)) {
+        if (ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || !ignoreOpenNetworks)) {
             LogAlias.d("smarter", "Logging startup BSSID " + ssid.getBssid() + " for " + ssid.getSsid());
             dbSource.mapBssid(ssid);
         }
@@ -545,7 +545,9 @@ public class SmarterWifiService extends Service {
     public void onEvent(EventPreferencesChanged ev) {
         everBeenRun = preferences.getBoolean("everbeenrun", false);
 
-        trackOpenNetworks = preferences.getBoolean(getString(R.string.prefs_item_ignore_open), false);
+        ignoreOpenNetworks = preferences.getBoolean(getString(R.string.prefs_item_ignore_open), false);
+
+        LogAlias.d("smarter", "ignoring open networks; " + ignoreOpenNetworks);
 
         learnWifi = preferences.getBoolean(getString(R.string.pref_learn), true);
 
@@ -934,7 +936,7 @@ public class SmarterWifiService extends Service {
         SmarterSSID ssid = getCurrentSsid();
 
         // Log the BSSID if we're able to
-        if (ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || trackOpenNetworks)) {
+        if (ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || !ignoreOpenNetworks)) {
             LogAlias.d("smarter", "Logging BSSID " + ssid.getBssid() + " for " + ssid.getSsid());
             dbSource.mapBssid(ssid);
         }
@@ -1051,13 +1053,13 @@ public class SmarterWifiService extends Service {
                 LogAlias.d("smarter", "In range of known tower: " + curloc.getTowerId() + " towertype = enable");
                 worldState.setCellTowerType(CellLocationCommon.TowerType.TOWER_ENABLE);
 
-                // If the SSID makes sense, update our tower records
-                if (ssid != null && !ssid.isBlacklisted()) {
+                // If the SSID makes sense, isn't blacklisted, and isn't open, update our tower records
+                if (ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || !ignoreOpenNetworks)) {
                     LogAlias.d("smarter", "Updating known tower " + curloc.getTowerId() + " for ssid " + ssid.getSsid());
                     dbSource.mapTower(ssid, curloc.getTowerId());
                 }
             } else {
-                if ((ssid != null && !ssid.isBlacklisted()) && getWifiState() == WifiState.WIFI_ON &&
+                if ((ssid != null && !ssid.isBlacklisted() && (ssid.isEncrypted() || !ignoreOpenNetworks)) && getWifiState() == WifiState.WIFI_ON &&
                         targetState == WifiState.WIFI_ON && !getWifiTethered()) {
                     // We're connected, we want to stay turned on, learn this tower.  Don't map while we're tethered.
                     LogAlias.d("smarter", "New tower " + curloc.getTowerId() + ", Wi-Fi connected ssid " + ssid.getSsid() + ", learning tower");
@@ -1408,7 +1410,7 @@ public class SmarterWifiService extends Service {
         }
 
         // If we're ignoring unencrypted SSIDs
-        if (curstate == WifiState.WIFI_ON && (ssid != null && ssid.isOpen() && !trackOpenNetworks)) {
+        if (curstate == WifiState.WIFI_ON && (ssid != null && (ssid.isOpen() && ignoreOpenNetworks))) {
             LogAlias.d("smarter", "Connected to open SSID, ignoring wifi");
             lastControlReason = ControlType.CONTROL_OPEN;
             return WifiState.WIFI_IGNORE;
@@ -1710,6 +1712,12 @@ public class SmarterWifiService extends Service {
 
     public void deleteSsidTowerMap(SmarterSSID ssid) {
         dbSource.deleteSsidTowerMap(ssid);
+
+        handleCellLocation(null);
+    }
+
+    public void deleteBssidMap(SmarterSSID ssid) {
+        dbSource.deleteSsidBssidMap(ssid);
 
         handleCellLocation(null);
     }
