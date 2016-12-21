@@ -266,6 +266,7 @@ public class SmarterWifiService extends Service {
 
         if (getWifiBgScanCapable()) {
             LogAlias.d("smarter", "Starting initial background scan");
+            handleWifiScan();
             wifiManager.startScan();
         }
 
@@ -850,6 +851,10 @@ public class SmarterWifiService extends Service {
     }
 
     public void doAggressiveWifiCheck() {
+        // Force a handle
+        handleWifiScan();
+
+        // Schedule another scan
         if (wifiManager != null) {
             wifiManager.startScan();
         }
@@ -1905,5 +1910,20 @@ public class SmarterWifiService extends Service {
         LogAlias.d("smarter", "got wifi scan event");
         List<ScanResult> sr = wifiManager.getScanResults();
         worldState.setScanResults(sr);
+        configureWifiState();
+    }
+
+    public void pingOnWakeup() {
+        LogAlias.d("smarter", "pinging on wakeup");
+
+        handleWifiScan();
+
+        if (useWifiScan && getWifiBgScanCapable())
+            wifiManager.startScan();
+
+        handleCellLocation(null);
+
+        configureWifiState();
+
     }
 }

@@ -282,6 +282,9 @@ public class FragmentMain extends SmarterFragment {
                     if (ma == null)
                         return;
 
+                    // Ping that the UI just woke up
+                    serviceBinder.pingOnWakeup();
+
                     ma.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -500,6 +503,8 @@ public class FragmentMain extends SmarterFragment {
 
         if (serviceBinder != null) {
             serviceBinder.addCallback(guiCallback);
+
+            serviceBinder.pingOnWakeup();
 
             /*
             if (backgroundScanViewHolder != null) {

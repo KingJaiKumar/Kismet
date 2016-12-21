@@ -426,4 +426,13 @@ public class SmarterWifiServiceBinder {
 
         return smarterService.checkForPermissions();
     }
+
+    public void pingOnWakeup() {
+        if (smarterService == null) {
+            Log.e("smarter", "pingOnWakeup while service null");
+            return;
+        }
+
+        smarterService.pingOnWakeup();
+    }
 }
