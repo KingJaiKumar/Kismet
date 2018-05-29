@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Smarter Wifi Manager2</string>
+    <string name="notification_channel_desc">SWM2 Persistent Notification</string>
+
+
+    <string name="title_database">Learned</string>
+    <string name="title_dashboard">Status</string>
+    <string name="title_log">Log</string>
+
+    <string name="permission_title">Permission Required</string>
+    <string name="permission_explain_location">To get information about near-by cell towers and Wi-Fi networks, SWM needs access to your location information.</string>
+
+    <string name="dialog_ok">OK</string>
+
+    <string name="main_loading">Loading...</string>
+
+    <string name="dash_wifi_desc">Wi-Fi Enabled:</string>
+    <string name="dash_connected_desc">Network Connected:</string>
+    <string name="dash_wifi_details">Wifi Info:</string>
+    <string name="dash_connected_wifi_desc">Network on Wifi:</string>
+    <string name="dash_connected_celltower_desc">Last Tower:</string>
+</resources>

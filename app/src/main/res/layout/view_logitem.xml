@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/logTime"
+        android:layout_width="133dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:gravity="top"
+        android:text="TextView"
+        android:textAlignment="viewStart"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/logText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textAlignment="viewStart" />
+</LinearLayout>
