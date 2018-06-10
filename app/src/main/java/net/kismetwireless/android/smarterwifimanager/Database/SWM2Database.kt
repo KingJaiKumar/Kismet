@@ -10,7 +10,7 @@ import android.arch.persistence.room.RoomDatabase
                 SWM2AccessPoint::class,
                 SWM2CellTower::class
                 ),
-        version = 10,
+        version = 11,
         exportSchema = false)
 abstract class SWM2Database : RoomDatabase() {
     abstract fun logDao(): Swm2LogDao

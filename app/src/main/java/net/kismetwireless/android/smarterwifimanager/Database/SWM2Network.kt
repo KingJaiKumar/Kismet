@@ -4,9 +4,6 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.ForeignKey.CASCADE
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import android.telephony.CellLocation
-import android.telephony.cdma.CdmaCellLocation
-import android.telephony.gsm.GsmCellLocation
 
 // Learned networks are tracked by SSID; it may have multiple BSSIDs or towers
 // associated with it, when in the presence of a learned bssid/tower, we
@@ -45,7 +42,7 @@ data class SWM2AccessPoint(
 // possible because different cellinfo records have different numeric fields
 @Entity(tableName="celltower",
         indices = [
-            Index(value = ["bsidcid", "nidlac", "sid", "networkId"], unique = true)
+            Index(value = ["towerString", "networkId"], unique = true)
         ],
         foreignKeys = [
             ForeignKey(entity = SWM2Network::class, parentColumns = ["id"], childColumns = ["networkId"], onDelete = CASCADE)
@@ -53,56 +50,13 @@ data class SWM2AccessPoint(
 )
 data class SWM2CellTower(
         @ColumnInfo(name="lastTime") var lastTime: Long = System.currentTimeMillis(),
-        @ColumnInfo(name="bsidcid") var bsid_cid: Long,
-        @ColumnInfo(name="nidlac") var nid_lac: Long,
-        @ColumnInfo(name="sid") var sid : Long = 0,
+        @ColumnInfo(name="towerString") var towerString: String,
         @ColumnInfo(name="networkId") var network_id : Long) {
 
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 }
-
-class SWM2CommonTower(cellLocation: CellLocation?) {
-    var bsidcid : Long = -1
-    var nidlac : Long = -1
-    var sid : Long = -1
-
-    init {
-        if (cellLocation != null) {
-            if (cellLocation is GsmCellLocation) {
-                val gsmTower = cellLocation as GsmCellLocation
-
-                bsidcid = gsmTower.cid.toLong()
-                nidlac = gsmTower.lac.toLong()
-                sid = 0
-            } else if (cellLocation is CdmaCellLocation) {
-                val cdmaTower = cellLocation as CdmaCellLocation
-
-                bsidcid = cdmaTower.baseStationId.toLong()
-                nidlac = cdmaTower.networkId.toLong()
-                sid = cdmaTower.systemId.toLong()
-            }
-        }
-    }
-
-    fun isValid() : Boolean =
-            bsidcid != -1L && nidlac != -1L && sid != -1L
-
-    override fun toString() : String {
-        var str =
-                bsidcid.toString() + "." + nidlac.toString() + "." + sid.toString()
-
-        if (!isValid())
-            str += "[INVALID]"
-
-        return str
-    }
-
-    fun equals(tower : SWM2CommonTower) : Boolean =
-            bsidcid == tower.bsidcid && nidlac == tower.nidlac && sid == tower.sid
-}
-
 
 @Dao
 interface SWM2NetworkDao {
@@ -158,11 +112,11 @@ interface SWM2AccessPointDao {
 
 @Dao
 interface SWM2TowerDao {
-    @Query("SELECT * FROM celltower WHERE (bsidcid=:bsid_cid AND nidlac=:nid_lac AND sid=:sid AND networkId=:networkid)")
-    fun findCellTowerAssociation(bsid_cid : Long, nid_lac : Long, sid : Long, networkid : Long) : SWM2CellTower?
+    @Query("SELECT * FROM celltower WHERE (towerString=:towerString AND networkId=:networkId)")
+    fun findCellTowerAssociation(towerString : String, networkId : Long) : SWM2CellTower?
 
-    @Query("SELECT * FROM celltower WHERE (bsidcid=:bsid_cid AND nidlac=:nid_lac AND sid=:sid)")
-    fun findCellTowers(bsid_cid : Long, nid_lac : Long, sid : Long) : List<SWM2CellTower>
+    @Query("SELECT * FROM celltower WHERE (towerString=:towerString)")
+    fun findCellTowers(towerString : String) : List<SWM2CellTower>
 
     @Update
     fun updateTower(entry : SWM2CellTower)

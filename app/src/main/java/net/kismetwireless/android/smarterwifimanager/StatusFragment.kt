@@ -46,15 +46,17 @@ class StatusFragment : Fragment() {
         networkconnected.setText(state?.isNetworkConnected().toString())
         networkwifi.setText(state?.isNetworkWifi().toString())
 
-        if (state?.lastWifiNetwork == null)
+        if (state!!.lastWifiNetwork == null)
             wifidetails.setText("n/a")
         else
             wifidetails.setText(state?.lastWifiNetwork?.bssid + " " + state?.lastWifiNetwork?.ssid)
 
-        if (state?.lastCellLocation == null)
-            lasttower.setText("n/a")
-        else
-            lasttower.setText(state?.lastCellLocation.toString())
+        var text = state!!.cellLocations.size.toString() + " towers ["
+        for (tower in state!!.cellLocations) {
+            text += tower.toString()
+        }
+        text += "]"
+        lasttower.setText(text)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

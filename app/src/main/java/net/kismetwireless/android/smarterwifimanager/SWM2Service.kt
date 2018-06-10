@@ -1,11 +1,13 @@
 package net.kismetwireless.android.smarterwifimanager
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.arch.lifecycle.*
 import android.content.*
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.LinkProperties
 import android.net.Network
@@ -17,10 +19,14 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
+import android.telephony.CellInfo
 import android.telephony.CellLocation
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import kotlinx.coroutines.experimental.async
 import net.kismetwireless.android.smarterwifimanager.Database.*
 
@@ -61,9 +67,15 @@ class SWM2Service : Service(), LifecycleOwner {
 
     private var worldState : SWM2State? = null
 
-    class SWM2State(private val stateBus : MutableLiveData<SWM2State>,
+    private var worker : PeriodicWorkRequest? = null
+
+    class SWM2State(private val context : Context,
+                    private val stateBus : MutableLiveData<SWM2State>,
                     private val connectivityManager: ConnectivityManager,
-                    private val wifiManager : WifiManager) {
+                    private val wifiManager : WifiManager,
+                    private val telephonyManager: TelephonyManager) {
+
+        private var initialized = false
 
         var lastProcessedTime : Long = 0
             private set
@@ -94,7 +106,7 @@ class SWM2Service : Service(), LifecycleOwner {
         fun isWifiFresh() : Boolean =
                 isWifiStateFresh() || isWifiNetworkFresh()
 
-        var lastCellLocation : SWM2CommonTower = SWM2CommonTower(null)
+        var cellLocations : List<SWM2CommonTelephony> = listOf()
             private set
 
         private var cellLocationTimestamp : Long = 0
@@ -133,7 +145,8 @@ class SWM2Service : Service(), LifecycleOwner {
             if (wifiState != oldWifiState)
                 wifiStateTimestamp = System.currentTimeMillis()
 
-            stateBus.postValue(this)
+            if (initialized)
+                stateBus.postValue(this)
         }
 
         fun isWifiEnabled() : Boolean =
@@ -150,7 +163,9 @@ class SWM2Service : Service(), LifecycleOwner {
             lastWifiScan = wifiManager.scanResults
 
             wifiScanTimestamp = System.currentTimeMillis()
-            stateBus.postValue(this)
+
+            if (initialized)
+                stateBus.postValue(this)
         }
 
         // Trigger updating the active network info
@@ -173,7 +188,8 @@ class SWM2Service : Service(), LifecycleOwner {
 
             activeNetworkTimestamp = System.currentTimeMillis()
 
-            stateBus.postValue(this)
+            if (initialized)
+                stateBus.postValue(this)
         }
 
         fun isNetworkWifi() : Boolean =
@@ -182,19 +198,92 @@ class SWM2Service : Service(), LifecycleOwner {
         fun isNetworkConnected() : Boolean =
                 lastNetworkInfo?.isConnected == true
 
-        fun updateCellLocation(cellLocation: CellLocation?) {
-            val commonTower = SWM2CommonTower(cellLocation)
+        // Utilize either the modern cellinfo list or the legacy celLLocation method to try
+        // to get an updated location
+        fun updateCellLocations() {
+            val permission =
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
 
-            if (!commonTower.equals(lastCellLocation)) {
-                lastCellLocation = commonTower
-                cellLocationTimestamp = System.currentTimeMillis()
-                stateBus.postValue(this)
+            if (permission == PackageManager.PERMISSION_GRANTED) {
+                val locations = telephonyManager.allCellInfo
+
+                Log.d("SWM2", "updateLocations - " + locations?.size)
+
+                var commonList: MutableList<SWM2CommonTelephony> = arrayListOf()
+
+                if (locations != null && locations.isNotEmpty()) {
+                    for (ci in locations) {
+                        val swmci = SWM2CommonTelephony(ci)
+
+                        if (swmci.isValid()) {
+                            Log.d("SWM2", "Got valid swmci: " + swmci.toString())
+                            commonList.add(swmci)
+                        }
+                    }
+                } else {
+                    val swmci = SWM2CommonTelephony(telephonyManager.cellLocation)
+
+                    if (swmci.isValid()) {
+                        commonList.add(swmci)
+                    }
+
+                }
+                Log.d("SWM2", "Cell info: " + commonList.size)
+
+                // Different size?  Immediately different
+                if (commonList.size != cellLocations.size) {
+                    cellLocations = commonList
+                    cellLocationTimestamp = System.currentTimeMillis()
+
+                    if (initialized)
+                        stateBus.postValue(this)
+
+                    return
+                }
+
+                // This is a little dumb but we should never have more than a small
+                // handful of nearby towers
+                for (new_tower in commonList) {
+                    var present = false
+
+                    for (old_tower in cellLocations) {
+                        if (new_tower.equals(old_tower)) {
+                            present = true
+                            break
+                        }
+                    }
+
+                    // If we didn't find this tower in our old list, replace the list, push the update,
+                    // and get out
+                    if (!present) {
+                        cellLocations = commonList
+                        cellLocationTimestamp = System.currentTimeMillis()
+
+                        if (initialized)
+                            stateBus.postValue(this)
+
+                        return
+                    }
+                }
             }
         }
 
         fun isOnWifi() : Boolean {
             return isNetworkConnected() && isNetworkWifi()
         }
+
+        init {
+            updateWifiState(wifiManager.wifiState)
+
+            cellLocations = arrayListOf()
+
+            updateCellLocations()
+
+            initialized = true
+
+            stateBus.postValue(this)
+        }
+
     }
 
     override fun onBind(intent : Intent): IBinder? {
@@ -231,14 +320,38 @@ class SWM2Service : Service(), LifecycleOwner {
         connectivityManager =
                 applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+
         notificationManager =
                 applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        worldState = SWM2State(stateBus, connectivityManager!!, wifiManager!!)
+        // Set a listener on the livedata for when the state changes
+        stateBus.observe(this,
+                Observer { event ->
+                    if (event != null)
+                        handleStateChange()
+                })
+
+        worldState = SWM2State(this, stateBus, connectivityManager!!, wifiManager!!, telephonyManager!!)
 
         telephonyManager?.listen(phoneListener,
-                PhoneStateListener.LISTEN_CELL_LOCATION +
+                PhoneStateListener.LISTEN_CELL_LOCATION + PhoneStateListener.LISTEN_CELL_INFO)
+
+        /*
+        val permission =
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            if (telephonyManager?.allCellInfo != null) {
+                dbLog("Using CELL_INFO to get neighboring towers")
+                telephonyManager?.listen(phoneListener,
                         PhoneStateListener.LISTEN_CELL_INFO)
+            } else {
+                dbLog("Using old CELL_LOCATION to get connected tower")
+                telephonyManager?.listen(phoneListener,
+                        PhoneStateListener.LISTEN_CELL_LOCATION)
+            }
+
+        }
+        */
 
         registerReceiver(wifiReceiver, IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION))
         registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
@@ -254,16 +367,14 @@ class SWM2Service : Service(), LifecycleOwner {
 
         updateNotification()
 
-        // Set a listener on the livedata for when the state changes
-        stateBus.observe(this,
-                Observer { event ->
-                    if (event != null)
-                        handleStateChange()
-                })
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
+        if (worker != null) {
+            WorkManager.getInstance().cancelAllWorkByTag("TOWERCHECK")
+        }
 
         unregisterReceiver(wifiReceiver)
         unregisterReceiver(wifiScanReceiver)
@@ -403,7 +514,7 @@ class SWM2Service : Service(), LifecycleOwner {
             // any new BSSIDs, and associate any new towers with the current network
             if (worldState!!.isOnWifi() &&
                     worldState!!.lastWifiNetwork != null &&
-                    worldState!!.lastCellLocation.isValid()) {
+                    worldState!!.cellLocations.isNotEmpty()) {
 
                 val wifiInfo = worldState?.lastWifiNetwork
 
@@ -452,26 +563,24 @@ class SWM2Service : Service(), LifecycleOwner {
 
                     // We've learned anything we need to learn about the current wifi id,
                     // now let's learn about the cell towers nearby, if we can; again, if it's a new
-                    // network we instantly learn the current tower, otherwise we update if the info
+                    // network we instantly learn the current towers, otherwise we update if the info
                     // is fresh
-                    val lastTower = worldState?.lastCellLocation
-
-                    if (lastTower != null && (newNetwork || worldState!!.isCellLocationFresh())) {
+                    if (worldState!!.cellLocations.isNotEmpty() && (newNetwork || worldState!!.isCellLocationFresh())) {
                         Log.d("SWM2", "Considering tower data")
 
-                        if (lastTower.isValid()) {
-                            var savedTower = towerDao?.findCellTowerAssociation(lastTower.bsidcid, lastTower.nidlac, lastTower.sid, savedNetwork.id)
-                            if (savedTower == null) {
-                                savedTower = SWM2CellTower(bsid_cid = lastTower.bsidcid, nid_lac = lastTower.nidlac, sid = lastTower.sid, network_id = savedNetwork.id)
-                                if (towerDao?.insertTower(savedTower) != null)
-                                    dbLog("Associated tower " + lastTower.bsidcid.toString() + "." + lastTower.nidlac.toString() + "." + lastTower.sid.toString() + " with network " + wifiInfo.ssid)
+                        for (tower in worldState!!.cellLocations) {
+                            var savedTower = towerDao?.findCellTowerAssociation(tower.toString(), savedNetwork.id)
 
+                            if (savedTower == null) {
+                                savedTower =
+                                        SWM2CellTower(towerString =  tower.toString(), network_id = savedNetwork.id)
+                                if (towerDao?.insertTower(savedTower) != null)
+                                    dbLog("Associated tower " + tower.toString() +
+                                            " with network " + wifiInfo.ssid)
                             } else {
                                 savedTower.lastTime = System.currentTimeMillis()
                                 towerDao?.updateTower(savedTower)
                             }
-                        } else {
-                            dbLog("Invalid tower, could not process " + lastTower.toString())
                         }
                     }
 
@@ -481,10 +590,16 @@ class SWM2Service : Service(), LifecycleOwner {
                 // if we're not on wifi, but wifi is enabled...
                 // If we're not near anything we know, we should initiate a shutdown.  If we're
                 // near something we know, we should remain on...
-                val savedTower =
-                        towerDao!!.findCellTowers(worldState!!.lastCellLocation.bsidcid, worldState!!.lastCellLocation.nidlac, worldState!!.lastCellLocation.sid)
+                var nearTower = false
 
-                if (savedTower.isEmpty() && worldState!!.lastCellLocation.isValid()) {
+                for (tower in worldState!!.cellLocations) {
+                    if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
+                        nearTower = true
+                        break
+                    }
+                }
+
+                if (!nearTower) {
                     // If we're not near something we know, start the countdown to powering off.
                     // We do this by making a thread that will sleep for 15 seconds and then shut off
                     // wifi... if we're already waiting to shut down, do nothing.
@@ -507,10 +622,16 @@ class SWM2Service : Service(), LifecycleOwner {
                                 }
 
                                 // Check the tower again
-                                val retryTower =
-                                        towerDao!!.findCellTowers(worldState!!.lastCellLocation.bsidcid, worldState!!.lastCellLocation.nidlac, worldState!!.lastCellLocation.sid)
+                                var nearTower = false
 
-                                if (retryTower.isEmpty() && worldState!!.lastCellLocation.isValid()) {
+                                for (tower in worldState!!.cellLocations) {
+                                    if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
+                                        nearTower = true
+                                        break
+                                    }
+                                }
+
+                                if (nearTower) {
                                     dbLog("~WIFI - In range of a known tower; cancelling shutdown")
                                     return@Thread
                                 }
@@ -531,16 +652,20 @@ class SWM2Service : Service(), LifecycleOwner {
 
                 Log.d("SWM2", "Wifi disabled during event; should we enable it?")
 
-                if (worldState!!.lastCellLocation.isValid()) {
-                    val lastTower = worldState!!.lastCellLocation
-                    val savedTowers = towerDao?.findCellTowers(lastTower.bsidcid, lastTower.nidlac, lastTower.sid)
+                var nearTower = false
+                var lastTower = SWM2CommonTelephony()
 
-                    if (savedTowers!!.isNotEmpty()) {
-                        dbLog("+WIFI Near learned tower " + lastTower.toString() + " enabling Wi-Fi")
-                        wifiManager?.setWifiEnabled(true)
-                    } else {
-                        Log.d("SWM2", "No nearby tower is associated with a learned network, " + lastTower.toString())
+                for (tower in worldState!!.cellLocations) {
+                    if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
+                        nearTower = true
+                        lastTower = tower
+                        break
                     }
+                }
+
+                if (nearTower) {
+                    dbLog("+WIFI Near learned tower " + lastTower?.toString() + " enabling Wi-Fi")
+                    wifiManager?.setWifiEnabled(true)
                 } else {
                     Log.d("SWM2", "Last cell location not valid")
                 }
@@ -560,7 +685,19 @@ class SWM2Service : Service(), LifecycleOwner {
     inner class SWMPhoneStateListener : PhoneStateListener() {
         override fun onCellLocationChanged(location: CellLocation?) {
             super.onCellLocationChanged(location)
-            worldState?.updateCellLocation(location)
+
+            // Map this to the generic update function that uses CellInfo or CellLocation
+            Log.d("SWM2", "onCellLocationChanged")
+            worldState?.updateCellLocations()
+
+        }
+
+        override fun onCellInfoChanged(cellInfo: MutableList<CellInfo>?) {
+            super.onCellInfoChanged(cellInfo)
+
+            Log.d("SWM2", "onCellInfoChanged: " + cellInfo?.size)
+
+            worldState?.updateCellLocations()
         }
     }
 

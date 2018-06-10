@@ -37,11 +37,17 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    // Room ORM
     implementation "android.arch.persistence.room:runtime:1.1.0"
     kapt "android.arch.persistence.room:compiler:1.1.0"
 
-    def lifecycle_version = "1.1.1"
+    // Workmanager
+    def work_version = "1.0.0-alpha02"
+    implementation "android.arch.work:work-runtime-ktx:$work_version" // use -ktx for Kotlin
+
+
     // ViewModel and LiveData
+    def lifecycle_version = "1.1.1"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 
     // Coroutines
