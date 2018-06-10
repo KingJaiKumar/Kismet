@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_baseline_receipt_24px"
         android:title="@string/title_log" />
 
+    <item
+        android:id="@+id/prefs"
+        android:icon="@drawable/ic_baseline_settings_applications_24px"
+        android:title="@string/title_prefs" />
+
 </menu>

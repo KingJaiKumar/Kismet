@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.preference.PreferenceManager
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -64,6 +65,14 @@ class MainActivity : FragmentActivity() {
 
                 return@OnNavigationItemSelectedListener false
             }
+            R.id.prefs -> {
+                if (isBound) {
+                    swapFragment(PrefsFragment.newInstance())
+                    return@OnNavigationItemSelectedListener true
+                }
+
+                return@OnNavigationItemSelectedListener false
+            }
         }
         false
     }
@@ -73,6 +82,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 

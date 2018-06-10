@@ -6,6 +6,7 @@
     <string name="title_database">Learned</string>
     <string name="title_dashboard">Status</string>
     <string name="title_log">Log</string>
+    <string name="title_prefs">Settings</string>
 
     <string name="permission_title">Permission Required</string>
     <string name="permission_explain_location">To get information about near-by cell towers and Wi-Fi networks, SWM needs access to your location information.</string>
@@ -19,4 +20,16 @@
     <string name="dash_wifi_details">Wifi Info:</string>
     <string name="dash_connected_wifi_desc">Network on Wifi:</string>
     <string name="dash_connected_celltower_desc">Last Tower:</string>
+
+    <string name="pref_title">Preferences</string>
+    <string name="pref_category_learning">Learning</string>
+
+    <string name="pref_title_cell">Use Cell Towers</string>
+    <string name="pref_desc_cell">Use cell tower IDs to control networks.  This does not require Wi-Fi background scanning, but may be less accurate.</string>
+
+    <string name="pref_title_wifi">Use Wi-Fi Background Scanning</string>
+    <string name="pref_desc_wifi">Use Wi-Fi background scanning to control networks.  On modern Android devices which randomize Wi-Fi addresses, this does not sacrifice privacy, however on older devices it may reveal your MAC address.</string>
+
+    <string name="pref_title_learn_open">Learn Open Networks</string>
+    <string name="pref_desc_learn_open">Force SWM to learn unencrypted networks; this is less secure.</string>
 </resources>
