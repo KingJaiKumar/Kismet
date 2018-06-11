@@ -61,7 +61,7 @@ class SWM2Service : Service(), LifecycleOwner {
 
     }
 
-    private var worldState : SWM2State? = null
+    private lateinit var worldState : SWM2State
 
     private val phoneListener = SWMPhoneStateListener()
     private val wifiReceiver = SWMWifiReceiver()
@@ -333,7 +333,8 @@ class SWM2Service : Service(), LifecycleOwner {
                         handleStateChange()
                 })
 
-        worldState = SWM2State(this, stateBus, connectivityManager, wifiManager, telephonyManager)
+        worldState = SWM2State(this, stateBus, connectivityManager,
+                wifiManager, telephonyManager)
 
         telephonyManager.listen(phoneListener,
                 PhoneStateListener.LISTEN_CELL_LOCATION + PhoneStateListener.LISTEN_CELL_INFO)
@@ -404,7 +405,7 @@ class SWM2Service : Service(), LifecycleOwner {
     }
 
     fun provideState() : SWM2State? {
-        return worldState!!
+        return worldState
     }
 
     inner class LocalBinder : Binder() {
@@ -454,13 +455,13 @@ class SWM2Service : Service(), LifecycleOwner {
         val pendingIntent = PendingIntent.getActivity(this@SWM2Service, 0,
                 intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-        val content = "Wifi: " + wifiStateToString(worldState?.wifiState!!) +
-                " Connected: " + worldState?.isNetworkConnected() +
-                " onWifi: " + worldState?.isNetworkWifi()
+        val content = "Wifi: " + wifiStateToString(worldState.wifiState!!) +
+                " Connected: " + worldState.isNetworkConnected() +
+                " onWifi: " + worldState.isNetworkWifi()
 
         var icon : Int = R.drawable.ic_swm2_wifi_off
 
-        if (worldState?.isOnWifi() ?: false)
+        if (worldState.isOnWifi() ?: false)
             icon = R.drawable.ic_swm2_wifi
 
         val notification = NotificationCompat.Builder(this@SWM2Service, notificationChannelId)
@@ -514,11 +515,11 @@ class SWM2Service : Service(), LifecycleOwner {
         val updateJob = async {
             // If we're connected to wifi, we're in learning mode; Learn any new networks,
             // any new BSSIDs, and associate any new towers with the current network
-            if (worldState!!.isOnWifi() &&
-                    worldState!!.lastWifiNetwork != null &&
-                    worldState!!.cellLocations.isNotEmpty()) {
+            if (worldState.isOnWifi() &&
+                    worldState.lastWifiNetwork != null &&
+                    worldState.cellLocations.isNotEmpty()) {
 
-                val wifiInfo = worldState?.lastWifiNetwork
+                val wifiInfo = worldState.lastWifiNetwork
 
                 // If we have wifi info, learn it
                 if (wifiInfo != null) {
@@ -547,35 +548,31 @@ class SWM2Service : Service(), LifecycleOwner {
                     if (newNetwork)
                         dbLog("Learning network " + wifiInfo.ssid)
 
-                    // Learn about new APs for this network; if the AP is fresh or if we have
-                    // a new network
-                    if (newNetwork || worldState!!.isWifiNetworkFresh()) {
-                        var savedAp = apDao?.findAccessPoint(bssid = wifiInfo.bssid, networkId = savedNetwork.id)
+                    // Learn the BSSID or update
+                    var savedAp = apDao?.findAccessPoint(bssid = wifiInfo.bssid, networkId = savedNetwork.id)
 
-                        if (savedAp == null) {
-                            savedAp = SWM2AccessPoint(bssid = wifiInfo.bssid, network_id = savedNetwork.id)
-                            if (apDao?.insertAccessPoint(savedAp) != null)
-                                dbLog("Associated BSSID " + wifiInfo.bssid + " with " + wifiInfo.ssid)
+                    if (savedAp == null) {
+                        savedAp = SWM2AccessPoint(bssid = wifiInfo.bssid, network_id = savedNetwork.id)
+                        if (apDao?.insertAccessPoint(savedAp) != null)
+                            dbLog("Associated BSSID " + wifiInfo.bssid + " with " + wifiInfo.ssid)
 
-                        } else {
-                            savedAp.lastTime = System.currentTimeMillis()
-                            apDao?.updateAccessPoint(savedAp)
-                        }
+                    } else {
+                        savedAp.lastTime = System.currentTimeMillis()
+                        apDao?.updateAccessPoint(savedAp)
                     }
 
-                    // We've learned anything we need to learn about the current wifi id,
-                    // now let's learn about the cell towers nearby, if we can; again, if it's a new
-                    // network we instantly learn the current towers, otherwise we update if the info
-                    // is fresh
-                    if (worldState!!.cellLocations.isNotEmpty() && (newNetwork || worldState!!.isCellLocationFresh())) {
+                    // Update the towers for this network
+                    if (worldState.cellLocations.isNotEmpty()) {
                         Log.d("SWM2", "Considering tower data")
 
-                        for (tower in worldState!!.cellLocations) {
-                            var savedTower = towerDao?.findCellTowerAssociation(tower.toString(), savedNetwork.id)
+                        for (tower in worldState.cellLocations) {
+                            var savedTower = towerDao?.findCellTowerAssociation(tower.toString(),
+                                    savedNetwork.id)
 
                             if (savedTower == null) {
                                 savedTower =
-                                        SWM2CellTower(towerString =  tower.toString(), network_id = savedNetwork.id)
+                                        SWM2CellTower(towerString =  tower.toString(),
+                                                network_id = savedNetwork.id)
                                 if (towerDao?.insertTower(savedTower) != null)
                                     dbLog("Associated tower " + tower.toString() +
                                             " with network " + wifiInfo.ssid)
@@ -587,14 +584,14 @@ class SWM2Service : Service(), LifecycleOwner {
                     }
 
                 }
-            } else if (!worldState!!.isOnWifi() && worldState!!.isWifiEnabled()) {
+            } else if (!worldState.isOnWifi() && worldState.isWifiEnabled()) {
                 Log.d("SWM2", "Wifi enabled but we're not on wifi")
                 // if we're not on wifi, but wifi is enabled...
                 // If we're not near anything we know, we should initiate a shutdown.  If we're
                 // near something we know, we should remain on...
                 var nearTower = false
 
-                for (tower in worldState!!.cellLocations) {
+                for (tower in worldState.cellLocations) {
                     if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
                         nearTower = true
                         break
@@ -618,7 +615,7 @@ class SWM2Service : Service(), LifecycleOwner {
                                 Thread.sleep(15 * 1000)
 
                                 // Check if we're on wifi now
-                                if (worldState!!.isOnWifi()) {
+                                if (worldState.isOnWifi()) {
                                     dbLog("~WIFI - Wi-Fi connection re-established before shutdown timer; cancelling shutdown")
                                     return@Thread
                                 }
@@ -626,7 +623,7 @@ class SWM2Service : Service(), LifecycleOwner {
                                 // Check the tower again
                                 var nearTower = false
 
-                                for (tower in worldState!!.cellLocations) {
+                                for (tower in worldState.cellLocations) {
                                     if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
                                         nearTower = true
                                         break
@@ -649,7 +646,7 @@ class SWM2Service : Service(), LifecycleOwner {
                         }
                     }
                 }
-            } else if (!worldState!!.isOnWifi()) {
+            } else if (!worldState.isOnWifi()) {
                 // We're not on WiFi; look at the tower records
 
                 Log.d("SWM2", "Wifi disabled during event; should we enable it?")
@@ -657,7 +654,7 @@ class SWM2Service : Service(), LifecycleOwner {
                 var nearTower = false
                 var lastTower = SWM2CommonTelephony()
 
-                for (tower in worldState!!.cellLocations) {
+                for (tower in worldState.cellLocations) {
                     if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
                         nearTower = true
                         lastTower = tower
@@ -673,7 +670,7 @@ class SWM2Service : Service(), LifecycleOwner {
                 }
             }
 
-            worldState?.processed()
+            worldState.processed()
         }
 
 
@@ -690,7 +687,7 @@ class SWM2Service : Service(), LifecycleOwner {
 
             // Map this to the generic update function that uses CellInfo or CellLocation
             Log.d("SWM2", "onCellLocationChanged")
-            worldState?.updateCellLocations()
+            worldState.updateCellLocations()
 
         }
 
@@ -699,48 +696,48 @@ class SWM2Service : Service(), LifecycleOwner {
 
             Log.d("SWM2", "onCellInfoChanged: " + cellInfo?.size)
 
-            worldState?.updateCellLocations()
+            worldState.updateCellLocations()
         }
     }
 
     inner class SWMWifiReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            this@SWM2Service.worldState?.updateWifiState(
+            this@SWM2Service.worldState.updateWifiState(
                     intent?.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN))
         }
     }
 
     inner class SWMScanReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            this@SWM2Service.worldState?.updateWifiScan()
+            this@SWM2Service.worldState.updateWifiScan()
         }
     }
 
     inner class SWMConnectionReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            this@SWM2Service.worldState?.updateConnection()
+            this@SWM2Service.worldState.updateConnection()
         }
     }
 
     inner class SWMConnectivityCallback : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) {
             super.onAvailable(network)
-            this@SWM2Service.worldState?.updateConnection()
+            this@SWM2Service.worldState.updateConnection()
         }
 
         override fun onLinkPropertiesChanged(network: Network?, linkProperties: LinkProperties?) {
             super.onLinkPropertiesChanged(network, linkProperties)
-            this@SWM2Service.worldState?.updateConnection()
+            this@SWM2Service.worldState.updateConnection()
         }
 
         override fun onLost(network: Network?) {
             super.onLost(network)
-            this@SWM2Service.worldState?.updateConnection()
+            this@SWM2Service.worldState.updateConnection()
         }
 
         override fun onUnavailable() {
             super.onUnavailable()
-            this@SWM2Service.worldState?.updateConnection()
+            this@SWM2Service.worldState.updateConnection()
         }
     }
 
