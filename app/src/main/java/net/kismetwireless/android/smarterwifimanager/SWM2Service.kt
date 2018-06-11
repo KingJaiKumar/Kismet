@@ -42,21 +42,26 @@ class SWM2Service : Service(), LifecycleOwner {
 
         private var started = false
 
-        private var lifecycleRegistry : LifecycleRegistry? = null
+        private lateinit var lifecycleRegistry : LifecycleRegistry
 
         private var stateBus = MutableLiveData<SWM2State>()
 
         private var wifiDisableThread : Thread? = null
         private var wifiDisableThreadRunning : Boolean = false
+
+        private lateinit var notificationManager: NotificationManager
+        private val notificationChannelId = "net.kismetwireless.android.swm2"
+        private val notificationId = 101
+
+        private lateinit var wifiManager: WifiManager
+        private lateinit var telephonyManager : TelephonyManager
+        private lateinit var connectivityManager: ConnectivityManager
+
+        private var worker : PeriodicWorkRequest? = null
+
     }
 
-    private var notificationManager: NotificationManager? = null
-    private val notificationChannelId = "net.kismetwireless.android.swm2"
-    private val notificationId = 101
-
-    private var wifiManager: WifiManager? = null
-    private var telephonyManager : TelephonyManager? = null
-    private var connectivityManager: ConnectivityManager? = null
+    private var worldState : SWM2State? = null
 
     private val phoneListener = SWMPhoneStateListener()
     private val wifiReceiver = SWMWifiReceiver()
@@ -65,9 +70,6 @@ class SWM2Service : Service(), LifecycleOwner {
     private val connecivityReceiver = SWMConnectionReceiver()
     private val connectivityCallback = SWMConnectivityCallback()
 
-    private var worldState : SWM2State? = null
-
-    private var worker : PeriodicWorkRequest? = null
 
     class SWM2State(private val context : Context,
                     private val stateBus : MutableLiveData<SWM2State>,
@@ -209,7 +211,7 @@ class SWM2Service : Service(), LifecycleOwner {
 
                 Log.d("SWM2", "updateLocations - " + locations?.size)
 
-                var commonList: MutableList<SWM2CommonTelephony> = arrayListOf()
+                val commonList: MutableList<SWM2CommonTelephony> = arrayListOf()
 
                 if (locations != null && locations.isNotEmpty()) {
                     for (ci in locations) {
@@ -311,7 +313,7 @@ class SWM2Service : Service(), LifecycleOwner {
         dbLog("Service created")
 
         lifecycleRegistry = LifecycleRegistry(this)
-        lifecycleRegistry!!.markState(Lifecycle.State.STARTED)
+        lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
         wifiManager =
                 applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -331,9 +333,9 @@ class SWM2Service : Service(), LifecycleOwner {
                         handleStateChange()
                 })
 
-        worldState = SWM2State(this, stateBus, connectivityManager!!, wifiManager!!, telephonyManager!!)
+        worldState = SWM2State(this, stateBus, connectivityManager, wifiManager, telephonyManager)
 
-        telephonyManager?.listen(phoneListener,
+        telephonyManager.listen(phoneListener,
                 PhoneStateListener.LISTEN_CELL_LOCATION + PhoneStateListener.LISTEN_CELL_INFO)
 
         /*
@@ -357,7 +359,7 @@ class SWM2Service : Service(), LifecycleOwner {
         registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
 
         if (Build.VERSION.SDK_INT >= 24) {
-            connectivityManager?.registerDefaultNetworkCallback(connectivityCallback)
+            connectivityManager.registerDefaultNetworkCallback(connectivityCallback)
         } else {
             registerReceiver(connecivityReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         }
@@ -380,7 +382,7 @@ class SWM2Service : Service(), LifecycleOwner {
         unregisterReceiver(wifiScanReceiver)
 
         if (Build.VERSION.SDK_INT >= 24) {
-            connectivityManager?.unregisterNetworkCallback(connectivityCallback)
+            connectivityManager.unregisterNetworkCallback(connectivityCallback)
         } else {
             unregisterReceiver(connecivityReceiver)
         }
@@ -442,7 +444,7 @@ class SWM2Service : Service(), LifecycleOwner {
             channel.setShowBadge(false)
 
 
-            notificationManager?.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
@@ -518,8 +520,8 @@ class SWM2Service : Service(), LifecycleOwner {
 
                 val wifiInfo = worldState?.lastWifiNetwork
 
-                // If our Wifi info is new, learn it
-                if (wifiInfo != null && worldState!!.isWifiFresh()) {
+                // If we have wifi info, learn it
+                if (wifiInfo != null) {
                     Log.d("SWM2", "Considering Wi-Fi data")
 
                     // Learn brand new networks, or update networks we already know about
@@ -610,7 +612,7 @@ class SWM2Service : Service(), LifecycleOwner {
                         if (!wifiDisableThreadRunning) {
                             wifiDisableThreadRunning = true
 
-                            wifiDisableThread = Thread({
+                            net.kismetwireless.android.smarterwifimanager.SWM2Service.Companion.wifiDisableThread = Thread({
                                 dbLog("-WIFI - No Wi-Fi connection but Wi-Fi enabled; shutting off Wi-Fi in 15 seconds")
                                 // First, sleep for 15 seconds
                                 Thread.sleep(15 * 1000)
@@ -637,7 +639,7 @@ class SWM2Service : Service(), LifecycleOwner {
                                 }
 
                                 dbLog("-WIFI - No Wi-Fi connection after 15 seconds; shutting off Wi-Fi")
-                                wifiManager?.setWifiEnabled(false)
+                                wifiManager.setWifiEnabled(false)
 
                                 synchronized(this@SWM2Service) {
                                     wifiDisableThreadRunning = false
@@ -665,7 +667,7 @@ class SWM2Service : Service(), LifecycleOwner {
 
                 if (nearTower) {
                     dbLog("+WIFI Near learned tower " + lastTower?.toString() + " enabling Wi-Fi")
-                    wifiManager?.setWifiEnabled(true)
+                    wifiManager.setWifiEnabled(true)
                 } else {
                     Log.d("SWM2", "Last cell location not valid")
                 }
@@ -743,7 +745,7 @@ class SWM2Service : Service(), LifecycleOwner {
     }
 
     override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry!!
+        return lifecycleRegistry
     }
 }
 
