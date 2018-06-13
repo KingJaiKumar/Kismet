@@ -1,18 +1,13 @@
 package net.kismetwireless.android.smarterwifimanager
 
 import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.arch.lifecycle.*
 import android.content.*
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.LinkProperties
 import android.net.Network
-import android.net.NetworkInfo
-import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Binder
@@ -25,8 +20,6 @@ import android.telephony.CellLocation
 import android.telephony.PhoneStateListener
 import android.telephony.TelephonyManager
 import android.util.Log
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
 import kotlinx.coroutines.experimental.async
 import net.kismetwireless.android.smarterwifimanager.Database.*
 
@@ -34,20 +27,19 @@ class SWM2Service : Service(), LifecycleOwner {
     private val binder = LocalBinder()
 
     companion object {
-        private var database: SWM2Database? = null
-        private var logDao: Swm2LogDao? = null
-        private var networkDao : SWM2NetworkDao? = null
-        private var apDao : SWM2AccessPointDao? = null
-        private var towerDao : SWM2TowerDao? = null
+        private lateinit var database: SWM2Database
+        private lateinit var logDao: Swm2LogDao
+        private lateinit var networkDao : SWM2NetworkDao
+        private lateinit var apDao : SWM2AccessPointDao
+        private lateinit var towerDao : SWM2TowerDao
 
         private var started = false
 
         private lateinit var lifecycleRegistry : LifecycleRegistry
 
-        private var stateBus = MutableLiveData<SWM2State>()
+        private var stateBus = MutableLiveData<Boolean>()
 
-        private var wifiDisableThread : Thread? = null
-        private var wifiDisableThreadRunning : Boolean = false
+        private var shutdownScheduled : Boolean = false
 
         private lateinit var notificationManager: NotificationManager
         private val notificationChannelId = "net.kismetwireless.android.swm2"
@@ -56,12 +48,8 @@ class SWM2Service : Service(), LifecycleOwner {
         private lateinit var wifiManager: WifiManager
         private lateinit var telephonyManager : TelephonyManager
         private lateinit var connectivityManager: ConnectivityManager
-
-        private var worker : PeriodicWorkRequest? = null
-
+        private lateinit var alarmManager: AlarmManager
     }
-
-    private lateinit var worldState : SWM2State
 
     private val phoneListener = SWMPhoneStateListener()
     private val wifiReceiver = SWMWifiReceiver()
@@ -70,89 +58,51 @@ class SWM2Service : Service(), LifecycleOwner {
     private val connecivityReceiver = SWMConnectionReceiver()
     private val connectivityCallback = SWMConnectivityCallback()
 
+    fun isNetworkWifi() : Boolean =
+            connectivityManager.activeNetworkInfo?.type == ConnectivityManager.TYPE_WIFI
 
-    class SWM2State(private val context : Context,
-                    private val stateBus : MutableLiveData<SWM2State>,
-                    private val connectivityManager: ConnectivityManager,
-                    private val wifiManager : WifiManager,
-                    private val telephonyManager: TelephonyManager) {
+    fun isNetworkConnected() : Boolean =
+            connectivityManager.activeNetworkInfo?.isConnected == true
 
-        private var initialized = false
+    fun isOnWifi() : Boolean =
+            isNetworkConnected() && isNetworkWifi()
 
-        var lastProcessedTime : Long = 0
-            private set
+    fun commonNeighborTowers() : MutableList<SWM2CommonTelephony> {
+        val commonList: MutableList<SWM2CommonTelephony> = arrayListOf()
 
-        fun processed() {
-            lastProcessedTime = System.currentTimeMillis()
+        val permission =
+                ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        if (permission == PackageManager.PERMISSION_GRANTED) {
+            val locations = telephonyManager.allCellInfo
+
+            if (locations != null && locations.isNotEmpty()) {
+                for (ci in locations) {
+                    val swmci = SWM2CommonTelephony(ci)
+
+                    if (swmci.isValid()) {
+                        commonList.add(swmci)
+                    }
+                }
+            } else {
+                val swmci = SWM2CommonTelephony(telephonyManager.cellLocation)
+
+                if (swmci.isValid()) {
+                    commonList.add(swmci)
+                }
+
+            }
         }
 
-        var wifiState : Int? = WifiManager.WIFI_STATE_UNKNOWN
-            private set
+        return commonList
+    }
 
-        private var wifiStateTimestamp : Long = 0
+    fun wifiState() : Int =
+            wifiManager.wifiState
 
-        fun isWifiStateFresh() : Boolean =
-                wifiStateTimestamp > lastProcessedTime
-
-        var oldWifiState : Int? = WifiManager.WIFI_STATE_UNKNOWN
-            private set
-
-        var lastNetworkInfo : NetworkInfo? = null
-            private set
-
-        private var activeNetworkTimestamp : Long = 0
-
-        fun isNetworkInfoFresh() : Boolean =
-                activeNetworkTimestamp > lastProcessedTime
-
-        fun isWifiFresh() : Boolean =
-                isWifiStateFresh() || isWifiNetworkFresh()
-
-        var cellLocations : List<SWM2CommonTelephony> = listOf()
-            private set
-
-        private var cellLocationTimestamp : Long = 0
-
-        fun isCellLocationFresh() : Boolean =
-                cellLocationTimestamp > lastProcessedTime
-
-        var lastWifiNetwork : WifiInfo? = null
-            private set
-
-        private var wifiNetworkTimestamp : Long = 0
-
-        fun isWifiNetworkFresh() : Boolean =
-                wifiNetworkTimestamp > lastProcessedTime
-
-        var lastWifiScan : List<ScanResult> = listOf()
-            private set
-
-        private var wifiScanTimestamp : Long = 0
-
-        fun isWifiScanFresh() : Boolean =
-                wifiScanTimestamp > lastProcessedTime
-
-        // Set the Wifi state
-        fun updateWifiState(newstate : Int? = WifiManager.WIFI_STATE_UNKNOWN) {
-            oldWifiState = wifiState
-            wifiState = newstate
-
-            if (wifiState == WifiManager.WIFI_STATE_ENABLED)
-                lastWifiNetwork = wifiManager.connectionInfo
-            else
-                lastWifiNetwork = null
-
-            wifiNetworkTimestamp = System.currentTimeMillis()
-
-            if (wifiState != oldWifiState)
-                wifiStateTimestamp = System.currentTimeMillis()
-
-            if (initialized)
-                stateBus.postValue(this)
-        }
-
-        fun isWifiEnabled() : Boolean =
-            when (wifiState) {
+    fun isWifiEnabled() : Boolean =
+            when (wifiState()) {
                 WifiManager.WIFI_STATE_ENABLED -> true
                 WifiManager.WIFI_STATE_ENABLING -> true
                 WifiManager.WIFI_STATE_DISABLED -> false
@@ -160,133 +110,8 @@ class SWM2Service : Service(), LifecycleOwner {
                 else -> false
             }
 
-        // Trigger that we have new wifi neighbors
-        fun updateWifiScan() {
-            lastWifiScan = wifiManager.scanResults
-
-            wifiScanTimestamp = System.currentTimeMillis()
-
-            if (initialized)
-                stateBus.postValue(this)
-        }
-
-        // Trigger updating the active network info
-        fun updateConnection() {
-            lastNetworkInfo = connectivityManager.activeNetworkInfo
-
-            if (isNetworkWifi() and isNetworkConnected()) {
-                val newWifiNetwork = wifiManager.connectionInfo
-                if (lastWifiNetwork == null || lastWifiNetwork?.bssid != lastWifiNetwork?.bssid ||
-                        newWifiNetwork?.ssid != lastWifiNetwork?.ssid) {
-                    lastWifiNetwork = newWifiNetwork
-                    wifiNetworkTimestamp = System.currentTimeMillis()
-                }
-            } else {
-                if (lastWifiNetwork != null) {
-                    lastWifiNetwork = null
-                    wifiNetworkTimestamp = System.currentTimeMillis()
-                }
-            }
-
-            activeNetworkTimestamp = System.currentTimeMillis()
-
-            if (initialized)
-                stateBus.postValue(this)
-        }
-
-        fun isNetworkWifi() : Boolean =
-                lastNetworkInfo?.type == ConnectivityManager.TYPE_WIFI
-
-        fun isNetworkConnected() : Boolean =
-                lastNetworkInfo?.isConnected == true
-
-        // Utilize either the modern cellinfo list or the legacy celLLocation method to try
-        // to get an updated location
-        fun updateCellLocations() {
-            val permission =
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
-
-            if (permission == PackageManager.PERMISSION_GRANTED) {
-                val locations = telephonyManager.allCellInfo
-
-                Log.d("SWM2", "updateLocations - " + locations?.size)
-
-                val commonList: MutableList<SWM2CommonTelephony> = arrayListOf()
-
-                if (locations != null && locations.isNotEmpty()) {
-                    for (ci in locations) {
-                        val swmci = SWM2CommonTelephony(ci)
-
-                        if (swmci.isValid()) {
-                            Log.d("SWM2", "Got valid swmci: " + swmci.toString())
-                            commonList.add(swmci)
-                        }
-                    }
-                } else {
-                    val swmci = SWM2CommonTelephony(telephonyManager.cellLocation)
-
-                    if (swmci.isValid()) {
-                        commonList.add(swmci)
-                    }
-
-                }
-                Log.d("SWM2", "Cell info: " + commonList.size)
-
-                // Different size?  Immediately different
-                if (commonList.size != cellLocations.size) {
-                    cellLocations = commonList
-                    cellLocationTimestamp = System.currentTimeMillis()
-
-                    if (initialized)
-                        stateBus.postValue(this)
-
-                    return
-                }
-
-                // This is a little dumb but we should never have more than a small
-                // handful of nearby towers
-                for (new_tower in commonList) {
-                    var present = false
-
-                    for (old_tower in cellLocations) {
-                        if (new_tower.equals(old_tower)) {
-                            present = true
-                            break
-                        }
-                    }
-
-                    // If we didn't find this tower in our old list, replace the list, push the update,
-                    // and get out
-                    if (!present) {
-                        cellLocations = commonList
-                        cellLocationTimestamp = System.currentTimeMillis()
-
-                        if (initialized)
-                            stateBus.postValue(this)
-
-                        return
-                    }
-                }
-            }
-        }
-
-        fun isOnWifi() : Boolean {
-            return isNetworkConnected() && isNetworkWifi()
-        }
-
-        init {
-            updateWifiState(wifiManager.wifiState)
-
-            cellLocations = arrayListOf()
-
-            updateCellLocations()
-
-            initialized = true
-
-            stateBus.postValue(this)
-        }
-
-    }
+    fun wifiNetwork() : WifiInfo =
+            wifiManager.connectionInfo
 
     override fun onBind(intent : Intent): IBinder? {
         Log.d("SWM2", "SWM2StateService Binding")
@@ -305,10 +130,10 @@ class SWM2Service : Service(), LifecycleOwner {
         Log.d("SWM2", "SWM2StateService onCreate")
 
         database = provideSWM2Database(this)
-        logDao = database?.logDao()
-        networkDao = database?.networkDao()
-        apDao = database?.apDao()
-        towerDao = database?.towerDao()
+        logDao = database.logDao()
+        networkDao = database.networkDao()
+        apDao = database.apDao()
+        towerDao = database.towerDao()
 
         dbLog("Service created")
 
@@ -321,6 +146,8 @@ class SWM2Service : Service(), LifecycleOwner {
                 applicationContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         connectivityManager =
                 applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        alarmManager =
+                applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 
         notificationManager =
@@ -333,28 +160,8 @@ class SWM2Service : Service(), LifecycleOwner {
                         handleStateChange()
                 })
 
-        worldState = SWM2State(this, stateBus, connectivityManager,
-                wifiManager, telephonyManager)
-
         telephonyManager.listen(phoneListener,
                 PhoneStateListener.LISTEN_CELL_LOCATION + PhoneStateListener.LISTEN_CELL_INFO)
-
-        /*
-        val permission =
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if (permission == PackageManager.PERMISSION_GRANTED) {
-            if (telephonyManager?.allCellInfo != null) {
-                dbLog("Using CELL_INFO to get neighboring towers")
-                telephonyManager?.listen(phoneListener,
-                        PhoneStateListener.LISTEN_CELL_INFO)
-            } else {
-                dbLog("Using old CELL_LOCATION to get connected tower")
-                telephonyManager?.listen(phoneListener,
-                        PhoneStateListener.LISTEN_CELL_LOCATION)
-            }
-
-        }
-        */
 
         registerReceiver(wifiReceiver, IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION))
         registerReceiver(wifiScanReceiver, IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION))
@@ -375,12 +182,9 @@ class SWM2Service : Service(), LifecycleOwner {
     override fun onDestroy() {
         super.onDestroy()
 
-        if (worker != null) {
-            WorkManager.getInstance().cancelAllWorkByTag("TOWERCHECK")
-        }
-
         unregisterReceiver(wifiReceiver)
         unregisterReceiver(wifiScanReceiver)
+        cancelShutdown()
 
         if (Build.VERSION.SDK_INT >= 24) {
             connectivityManager.unregisterNetworkCallback(connectivityCallback)
@@ -397,15 +201,15 @@ class SWM2Service : Service(), LifecycleOwner {
     }
 
     fun provideDatabase() : SWM2Database? {
-        return database!!
+        return database
     }
 
-    fun provideStateBus() : MutableLiveData<SWM2State> {
+    fun provideStateBus() : MutableLiveData<Boolean> {
         return stateBus
     }
 
-    fun provideState() : SWM2State? {
-        return worldState
+    fun provideState() : Boolean? {
+        return true
     }
 
     inner class LocalBinder : Binder() {
@@ -426,7 +230,7 @@ class SWM2Service : Service(), LifecycleOwner {
     fun dbLog(text : String) {
         // Run DB entries as threads because it's a blocking operation
         val job = async {
-            val retId = logDao?.insertLog(Swm2LogEntry(msg = text))
+            val retId = logDao.insertLog(Swm2LogEntry(msg = text))
 
             Log.d("SWM2", "DB log " + retId.toString() + ": " + text)
         }
@@ -455,13 +259,13 @@ class SWM2Service : Service(), LifecycleOwner {
         val pendingIntent = PendingIntent.getActivity(this@SWM2Service, 0,
                 intent, PendingIntent.FLAG_CANCEL_CURRENT)
 
-        val content = "Wifi: " + wifiStateToString(worldState.wifiState!!) +
-                " Connected: " + worldState.isNetworkConnected() +
-                " onWifi: " + worldState.isNetworkWifi()
+        val content = "Wifi: " + wifiStateToString(wifiState()) +
+                " Connected: " + isNetworkConnected() +
+                " onWifi: " + isNetworkWifi()
 
         var icon : Int = R.drawable.ic_swm2_wifi_off
 
-        if (worldState.isOnWifi() ?: false)
+        if (isNetworkWifi() ?: false)
             icon = R.drawable.ic_swm2_wifi
 
         val notification = NotificationCompat.Builder(this@SWM2Service, notificationChannelId)
@@ -489,193 +293,151 @@ class SWM2Service : Service(), LifecycleOwner {
             }
 
     private fun handleStateChange() {
-        if (worldState == null)
-            return
+        // Lock so we process state changes serially, sometimes we get a flood of changes
+        synchronized(this) {
+            // Run this on a coroutine so that the database accesses don't cause problems
 
-        /*
-        if (0 == 1) {
-            // Verbose state logging, for now
-            var content = "State Changed: Connected(" + worldState?.isNetworkConnected() + ") " +
-                    "OnWifi(" + worldState?.isNetworkWifi() + ") "
-            "WifiEnabled(" + wifiStateToString(worldState?.wifiState!!) + ")"
+            val updateJob = async {
+                // If we're connected to wifi, we're in learning mode; Learn any new networks,
+                // any new BSSIDs, and associate any new towers with the current network
+                if (isOnWifi()) {
+                    val wifiInfo = wifiNetwork()
 
-            if (worldState?.lastNetworkInfo != null)
-                content +=
-                        " ConnectionInfo(" + worldState?.lastNetworkInfo?.toString() + ")"
+                    // If we have wifi info, learn it
+                    if (wifiInfo != null) {
+                        Log.d("SWM2", "Considering Wi-Fi data")
 
-            if (worldState?.lastCellLocation != null)
-                content +=
-                        " CellLocation(" + worldState?.lastCellLocation?.toString() + ")"
+                        // Generate a network based on the wifi info if we don't have it already
+                        var savedNetwork = networkDao.findNetwork(wifiInfo.ssid)
+                        var newNetwork = false
 
-            dbLog(content)
-        }
-        */
+                        if (savedNetwork == null) {
+                            savedNetwork = SWM2Network(ssid = wifiInfo.ssid)
+                            val id = networkDao.insertNetwork(savedNetwork)
 
-        // Run this on a coroutine so that the database accesses don't cause problems
-        val updateJob = async {
-            // If we're connected to wifi, we're in learning mode; Learn any new networks,
-            // any new BSSIDs, and associate any new towers with the current network
-            if (worldState.isOnWifi() &&
-                    worldState.lastWifiNetwork != null &&
-                    worldState.cellLocations.isNotEmpty()) {
-
-                val wifiInfo = worldState.lastWifiNetwork
-
-                // If we have wifi info, learn it
-                if (wifiInfo != null) {
-                    Log.d("SWM2", "Considering Wi-Fi data")
-
-                    // Learn brand new networks, or update networks we already know about
-                    var savedNetwork = networkDao?.findNetwork(wifiInfo.ssid)
-                    var newNetwork = false
-
-                    if (savedNetwork == null) {
-                        savedNetwork = SWM2Network(ssid = wifiInfo.ssid)
-                        val id = networkDao?.insertNetwork(savedNetwork)
-
-                        if (id == null) {
-                            dbLog("Failed to insert network in DB for " + wifiInfo.ssid)
-                            return@async
-                        } else {
-                            savedNetwork.id = id
-                            newNetwork = true
-                        }
-                    } else {
-                        savedNetwork.lastTime = System.currentTimeMillis()
-                        networkDao?.updateNetwork(savedNetwork)
-                    }
-
-                    if (newNetwork)
-                        dbLog("Learning network " + wifiInfo.ssid)
-
-                    // Learn the BSSID or update
-                    var savedAp = apDao?.findAccessPoint(bssid = wifiInfo.bssid, networkId = savedNetwork.id)
-
-                    if (savedAp == null) {
-                        savedAp = SWM2AccessPoint(bssid = wifiInfo.bssid, network_id = savedNetwork.id)
-                        if (apDao?.insertAccessPoint(savedAp) != null)
-                            dbLog("Associated BSSID " + wifiInfo.bssid + " with " + wifiInfo.ssid)
-
-                    } else {
-                        savedAp.lastTime = System.currentTimeMillis()
-                        apDao?.updateAccessPoint(savedAp)
-                    }
-
-                    // Update the towers for this network
-                    if (worldState.cellLocations.isNotEmpty()) {
-                        Log.d("SWM2", "Considering tower data")
-
-                        for (tower in worldState.cellLocations) {
-                            var savedTower = towerDao?.findCellTowerAssociation(tower.toString(),
-                                    savedNetwork.id)
-
-                            if (savedTower == null) {
-                                savedTower =
-                                        SWM2CellTower(towerString =  tower.toString(),
-                                                network_id = savedNetwork.id)
-                                if (towerDao?.insertTower(savedTower) != null)
-                                    dbLog("Associated tower " + tower.toString() +
-                                            " with network " + wifiInfo.ssid)
+                            if (id == null) {
+                                dbLog("Failed to insert network in DB for " + wifiInfo.ssid)
+                                return@async
                             } else {
-                                savedTower.lastTime = System.currentTimeMillis()
-                                towerDao?.updateTower(savedTower)
+                                savedNetwork.id = id
+                                newNetwork = true
                             }
+                        } else {
+                            savedNetwork.lastTime = System.currentTimeMillis()
+                            networkDao.updateNetwork(savedNetwork)
                         }
+
+                        if (newNetwork)
+                            dbLog("Learning network " + wifiInfo.ssid)
+
+                        // Learn the BSSID we're associated to
+                        var savedAp = apDao.findAccessPoint(bssid = wifiInfo.bssid,
+                                networkId = savedNetwork.id)
+
+                        if (savedAp == null) {
+                            savedAp = SWM2AccessPoint(bssid = wifiInfo.bssid, network_id = savedNetwork.id)
+                            if (apDao.insertAccessPoint(savedAp) != null)
+                                dbLog("Associated BSSID " + wifiInfo.bssid + " with " + wifiInfo.ssid)
+                        } else {
+                            savedAp.lastTime = System.currentTimeMillis()
+                            apDao.updateAccessPoint(savedAp)
+                        }
+
+                        updateDatabaseTowers(savedNetwork.id, savedNetwork.ssid)
+                    }
+                } else if (isWifiEnabled() && !isOnWifi()) {
+                    // Are we near a tower we know about?
+                    if (isNearKnownTower()) {
+                        dbLog("~WIFI Wi-Fi enabled without connection, but we're near a known tower, leaving Wi-Fi turned on.")
+                        return@async
                     }
 
-                }
-            } else if (!worldState.isOnWifi() && worldState.isWifiEnabled()) {
-                Log.d("SWM2", "Wifi enabled but we're not on wifi")
-                // if we're not on wifi, but wifi is enabled...
-                // If we're not near anything we know, we should initiate a shutdown.  If we're
-                // near something we know, we should remain on...
-                var nearTower = false
-
-                for (tower in worldState.cellLocations) {
-                    if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
-                        nearTower = true
-                        break
-                    }
-                }
-
-                if (!nearTower) {
-                    // If we're not near something we know, start the countdown to powering off.
-                    // We do this by making a thread that will sleep for 15 seconds and then shut off
-                    // wifi... if we're already waiting to shut down, do nothing.
+                    // Otherwise, start the countdown for turning off wifi; we do this by making a
+                    // job that waits for 15 seconds then sees if we still need to shut down.
                     //
-                    // The shutdown thread should re-check the current wifi state before disabling to
-                    // make sure that we're actually still w/out a reason to turn on
-                    synchronized(this) {
-                        if (!wifiDisableThreadRunning) {
-                            wifiDisableThreadRunning = true
+                    // If we're already running a shutdown job, do nothing
+                    if (!shutdownScheduled)
+                        scheduleShutdown()
+                } else if (!isWifiEnabled()) {
+                    // We're not near a wifi network, should we turn it on?
+                    val nearTower = findNearKnownTower()
 
-                            net.kismetwireless.android.smarterwifimanager.SWM2Service.Companion.wifiDisableThread = Thread({
-                                dbLog("-WIFI - No Wi-Fi connection but Wi-Fi enabled; shutting off Wi-Fi in 15 seconds")
-                                // First, sleep for 15 seconds
-                                Thread.sleep(15 * 1000)
-
-                                // Check if we're on wifi now
-                                if (worldState.isOnWifi()) {
-                                    dbLog("~WIFI - Wi-Fi connection re-established before shutdown timer; cancelling shutdown")
-                                    return@Thread
-                                }
-
-                                // Check the tower again
-                                var nearTower = false
-
-                                for (tower in worldState.cellLocations) {
-                                    if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
-                                        nearTower = true
-                                        break
-                                    }
-                                }
-
-                                if (nearTower) {
-                                    dbLog("~WIFI - In range of a known tower; cancelling shutdown")
-                                    return@Thread
-                                }
-
-                                dbLog("-WIFI - No Wi-Fi connection after 15 seconds; shutting off Wi-Fi")
-                                wifiManager.setWifiEnabled(false)
-
-                                synchronized(this@SWM2Service) {
-                                    wifiDisableThreadRunning = false
-                                }
-                            })
-                            wifiDisableThread?.start()
-                        }
+                    if (nearTower.isValid()) {
+                        dbLog("+WIFI - Enabling Wi-Fi, near known tower " + nearTower.toString())
+                        wifiManager.setWifiEnabled(true)
                     }
-                }
-            } else if (!worldState.isOnWifi()) {
-                // We're not on WiFi; look at the tower records
-
-                Log.d("SWM2", "Wifi disabled during event; should we enable it?")
-
-                var nearTower = false
-                var lastTower = SWM2CommonTelephony()
-
-                for (tower in worldState.cellLocations) {
-                    if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
-                        nearTower = true
-                        lastTower = tower
-                        break
-                    }
-                }
-
-                if (nearTower) {
-                    dbLog("+WIFI Near learned tower " + lastTower?.toString() + " enabling Wi-Fi")
-                    wifiManager.setWifiEnabled(true)
-                } else {
-                    Log.d("SWM2", "Last cell location not valid")
                 }
             }
 
-            worldState.processed()
+            // Fire the notification
+            updateNotification()
+        }
+    }
+
+    fun isNearKnownTower() : Boolean {
+        if (findNearKnownTower().isValid())
+            return true
+
+        return false
+    }
+
+    fun findNearKnownTower() : SWM2CommonTelephony {
+        for (tower in commonNeighborTowers()) {
+            if (towerDao!!.findCellTowers(tower.toString()).isNotEmpty()) {
+                return tower
+            }
         }
 
+        return SWM2CommonTelephony()
+    }
 
-        // Fire the notification
-        updateNotification()
+    fun updateDatabaseTowers(networkId : Long, networkSsid : String) {
+        for (tower in commonNeighborTowers()) {
+            var logTower = towerDao.findCellTowerAssociation(tower.toString(), networkId)
+
+            if (logTower == null) {
+                logTower = SWM2CellTower(towerString = tower.toString(),
+                        network_id = networkId)
+
+                if (towerDao.insertTower(logTower) != null)
+                    dbLog("Associated tower " + tower.toString() + " with network " +
+                            networkSsid);
+            } else {
+                logTower.lastTime = System.currentTimeMillis()
+                towerDao.updateTower(logTower)
+            }
+        }
+    }
+
+    fun scheduleShutdown() {
+        val wakeTime = System.currentTimeMillis() + (15 * 1000)
+        val intent = Intent(this, SWM2TimerReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeTime, pendingIntent)
+    }
+
+    fun cancelShutdown() {
+        val intent = Intent(this, SWM2TimerReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        alarmManager.cancel(pendingIntent)
+
+        synchronized(this) {
+            shutdownScheduled = false
+        }
+    }
+
+    fun attemptWifiShutdown() {
+        synchronized(this) {
+            if (isOnWifi() || isNearKnownTower()) {
+                dbLog("~WIFI - Shutdown scheduled, but we're near a known tower or on Wi-Fi now")
+                return@synchronized
+            }
+
+            dbLog("-WIFI - Shutdown scheduled, turning off Wi-Fi adapter")
+            wifiManager.setWifiEnabled(false)
+
+            shutdownScheduled = false
+        }
     }
 
     // Utility receiver classes attached to broadcast receivers and state
@@ -687,8 +449,8 @@ class SWM2Service : Service(), LifecycleOwner {
 
             // Map this to the generic update function that uses CellInfo or CellLocation
             Log.d("SWM2", "onCellLocationChanged")
-            worldState.updateCellLocations()
 
+            stateBus.postValue(true)
         }
 
         override fun onCellInfoChanged(cellInfo: MutableList<CellInfo>?) {
@@ -696,48 +458,47 @@ class SWM2Service : Service(), LifecycleOwner {
 
             Log.d("SWM2", "onCellInfoChanged: " + cellInfo?.size)
 
-            worldState.updateCellLocations()
+            stateBus.postValue(true)
         }
     }
 
     inner class SWMWifiReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            this@SWM2Service.worldState.updateWifiState(
-                    intent?.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN))
+            stateBus.postValue(true)
         }
     }
 
     inner class SWMScanReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            this@SWM2Service.worldState.updateWifiScan()
+            stateBus.postValue(true)
         }
     }
 
     inner class SWMConnectionReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            this@SWM2Service.worldState.updateConnection()
+            stateBus.postValue(true)
         }
     }
 
     inner class SWMConnectivityCallback : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network?) {
             super.onAvailable(network)
-            this@SWM2Service.worldState.updateConnection()
+            stateBus.postValue(true)
         }
 
         override fun onLinkPropertiesChanged(network: Network?, linkProperties: LinkProperties?) {
             super.onLinkPropertiesChanged(network, linkProperties)
-            this@SWM2Service.worldState.updateConnection()
+            stateBus.postValue(true)
         }
 
         override fun onLost(network: Network?) {
             super.onLost(network)
-            this@SWM2Service.worldState.updateConnection()
+            stateBus.postValue(true)
         }
 
         override fun onUnavailable() {
             super.onUnavailable()
-            this@SWM2Service.worldState.updateConnection()
+            stateBus.postValue(true)
         }
     }
 
@@ -764,6 +525,26 @@ class SWM2ServiceReceiver : BroadcastReceiver() {
         val serviceIntent = Intent(context, SWM2Service::class.java)
         context?.startService(serviceIntent)
         context?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+}
+
+class SWM2TimerReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, p1: Intent?) {
+        val serviceConnection = object : ServiceConnection {
+            override fun onServiceConnected(className: ComponentName?, service: IBinder?) {
+                val binder = service as SWM2Service.LocalBinder
+
+                binder.getService().attemptWifiShutdown()
+            }
+
+            override fun onServiceDisconnected(p0: ComponentName?) {
+                //
+            }
+        }
+        val serviceIntent = Intent(context, SWM2Service::class.java)
+        context?.startService(serviceIntent)
+        context?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+
     }
 }
 

@@ -17,14 +17,14 @@ import kotlinx.android.synthetic.main.fragment_status.*
  *
  */
 class StatusFragment : Fragment() {
-    private var mainActivity : MainActivity? = null
-    private var mainService : SWM2Service? = null
+    private lateinit var mainActivity : MainActivity
+    private lateinit var mainService : SWM2Service
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mainActivity = activity as MainActivity
-        mainService = mainActivity?.myService
+        mainService = mainActivity.myService!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -41,18 +41,18 @@ class StatusFragment : Fragment() {
         super.onDetach()
     }
 
-    private fun updateView(state : SWM2Service.SWM2State?) {
-        wifienabled.setText(mainService?.wifiStateToString(state?.wifiState!!))
-        networkconnected.setText(state?.isNetworkConnected().toString())
-        networkwifi.setText(state?.isNetworkWifi().toString())
+    private fun updateView() {
+        wifienabled.setText(mainService.wifiStateToString(mainService.wifiState()))
+        networkconnected.setText(mainService.isNetworkConnected().toString())
+        networkwifi.setText(mainService.isNetworkWifi().toString())
 
-        if (state!!.lastWifiNetwork == null)
+        if (mainService.wifiNetwork().networkId < 0)
             wifidetails.setText("n/a")
         else
-            wifidetails.setText(state?.lastWifiNetwork?.bssid + " " + state?.lastWifiNetwork?.ssid)
+            wifidetails.setText(mainService.wifiNetwork().bssid + " " + mainService.wifiNetwork().ssid)
 
-        var text = state!!.cellLocations.size.toString() + " towers ["
-        for (tower in state!!.cellLocations) {
+        var text = mainService.commonNeighborTowers().size.toString() + " towers ["
+        for (tower in mainService.commonNeighborTowers()) {
             text += tower.toString()
         }
         text += "]"
@@ -69,10 +69,10 @@ class StatusFragment : Fragment() {
 
         mainService!!.provideStateBus().observe(this,
                 Observer { event ->
-                    updateView(event)
+                    updateView()
                 })
 
-        updateView(mainService!!.provideState())
+        updateView()
     }
 
     companion object {
