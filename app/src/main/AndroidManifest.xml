@@ -57,6 +57,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".SWM2TimerReceiver"
+            android:enabled="true"
+            android:exported="false">
+
+        </receiver>
+
+
     </application>
 
 </manifest>
