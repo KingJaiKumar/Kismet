@@ -177,6 +177,8 @@ class SWM2Service : Service(), LifecycleOwner {
 
         updateNotification()
 
+        scheduleTick()
+
     }
 
     override fun onDestroy() {
@@ -184,7 +186,9 @@ class SWM2Service : Service(), LifecycleOwner {
 
         unregisterReceiver(wifiReceiver)
         unregisterReceiver(wifiScanReceiver)
+
         cancelShutdown()
+        cancelTick()
 
         if (Build.VERSION.SDK_INT >= 24) {
             connectivityManager.unregisterNetworkCallback(connectivityCallback)
@@ -426,6 +430,20 @@ class SWM2Service : Service(), LifecycleOwner {
         }
     }
 
+    fun scheduleTick() {
+        val wakeTime = System.currentTimeMillis() + (30 * 1000)
+        val intent = Intent(this, SWM2CheckReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeTime, pendingIntent)
+
+    }
+
+    fun cancelTick() {
+        val intent = Intent(this, SWM2CheckReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        alarmManager.cancel(pendingIntent)
+    }
+
     fun attemptWifiShutdown() {
         synchronized(this) {
             if (isOnWifi() || isNearKnownTower()) {
@@ -438,6 +456,13 @@ class SWM2Service : Service(), LifecycleOwner {
 
             shutdownScheduled = false
         }
+    }
+
+    fun serviceTick() {
+        dbLog("Kicking forced check")
+        handleStateChange()
+
+        scheduleTick()
     }
 
     // Utility receiver classes attached to broadcast receivers and state
@@ -528,23 +553,44 @@ class SWM2ServiceReceiver : BroadcastReceiver() {
     }
 }
 
-class SWM2TimerReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, p1: Intent?) {
+class SWM2IntentServiceShim : IntentService("SWM2ServiceShim") {
+    override fun onHandleIntent(p0: Intent?) {
         val serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(className: ComponentName?, service: IBinder?) {
                 val binder = service as SWM2Service.LocalBinder
 
-                binder.getService().attemptWifiShutdown()
+                if (p0!!.hasExtra("SHUTDOWN"))
+                    binder.getService().attemptWifiShutdown()
+
+                else if (p0!!.hasExtra("TICK"))
+                    binder.getService().serviceTick()
+
+                unbindService(this)
             }
 
             override fun onServiceDisconnected(p0: ComponentName?) {
                 //
             }
         }
-        val serviceIntent = Intent(context, SWM2Service::class.java)
-        context?.startService(serviceIntent)
-        context?.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        val serviceIntent = Intent(this, SWM2Service::class.java)
+        this.startService(serviceIntent)
+        this.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+}
 
+class SWM2TimerReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, p1: Intent?) {
+        val intent = Intent(context, SWM2IntentServiceShim::class.java)
+        intent.putExtra("SHUTDOWN", true)
+        context?.startService(intent)
+    }
+}
+
+class SWM2CheckReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, p1: Intent?) {
+        val intent = Intent(context, SWM2IntentServiceShim::class.java)
+        intent.putExtra("TICK", true)
+        context?.startService(intent)
     }
 }
 

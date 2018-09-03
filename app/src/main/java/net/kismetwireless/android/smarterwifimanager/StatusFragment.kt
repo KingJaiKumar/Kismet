@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_status.*
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 
 
 /**
@@ -46,17 +48,19 @@ class StatusFragment : Fragment() {
         networkconnected.setText(mainService.isNetworkConnected().toString())
         networkwifi.setText(mainService.isNetworkWifi().toString())
 
-        if (mainService.wifiNetwork().networkId < 0)
-            wifidetails.setText("n/a")
-        else
-            wifidetails.setText(mainService.wifiNetwork().bssid + " " + mainService.wifiNetwork().ssid)
+        launch (UI) {
+            if (mainService.wifiNetwork().networkId < 0)
+                wifidetails.setText("n/a")
+            else
+                wifidetails.setText(mainService.wifiNetwork().bssid + " " + mainService.wifiNetwork().ssid)
 
-        var text = mainService.commonNeighborTowers().size.toString() + " towers ["
-        for (tower in mainService.commonNeighborTowers()) {
-            text += tower.toString()
+            var text = mainService.commonNeighborTowers().size.toString() + " towers ["
+            for (tower in mainService.commonNeighborTowers()) {
+                text += tower.toString()
+            }
+            text += "]"
+            lasttower.setText(text)
         }
-        text += "]"
-        lasttower.setText(text)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
