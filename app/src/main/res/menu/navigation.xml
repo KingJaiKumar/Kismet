@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_baseline_signal_wifi_3_bar_lock_24px"
+        android:title="@string/title_dashboard" />
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_baseline_calendar_view_day_24px"
+        android:title="@string/title_database" />
+
+    <item
+        android:id="@+id/navigation_log"
+        android:icon="@drawable/ic_baseline_receipt_24px"
+        android:title="@string/title_log" />
+
+    <item
+        android:id="@+id/prefs"
+        android:icon="@drawable/ic_baseline_settings_applications_24px"
+        android:title="@string/title_prefs" />
+
+</menu>

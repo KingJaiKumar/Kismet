@@ -1,5 +1,1 @@
-/* include ':libraries:betterpickers' */
-include ':libraries:nineoldandroids'
-include ':libraries:betterpickers'
-include ':SmarterWifiManager'
-
+include ':app'

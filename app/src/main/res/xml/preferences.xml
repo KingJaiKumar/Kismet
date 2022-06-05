@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/pref_title">
+
+    <PreferenceCategory
+        android:title="@string/pref_category_learning">
+
+        <CheckBoxPreference
+            android:key="pref_cell"
+            android:title="@string/pref_title_cell"
+            android:summary="@string/pref_desc_cell"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="pref_wifi"
+            android:title="@string/pref_title_wifi"
+            android:summary="@string/pref_desc_wifi"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="pref_open"
+            android:title="@string/pref_title_learn_open"
+            android:summary="@string/pref_desc_learn_open"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
